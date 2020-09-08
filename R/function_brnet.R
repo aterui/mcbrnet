@@ -30,7 +30,7 @@ brnet <- function(n_patch = 100,
                   randomize_patch = TRUE,
                   plot = TRUE){
 
-# define functions and variables ------------------------------------------
+  # define functions and variables ------------------------------------------
 
   resample <- function(x, ...) x[sample.int(length(x), ...)]
 
@@ -64,7 +64,7 @@ brnet <- function(n_patch = 100,
   }# ifelse
 
 
-# adjacency matrix: linear network ----------------------------------------
+  # adjacency matrix: linear network ----------------------------------------
 
   if(p_branch == 0|n_branch == 1){
     Adj <- matrix(0, nrow = n_patch, ncol = n_patch)
@@ -75,7 +75,7 @@ brnet <- function(n_patch = 100,
   }# if(p_branch == 0|n_branch == 1)
 
 
-# adjacency matrix: branched network --------------------------------------
+  # adjacency matrix: branched network --------------------------------------
 
   if(p_branch > 0 & n_branch > 1){
 
@@ -131,7 +131,7 @@ brnet <- function(n_patch = 100,
   }# if(p_branch > 0)
 
 
-# distance matrix ---------------------------------------------------------
+  # distance matrix ---------------------------------------------------------
 
   D <- matrix(0, ncol = n_patch, nrow = n_patch)
   A <- diag(x = 1, nrow = n_patch, ncol = n_patch)
@@ -144,7 +144,7 @@ brnet <- function(n_patch = 100,
   A <- NULL
 
 
-# upstream watershed area ------------------------------------------------
+  # upstream watershed area ------------------------------------------------
 
   Adj_up <- Adj
   Adj_up[lower.tri(Adj_up)] <- 0
@@ -162,7 +162,7 @@ brnet <- function(n_patch = 100,
   v_wa <- rowSums(Wm)
 
 
-# environmental condition -------------------------------------------------
+  # environmental condition -------------------------------------------------
 
   Pm <- t(apply(X = Adj_up, MARGIN = 1, function(x) x*v_wa/ifelse(sum(x)==0, 1, sum(x*v_wa) ) ) )
 
@@ -182,21 +182,27 @@ brnet <- function(n_patch = 100,
   }# for(i in 1:max(D[1,]) )
 
 
-# randomize nodes ---------------------------------------------------------
+  # randomize nodes ---------------------------------------------------------
 
   branch <- unlist(lapply(1:n_branch, function(x) rep(x, each = v_n_patch_branch[x])))
+  patch <- 1:n_patch
 
   if(randomize_patch == TRUE){
-    random_id <- c(1, resample(2:n_patch))
-    branch <- branch[random_id]
-    v_wa <- v_wa[random_id]
-    v_env <- v_env[random_id]
-    Adj <- Adj[random_id, random_id]
-    D <- D[random_id, random_id]
-  }# if(randomize_patch == TRUE)
+    if(n_branch > 1){
+      df_id <- data.frame(branch = as.character(c(1, resample(2:n_branch)))) %>%
+        dplyr::left_join(data.frame(patch, branch = as.character(branch)), by = "branch")
+      v_wa <- v_wa[df_id$patch]
+      v_env <- v_env[df_id$patch]
+      Adj <- Adj[df_id$patch, df_id$patch]
+      D <- D[df_id$patch, df_id$patch]
+    }else{
+      df_id <- data.frame(branch = 1, patch = 1:n_patch)
+    }# ifelse(n_branch > 1)
+  }else{
+    df_id <- data.frame(branch = branch, patch = patch)
+  }# ifelse(randomize_patch == TRUE)
 
-
-# visualization -----------------------------------------------------------
+  # visualization -----------------------------------------------------------
 
   if(plot == T){
     adj <- igraph::graph.adjacency(adjmatrix = Adj, mode = "undirected")
@@ -204,18 +210,19 @@ brnet <- function(n_patch = 100,
     layout.tree <- igraph::layout_as_tree(adj, root = 1, flip.y = F)
     par(mar = c(5,8,4,3))
     igraph::plot.igraph(adj, layout = layout.tree,
-                        vertex.size = sqrt(v_wa),
+                        vertex.size = I(scale(v_wa, center = min(v_wa), scale = max(v_wa)-min(v_wa)) + 0.3)*10,
                         vertex.label = NA,
                         vertex.frame.color = grey(0.5),
                         vertex.color = colvalue$color[match(v_env, colvalue$value)])
     plotfunctions::gradientLegend(valRange = range(v_env), color = viridis::viridis(n_patch),
-                                  pos = 0.8, side = 2, dec = 2, inside = T)
+                                  pos = 0.8, side = 2, dec = 2)
     pc <- c(plotfunctions::getCoords(0, side = 1), plotfunctions::getCoords(1, side = 2))
-    text(x = pc[1], y = pc[2], labels = "Environmental value", adj = 0)
+    text(x = pc[1], y = pc[2], labels = "Environmental value", adj = 1)
   }# if(plot == T)
 
   return(list(adjacency_matrix = Adj,
               distance_matrix = D,
-              environment = v_env,
-              watershed_area = v_wa) )
+              environment = c(v_env),
+              watershed_area = c(v_wa),
+              branch_id = as.numeric(df_id$branch)) )
 }
