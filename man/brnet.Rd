@@ -28,7 +28,7 @@ brnet(
 
 \item{sd_env}{SD of environmental noise (\eqn{\sigma}\out{<sub>env</sub>}).}
 
-\item{randomize_patch}{logical indicating whether randomize or not patches. If \code{FALSE}, the function may generate a biased network with ordered patches. Default \code{TRUE}.}
+\item{randomize_patch}{logical indicating whether randomize patches or not. If \code{FALSE}, the function may generate a biased network with ordered patches. Default \code{TRUE}.}
 
 \item{plot}{logical. If \code{FALSE}, a plot of the generated network will not be shown. Default \code{TRUE}.}
 }
@@ -40,9 +40,12 @@ brnet(
 \code{environment} environmental values for patches.
 
 \code{watershed_area} number of patches upstream. Patch 1 is set to be the root patch (i.e., outlet).
+
+\code{branch_id} branch id for each patch.
 }
 \description{
-Generate a random branching network
+A function generating a random branching network.
+The function produces a set of branches that are organized into a branching network. The branch length is drawn from a geometric distribution with branching probability \code{p_branch}.
 }
 \examples{
 brnet(n_patch = 100, p_branch = 0.5)
