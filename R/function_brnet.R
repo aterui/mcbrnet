@@ -6,13 +6,16 @@
 #' @param max_env maximum value of environmental condition in source streams (maximum of a uniform distribution).
 #' @param rho strength of spatial autocorrelation in environmental condition. The environmental condition at patch i \eqn{x}\out{<sub>i</sub>} is determined as \eqn{x}\out{<sub>i</sub>}\eqn{ = \rho}x\out{<sub>i-1</sub>}\eqn{ + \epsilon}\out{<sub>i</sub>}, where \eqn{\epsilon}\out{<sub>i</sub>} is the random variable drawn from a normal distribution with mean 0 and SD \eqn{\sigma}\out{<sub>env</sub>}.
 #' @param sd_env SD of environmental noise (\eqn{\sigma}\out{<sub>env</sub>}).
-#' @param randomize_patch logical indicating whether randomize or not patches. If \code{FALSE}, the function may generate a biased network with ordered patches. Default \code{TRUE}.
+#' @param randomize_patch logical indicating whether randomize patches or not. If \code{FALSE}, the function may generate a biased network with ordered patches. Default \code{TRUE}.
 #' @param plot logical. If \code{FALSE}, a plot of the generated network will not be shown. Default \code{TRUE}.
 #'
 #' @return \code{adjacency_matrix} adjacency matrix for the generated network.
 #' @return \code{distance_matrix} distance matrix for the generated network.
 #' @return \code{environment} environmental values for patches.
 #' @return \code{watershed_area} number of patches upstream. Patch 1 is set to be the root patch (i.e., outlet).
+#' @return \code{branch_id} branch id for each patch.
+#'
+#' @importFrom dplyr %>%
 #'
 #' @author Akira Terui, \email{hanabi0111@gmail.com}
 #'
@@ -107,11 +110,11 @@ brnet <- function(n_patch = 100,
       v_parent_branch <- 1:n_confluence
       v_offspg_branch <- 2:n_branch
 
-      Offspg <- NULL
+      Offspg <- matrix(NA, nrow = 2, ncol = n_confluence)
       for(i in n_confluence:1){
         v_y <- resample(v_offspg_branch[v_offspg_branch > v_parent_branch[i]], size = 2)
         v_offspg_branch <- setdiff(v_offspg_branch, v_y)
-        Offspg <- cbind(v_y, Offspg)
+        Offspg[,i] <- v_y
       }
 
       parent <- rep(v_parent_branch, each = 2)
