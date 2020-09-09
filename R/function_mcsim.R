@@ -32,7 +32,8 @@
 #' @importFrom dplyr %>% filter
 #' @importFrom ggplot2 ggplot vars labeller geom_line aes scale_color_viridis_c labs facet_grid label_both
 #' @importFrom stats dist rpois
-#' @importFrom utils setTxtProgressBar txtProgressBar globalVariables
+#' @importFrom utils setTxtProgressBar txtProgressBar
+#' @importFrom rlang .data
 #'
 #' @author Akira Terui, \email{hanabi0111@gmail.com}
 #'
@@ -199,17 +200,15 @@ mcsim <- function(n_warmup = 200,
     sample_species <- sample(1:n_species, size = min(c(n_species, 5)), replace = FALSE)
 
     g <- dplyr::as_tibble(m_dynamics) %>%
-            dplyr::filter(patch %in% sample_patch, species %in% sample_species) %>%
+            dplyr::filter(.data$patch %in% sample_patch, .data$species %in% sample_species) %>%
             ggplot() +
-            facet_grid(rows = vars(species), cols = vars(patch),
+            facet_grid(rows = vars(.data$species), cols = vars(.data$patch),
                        labeller = labeller(.rows = label_both, .cols = label_both)) +
-            geom_line(mapping = aes(x = timestep, y = abundance, color = abs(niche_optim - env))) +
+            geom_line(mapping = aes(x = .data$timestep, y = .data$abundance, color = abs(.data$niche_optim - .data$env))) +
             scale_color_viridis_c(alpha = 0.8) +
             labs(color = "Environmental \ndeviation")
     print(g)
   }
-
-  utils::globalVariables(names(m_dynamics))
 
   return(list(dynamics = dplyr::as_tibble(m_dynamics),
               distance_matrix = m_distance,
