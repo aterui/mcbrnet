@@ -1,4 +1,42 @@
-
+#' Simulate metacommunity dynamics
+#'
+#' @param n_warmup numeric scalar. Number of time-steps for warm-up.
+#' @param n_burnin numeric scalar. Number of time-steps for burn-in.
+#' @param n_timestep numeric scalar. Number of time-steps to be saved.
+#' @param propagule_interval numeric scalar. Time interval for propagule introduction during warm-up.
+#' @param n_species numeric scalar. Number of species in a metacommunity.
+#' @param n_patch numeric scalar. Number of patches in a metacommunity.
+#' @param carrying_capacity numeric scalar or vector (with length equal to the number of patches). Carrying capacities of individual patches.
+#' @param interaction_type character scalar. \code{"constant"} or \code{"random"}. \code{"constant"} assumes the single interaction strength of alpha for all pairs of species. \code{"random"} draws random numbers from a uniform distribution with \code{min_alpha} and \code{max_alpha}.
+#' @param min_alpha numeric scalar. Minimum value of a uniform distribution that generates alpha.
+#' @param max_alpha numeric scalar. Maximum value of a uniform distribution that generates alpha.
+#' @param r0 numeric scalar. Maximum population growth rate of the Beverton-Holt model.
+#' @param sd_niche_width numeric scalar. Niche width of species. Higher values indicate greater niche width.
+#' @param optim_min numeric scalar. Minimum value of a uniform distribution that generates optimal environmental values of simulated species. Values are randomly assigned to species.
+#' @param optim_max numeric scalar. Maximum value of a uniform distribution that generates optimal environmental values of simulated species. Values are randomly assigned to species.
+#' @param distance_matrix numeric matrix. Distance matrix indicating distance between habitat patches. If \code{NULL}, a square landscape with randomly distributed patches will be generated. Default \code{NULL}.
+#' @param landscape_size numeric scalar. Length of a landscape on a side. Active only when \code{dispersal_matrix = NULL}.
+#' @param mu_env numeric scalar or vector (with length equal to the number of patches). Mean environmental values of patches.
+#' @param sd_env numeric scalar. Temporal SD of environmental variation at each patch.
+#' @param phi numeric scalar. Parameter describing distance decay of spatial autocorrelation in temporal environmental variation (\eqn{\rho = exp(-\phi distance)}).
+#' @param spatial_env_cor logical. Indicates whether spatial autocorrelation in temporal environmental variation is considered or not. Default \code{FALSE}.
+#' @param p_dispersal numeric scalar. Probability of dispersal (success probability of a binomial distribution).
+#' @param theta numeric scalar. Dispersal parameter describing dispersal capability of species (\eqn{exp(-\theta distance)}).
+#' @param plot logical. If \code{TRUE}, results are plotted.
+#'
+#' @return \code{dynamics} temporal metacommunity dynamics.
+#' @return \code{distance_matrix} distance matrix.
+#' @return \code{interaction_matrix} species interaction matrix.
+#'
+#' @importFrom dplyr %>% filter
+#'
+#' @author Akira Terui, \email{hanabi0111@gmail.com}
+#'
+#' @examples
+#' mcsim(n_warmup = 200, n_burnin = 200, n_timestep = 1000)
+#'
+#' @export
+#'
 mcsim <- function(n_warmup = 200,
                   n_burnin = 200,
                   n_timestep = 1000,
@@ -14,23 +52,18 @@ mcsim <- function(n_warmup = 200,
                   sd_niche_width = 1,
                   optim_min = -1,
                   optim_max = 1,
-                  m_distance = NULL,
+                  distance_matrix = NULL,
                   landscape_size = 10,
                   mu_env = 0,
-                  sd_env = 1,
+                  sd_env = 0.1,
                   phi = 1,
                   spatial_env_cor = FALSE,
                   p_dispersal = 0.1,
                   theta = 1,
                   plot = FALSE
-                  ) {
+) {
 
-# Required library --------------------------------------------------------
-  library(mvtnorm)
-  library(ggplot2)
-  library(dplyr)
-
-# parameter setup ---------------------------------------------------------
+  # parameter setup ---------------------------------------------------------
 
   # carrying capacity
   if (length(carrying_capacity) == 1) {
@@ -38,19 +71,25 @@ mcsim <- function(n_warmup = 200,
     m_k <- matrix(carrying_capacity, nrow = n_species, ncol = n_patch)
   } else {
     if(length(carrying_capacity) != n_patch) stop("carrying_capacity must have the length of one or n_patch")
-    m_k <- matrix(rep(carrying_capacity, each = n_species), nrow = n_species, ncol = n_patch)
+    m_k <- matrix(rep(x = carrying_capacity, each = n_species), nrow = n_species, ncol = n_patch)
   }
 
   # species niche
-  v_mu <- runif(n_species, optim_min, optim_max)
-  m_mu <- matrix(rep(v_mu, n_patch), nrow = n_species, ncol = n_patch) # optimal value
+  v_mu <- runif(n = n_species, min = optim_min, max = optim_max)
+  m_mu <- matrix(rep(x = v_mu, times = n_patch), nrow = n_species, ncol = n_patch) # optimal value
+  if (length(r0) == 1) {
+    m_r0 <- matrix(rep(x = r0, times = n_species * n_patch), nrow = n_species, ncol = n_patch)
+  } else {
+    if (length(r0) != n_species) stop("r0 must have the length of one or n_species")
+    m_r0 <- matrix(rep(x = r0, times = n_patch), nrow = n_species, ncol = n_patch)
+  }
 
   # environmental variation among patches
   if (length(mu_env) == 1) {
     print("Only one environmental value is given: the model will assume environmental conditions are the same at all habitat patches")
-    v_mu_z <- rep(mu_env, n_patch)
+    v_mu_z <- rep(x = mu_env, times = n_patch)
   } else {
-    if(n_patch != length(mu_env)) stop("mu_env must have the length of n_patch")
+    if (length(mu_env) != n_patch) stop("mu_env must have the length of n_patch")
     v_mu_z <- mu_env
   }
 
@@ -61,24 +100,27 @@ mcsim <- function(n_warmup = 200,
   }
 
   if (interaction_type == "random") {
-    if (min_alpha < 0 | max_alpha < 0 | min_alpha > max_alpha | is.null(min_alpha) | is.null(max_alpha)) stop("invalid values of min_alpha and/or min_alpha - the values must be positive values")
-    alpha <- runif(n_species * n_species, min_alpha, max_alpha)
+    if (min_alpha < 0 | max_alpha < 0) stop("invalid values of min_alpha and/or max_alpha - values must be positive values")
+    if (is.null(min_alpha) | is.null(max_alpha)) stop("provide min_alpha and max_alpha")
+    if (min_alpha > max_alpha) stop("max_alpha must exceed min_alpha")
+    alpha <- runif(n = n_species * n_species, min = min_alpha, max = max_alpha)
   }
 
   m_interaction <- matrix(alpha, nrow = n_species, ncol = n_species)
   diag(m_interaction) <- 1
 
   # dispersal matrix
-  if (is.null(m_distance)) {
-    print("Distance matrix m_distance is not given: create a square landscape with landscape_size (default: 10) on a side")
+  if (is.null(distance_matrix)) {
+    print("Distance matrix m_distance is not given: generate a square landscape with landscape_size (default: 10) on a side")
     v_x_coord <- runif(n = n_patch, min = 0, max = landscape_size)
     v_y_coord <- runif(n = n_patch, min = 0, max = landscape_size)
     m_distance <- data.matrix(dist(cbind(v_x_coord, v_y_coord), diag = TRUE, upper = TRUE))
     m_dispersal <- data.matrix(exp(-theta*m_distance))
     diag(m_dispersal) <- 0
   } else {
+    m_distance <- distance_matrix
     if (is.matrix(m_distance) == 0) stop("Distance matrix should be provided as matrix")
-    if (nrow(m_distance) == n_patch) stop("Invalid dimension of distance matrix m_distance: m_distance must have a dimension of n_patch*n_patch")
+    if (nrow(m_distance) == n_patch) stop("Invalid dimension of distance matrix m_distance: distance_matrix must have a dimension of n_patch * n_patch")
     m_dispersal <- exp(-theta * m_distance)
     diag(m_dispersal) <- 0
   }
@@ -99,7 +141,7 @@ mcsim <- function(n_warmup = 200,
   m_z <- mvtnorm::rmvnorm(n_sim, mean = v_mu_z, sigma = m_sigma)
 
   # community
-  colname <- c("N", "species", "niche_optim", "r_xt", "patch", "mean_env", "env", "timestep")
+  colname <- c("abundance", "species", "niche_optim", "r_xt", "patch", "mean_env", "env", "timestep")
   m_dynamics <- matrix(NA, nrow = n_species * n_patch * n_timestep, ncol = length(colname))
   colnames(m_dynamics) <- colname
   st_row <- seq(1, nrow(m_dynamics), by = n_species * n_patch)
@@ -117,9 +159,9 @@ mcsim <- function(n_warmup = 200,
       }
     }
 
-    m_z_xt <- matrix(rep(m_z[n, ], each = n_species), nrow = n_species, ncol = n_patch)
-    m_r_xt <- r0 * exp(-((m_mu - m_z_xt) / (sqrt(2) * sd_niche_width))^2)
-    m_n_hat <- (m_n * m_r_xt)/(1 + ((r0 - 1) / m_k) * (m_interaction %*% m_n) )
+    m_z_xt <- matrix(rep(x = m_z[n, ], each = n_species), nrow = n_species, ncol = n_patch)
+    m_r_xt <- m_r0 * exp(-((m_mu - m_z_xt) / (sqrt(2) * sd_niche_width))^2)
+    m_n_hat <- (m_n * m_r_xt)/(1 + ((m_r0 - 1) / m_k) * (m_interaction %*% m_n) )
 
     m_e_hat <- m_n_hat * p_dispersal
     v_e_sum <- rowSums(m_e_hat)
@@ -135,32 +177,35 @@ mcsim <- function(n_warmup = 200,
     if(n > n_discard){
       row_id <- st_row[n - n_discard]:(st_row[n - n_discard] + n_species * n_patch - 1)
       m_dynamics[row_id, ] <- cbind(c(m_n),
-                                    rep(1:n_species, n_patch),
+                                    rep(x = 1:n_species, times = n_patch),
                                     c(m_mu),
                                     c(m_r_xt),
-                                    rep(1:n_patch, each = n_species),
-                                    rep(v_mu_z, each = n_species),
+                                    rep(x = 1:n_patch, each = n_species),
+                                    rep(x = v_mu_z, each = n_species),
                                     c(m_z_xt),
                                     I(n - n_discard))
     }
     setTxtProgressBar(pb, n)
   }
   close(pb)
-    if (plot == TRUE) {
-      sample_patch <- sample(1:n_patch, size = min(c(n_patch, 5)), replace = FALSE)
-      sample_species <- sample(1:n_species, size = min(c(n_species, 5)), replace = FALSE)
 
-      g <- data.frame(m_dynamics) %>%
-              dplyr::filter(patch %in% sample_patch, species %in% sample_species) %>%
-              ggplot2::ggplot() +
-              ggplot2::facet_grid(rows = vars(species), cols = vars(patch)) +
-              ggplot2::geom_line(mapping = aes(x = timestep, y = m_n, color = abs(niche_optim - env))) +
-              ggplot2::scale_color_viridis_c(alpha = 0.5) +
-              ggplot2::labs(color = "Environmental \ndeviation")
-      print(g)
-    }
+  if (plot == TRUE) {
+    sample_patch <- sample(1:n_patch, size = min(c(n_patch, 5)), replace = FALSE)
+    sample_species <- sample(1:n_species, size = min(c(n_species, 5)), replace = FALSE)
 
-    return(list(dynamics = data.frame(m_dynamics),
-                distance_matrix = m_distance))
+    g <- dplyr::as_tibble(m_dynamics) %>%
+      dplyr::filter(patch %in% sample_patch, species %in% sample_species) %>%
+      ggplot2::ggplot() +
+      ggplot2::facet_grid(rows = vars(species), cols = vars(patch),
+                          labeller = ggplot2::labeller(.rows = label_both, .cols = label_both)) +
+      ggplot2::geom_line(mapping = aes(x = timestep, y = abundance, color = abs(niche_optim - env))) +
+      ggplot2::scale_color_viridis_c(alpha = 0.5) +
+      ggplot2::labs(color = "Environmental \ndeviation")
+    print(g)
+  }
+
+  return(list(dynamics = dplyr::as_tibble(m_dynamics),
+              distance_matrix = m_distance,
+              interaction_matrix = m_interaction))
 }
 
