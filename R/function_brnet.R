@@ -1,8 +1,5 @@
 #' Generate a random branching network
 #'
-#' A function generating a random branching network.
-#' The function produces a set of branches that are organized into a branching network. The branch length is drawn from a geometric distribution with branching probability \code{p_branch}.
-#'
 #' @param n_patch number of patches in a network.
 #' @param p_branch branching probability (success probability of a geometric distribution).
 #' @param min_env minimum value of environmental condition in source streams (minimum of a uniform distribution).

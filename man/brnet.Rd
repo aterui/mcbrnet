@@ -44,8 +44,7 @@ brnet(
 \code{branch_id} branch id for each patch.
 }
 \description{
-A function generating a random branching network.
-The function produces a set of branches that are organized into a branching network. The branch length is drawn from a geometric distribution with branching probability \code{p_branch}.
+Generate a random branching network
 }
 \examples{
 brnet(n_patch = 100, p_branch = 0.5)
