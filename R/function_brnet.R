@@ -90,7 +90,7 @@ brnet <- function(n_patch = 100,
     y <- 2:n_patch
     m_adj[cbind(x, y)] <- 1
     m_adj[cbind(y, x)] <- 1
-  }# if (p_branch == 0|n_branch == 1)
+  }
 
 
   # adjacency matrix: branched network --------------------------------------
@@ -102,9 +102,9 @@ brnet <- function(n_patch = 100,
       repeat{
         v_n_patch_branch <- rgeom(n = n_branch, prob = p_branch) + 1
         if (sum(v_n_patch_branch) >= n_patch) break
-      }# repeat
+      }
       if (sum(v_n_patch_branch) == n_patch) break
-    }# repeat
+    }
 
     # start_id, end_id, and neighbor list for each branch
     v_end_id <- cumsum(v_n_patch_branch)
@@ -146,7 +146,7 @@ brnet <- function(n_patch = 100,
 
     m_adj <- matrix(0, nrow = n_patch, ncol = n_patch)
     m_adj[m_neighbor_patch] <- 1
-  }# if (p_branch > 0)
+  }
 
 
   # distance matrix ---------------------------------------------------------
@@ -197,7 +197,7 @@ brnet <- function(n_patch = 100,
     v_z <- m_wa_prop %*% ((rho * v_z) + v_eps)
     v_z_dummy <- m_wa_prop %*% v_z_dummy
     v_env <- v_z + v_env
-  }# for(i in 1:max(m_distance[1,]) )
+  }
 
 
   # randomize nodes ---------------------------------------------------------
@@ -219,6 +219,7 @@ brnet <- function(n_patch = 100,
   }else{
     df_id <- data.frame(branch = branch, patch = patch)
   }
+
 
   # visualization -----------------------------------------------------------
 
