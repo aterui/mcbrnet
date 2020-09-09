@@ -33,6 +33,7 @@
 #' @importFrom ggplot2 ggplot vars labeller geom_line aes scale_color_viridis_c labs facet_grid label_both
 #' @importFrom stats dist rpois
 #' @importFrom utils setTxtProgressBar txtProgressBar
+#'
 #' @author Akira Terui, \email{hanabi0111@gmail.com}
 #'
 #' @examples
@@ -73,7 +74,7 @@ mcsim <- function(n_warmup = 200,
     print("Only one carrying capacity is given: the model will assume carrying capacities are the same at all habitat patches")
     m_k <- matrix(carrying_capacity, nrow = n_species, ncol = n_patch)
   } else {
-    if(length(carrying_capacity) != n_patch) stop("carrying_capacity must have the length of one or n_patch")
+    if (length(carrying_capacity) != n_patch) stop("carrying_capacity must have the length of one or n_patch")
     m_k <- matrix(rep(x = carrying_capacity, each = n_species), nrow = n_species, ncol = n_patch)
   }
 
@@ -118,16 +119,17 @@ mcsim <- function(n_warmup = 200,
     v_x_coord <- runif(n = n_patch, min = 0, max = landscape_size)
     v_y_coord <- runif(n = n_patch, min = 0, max = landscape_size)
     m_distance <- data.matrix(dist(cbind(v_x_coord, v_y_coord), diag = TRUE, upper = TRUE))
-    m_dispersal <- data.matrix(exp(-theta*m_distance))
+    m_dispersal <- data.matrix(exp(-theta * m_distance))
     diag(m_dispersal) <- 0
   } else {
     m_distance <- distance_matrix
     if (is.matrix(m_distance) == 0) stop("Distance matrix should be provided as matrix")
-    if (nrow(m_distance) == n_patch) stop("Invalid dimension of distance matrix m_distance: distance_matrix must have a dimension of n_patch * n_patch")
+    if (nrow(m_distance) != n_patch) stop("Invalid dimension of distance matrix m_distance: distance_matrix must have a dimension of n_patch * n_patch")
     m_dispersal <- exp(-theta * m_distance)
     diag(m_dispersal) <- 0
   }
 
+  if(!(length(p_dispersal) == 1 | length(p_dispersal) == n_species)) stop("p_dispersal must have the length of one or n_species")
 
   # dynamics ----------------------------------------------------------------
 
@@ -163,8 +165,8 @@ mcsim <- function(n_warmup = 200,
     }
 
     m_z_xt <- matrix(rep(x = m_z[n, ], each = n_species), nrow = n_species, ncol = n_patch)
-    m_r_xt <- m_r0 * exp(-((m_mu - m_z_xt) / (sqrt(2) * sd_niche_width))^2)
-    m_n_hat <- (m_n * m_r_xt)/(1 + ((m_r0 - 1) / m_k) * (m_interaction %*% m_n) )
+    m_r_xt <- m_r0 * exp(- ((m_mu - m_z_xt) / (sqrt(2) * sd_niche_width))^2)
+    m_n_hat <- (m_n * m_r_xt) / (1 + ((m_r0 - 1) / m_k) * (m_interaction %*% m_n))
 
     m_e_hat <- m_n_hat * p_dispersal
     v_e_sum <- rowSums(m_e_hat)
@@ -177,7 +179,7 @@ mcsim <- function(n_warmup = 200,
 
     m_n <- matrix(rpois(n = n_species * n_patch, lambda = m_n_hat), nrow = n_species, ncol = n_patch)
 
-    if(n > n_discard){
+    if (n > n_discard) {
       row_id <- st_row[n - n_discard]:(st_row[n - n_discard] + n_species * n_patch - 1)
       m_dynamics[row_id, ] <- cbind(c(m_n),
                                     rep(x = 1:n_species, times = n_patch),
@@ -197,18 +199,19 @@ mcsim <- function(n_warmup = 200,
     sample_species <- sample(1:n_species, size = min(c(n_species, 5)), replace = FALSE)
 
     g <- dplyr::as_tibble(m_dynamics) %>%
-      dplyr::filter(patch %in% sample_patch, species %in% sample_species) %>%
-      ggplot() +
-      facet_grid(rows = vars(species), cols = vars(patch),
-                 labeller = labeller(.rows = label_both, .cols = label_both)) +
-      geom_line(mapping = aes(x = timestep, y = abundance, color = abs(niche_optim - env))) +
-      scale_color_viridis_c(alpha = 0.8) +
-      labs(color = "Environmental \ndeviation")
+            dplyr::filter(patch %in% sample_patch, species %in% sample_species) %>%
+            ggplot() +
+            facet_grid(rows = vars(species), cols = vars(patch),
+                       labeller = labeller(.rows = label_both, .cols = label_both)) +
+            geom_line(mapping = aes(x = timestep, y = abundance, color = abs(niche_optim - env))) +
+            scale_color_viridis_c(alpha = 0.8) +
+            labs(color = "Environmental \ndeviation")
     print(g)
   }
+
+  utils::globalVariables(names(m_dynamics))
 
   return(list(dynamics = dplyr::as_tibble(m_dynamics),
               distance_matrix = m_distance,
               interaction_matrix = m_interaction))
 }
-
