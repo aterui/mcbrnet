@@ -3,14 +3,15 @@
 #' @param n_warmup numeric scalar. Number of time-steps for warm-up.
 #' @param n_burnin numeric scalar. Number of time-steps for burn-in.
 #' @param n_timestep numeric scalar. Number of time-steps to be saved.
-#' @param propagule_interval numeric scalar. Time interval for propagule introduction during warm-up.
+#' @param propagule_interval numeric scalar. Time interval for propagule introduction during warm-up. If \code{NULL}, a value of \code{ceiling(n_warmup / 10)} will be used.
 #' @param n_species numeric scalar. Number of species in a metacommunity.
 #' @param n_patch numeric scalar. Number of patches in a metacommunity.
 #' @param carrying_capacity numeric scalar or vector (with length equal to the number of patches). Carrying capacities of individual patches.
 #' @param interaction_type character scalar. \code{"constant"} or \code{"random"}. \code{"constant"} assumes the single interaction strength of alpha for all pairs of species. \code{"random"} draws random numbers from a uniform distribution with \code{min_alpha} and \code{max_alpha}.
+#' @param alpha species interaction strength.
 #' @param min_alpha numeric scalar. Minimum value of a uniform distribution that generates alpha.
 #' @param max_alpha numeric scalar. Maximum value of a uniform distribution that generates alpha.
-#' @param r0 numeric scalar. Maximum population growth rate of the Beverton-Holt model.
+#' @param r0 numeric scalar or vector (with length equal to the number of species). Maximum population growth rate of the Beverton-Holt model.
 #' @param sd_niche_width numeric scalar. Niche width of species. Higher values indicate greater niche width.
 #' @param optim_min numeric scalar. Minimum value of a uniform distribution that generates optimal environmental values of simulated species. Values are randomly assigned to species.
 #' @param optim_max numeric scalar. Maximum value of a uniform distribution that generates optimal environmental values of simulated species. Values are randomly assigned to species.
@@ -29,7 +30,9 @@
 #' @return \code{interaction_matrix} species interaction matrix.
 #'
 #' @importFrom dplyr %>% filter
-#'
+#' @importFrom ggplot2 ggplot vars labeller geom_line aes scale_color_viridis_c labs facet_grid label_both
+#' @importFrom stats dist rpois
+#' @importFrom utils setTxtProgressBar txtProgressBar
 #' @author Akira Terui, \email{hanabi0111@gmail.com}
 #'
 #' @examples
@@ -146,7 +149,7 @@ mcsim <- function(n_warmup = 200,
   colnames(m_dynamics) <- colname
   st_row <- seq(1, nrow(m_dynamics), by = n_species * n_patch)
 
-  if (is.null(propagule_interval)) propagule_interval <- max(c(1, floor(n_warmup / 10)))
+  if (is.null(propagule_interval)) propagule_interval <- ceiling(n_warmup / 10)
   propagule <- seq(propagule_interval, max(c(1, n_warmup)), by = propagule_interval)
 
   m_n <- matrix(rpois(n_species * n_patch, 0.5), nrow = n_species, ncol = n_patch)
@@ -195,12 +198,12 @@ mcsim <- function(n_warmup = 200,
 
     g <- dplyr::as_tibble(m_dynamics) %>%
       dplyr::filter(patch %in% sample_patch, species %in% sample_species) %>%
-      ggplot2::ggplot() +
-      ggplot2::facet_grid(rows = vars(species), cols = vars(patch),
-                          labeller = ggplot2::labeller(.rows = label_both, .cols = label_both)) +
-      ggplot2::geom_line(mapping = aes(x = timestep, y = abundance, color = abs(niche_optim - env))) +
-      ggplot2::scale_color_viridis_c(alpha = 0.5) +
-      ggplot2::labs(color = "Environmental \ndeviation")
+      ggplot() +
+      facet_grid(rows = vars(species), cols = vars(patch),
+                 labeller = labeller(.rows = label_both, .cols = label_both)) +
+      geom_line(mapping = aes(x = timestep, y = abundance, color = abs(niche_optim - env))) +
+      scale_color_viridis_c(alpha = 0.8) +
+      labs(color = "Environmental \ndeviation")
     print(g)
   }
 

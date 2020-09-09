@@ -38,7 +38,7 @@ mcsim(
 
 \item{n_timestep}{numeric scalar. Number of time-steps to be saved.}
 
-\item{propagule_interval}{numeric scalar. Time interval for propagule introduction during warm-up.}
+\item{propagule_interval}{numeric scalar. Time interval for propagule introduction during warm-up. If \code{NULL}, a value of \code{ceiling(n_warmup / 10)} will be used.}
 
 \item{n_species}{numeric scalar. Number of species in a metacommunity.}
 
@@ -48,11 +48,13 @@ mcsim(
 
 \item{interaction_type}{character scalar. \code{"constant"} or \code{"random"}. \code{"constant"} assumes the single interaction strength of alpha for all pairs of species. \code{"random"} draws random numbers from a uniform distribution with \code{min_alpha} and \code{max_alpha}.}
 
+\item{alpha}{species interaction strength.}
+
 \item{min_alpha}{numeric scalar. Minimum value of a uniform distribution that generates alpha.}
 
 \item{max_alpha}{numeric scalar. Maximum value of a uniform distribution that generates alpha.}
 
-\item{r0}{numeric scalar. Maximum population growth rate of the Beverton-Holt model.}
+\item{r0}{numeric scalar or vector (with length equal to the number of species). Maximum population growth rate of the Beverton-Holt model.}
 
 \item{sd_niche_width}{numeric scalar. Niche width of species. Higher values indicate greater niche width.}
 
