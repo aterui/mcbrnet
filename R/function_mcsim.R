@@ -6,12 +6,12 @@
 #' @param propagule_interval numeric scalar. Time interval for propagule introduction during warm-up. If \code{NULL}, a value of \code{ceiling(n_warmup / 10)} will be used.
 #' @param n_species numeric scalar. Number of species in a metacommunity.
 #' @param n_patch numeric scalar. Number of patches in a metacommunity.
-#' @param carrying_capacity numeric scalar or vector (with length equal to the number of patches). Carrying capacities of individual patches.
+#' @param carrying_capacity numeric scalar or vector (the length should be equal to the number of patches). Carrying capacities of individual patches.
 #' @param interaction_type character scalar. \code{"constant"} or \code{"random"}. \code{"constant"} assumes the single interaction strength of alpha for all pairs of species. \code{"random"} draws random numbers from a uniform distribution with \code{min_alpha} and \code{max_alpha}.
 #' @param alpha species interaction strength.
 #' @param min_alpha numeric scalar. Minimum value of a uniform distribution that generates alpha.
 #' @param max_alpha numeric scalar. Maximum value of a uniform distribution that generates alpha.
-#' @param r0 numeric scalar or vector (with length equal to the number of species). Maximum population growth rate of the Beverton-Holt model.
+#' @param r0 numeric scalar or vector (the length should be equal to the number of species). Maximum population growth rate of the Beverton-Holt model.
 #' @param sd_niche_width numeric scalar. Niche width of species. Higher values indicate greater niche width.
 #' @param optim_min numeric scalar. Minimum value of a uniform distribution that generates optimal environmental values of simulated species. Values are randomly assigned to species.
 #' @param optim_max numeric scalar. Maximum value of a uniform distribution that generates optimal environmental values of simulated species. Values are randomly assigned to species.
@@ -19,10 +19,10 @@
 #' @param landscape_size numeric scalar. Length of a landscape on a side. Active only when \code{dispersal_matrix = NULL}.
 #' @param mu_env numeric scalar or vector (with length equal to the number of patches). Mean environmental values of patches.
 #' @param sd_env numeric scalar. Temporal SD of environmental variation at each patch.
-#' @param phi numeric scalar. Parameter describing distance decay of spatial autocorrelation in temporal environmental variation (\eqn{\rho = exp(-\phi distance)}).
+#' @param phi numeric scalar. Parameter describing distance decay of spatial autocorrelation in temporal environmental variation (\eqn{\rho = exp(-\phi d)}, where \code{d} is the distance between patches).
 #' @param spatial_env_cor logical. Indicates whether spatial autocorrelation in temporal environmental variation is considered or not. Default \code{FALSE}.
-#' @param p_dispersal numeric scalar. Probability of dispersal (success probability of a binomial distribution).
-#' @param theta numeric scalar. Dispersal parameter describing dispersal capability of species (\eqn{exp(-\theta distance)}).
+#' @param p_dispersal numeric scalar or vector (the length should be equal to the number of species). Probability of dispersal (success probability of a binomial distribution).
+#' @param theta numeric scalar. Dispersal parameter describing dispersal capability of species as \eqn{exp(-\theta d)}, where \code{d} is the distance between patches.
 #' @param plot logical. If \code{TRUE}, results are plotted.
 #'
 #' @return \code{dynamics} temporal metacommunity dynamics.
@@ -32,7 +32,7 @@
 #' @importFrom dplyr %>% filter
 #' @importFrom ggplot2 ggplot vars labeller geom_line aes scale_color_viridis_c labs facet_grid label_both
 #' @importFrom stats dist rpois
-#' @importFrom utils setTxtProgressBar txtProgressBar
+#' @importFrom utils setTxtProgressBar txtProgressBar globalVariables
 #'
 #' @author Akira Terui, \email{hanabi0111@gmail.com}
 #'
@@ -149,10 +149,10 @@ mcsim <- function(n_warmup = 200,
   colname <- c("abundance", "species", "niche_optim", "r_xt", "patch", "mean_env", "env", "timestep")
   m_dynamics <- matrix(NA, nrow = n_species * n_patch * n_timestep, ncol = length(colname))
   colnames(m_dynamics) <- colname
-  st_row <- seq(1, nrow(m_dynamics), by = n_species * n_patch)
+  st_row <- seq(from = 1, to = nrow(m_dynamics), by = n_species * n_patch)
 
-  if (is.null(propagule_interval)) propagule_interval <- ceiling(n_warmup / 10)
-  propagule <- seq(propagule_interval, max(c(1, n_warmup)), by = propagule_interval)
+  if (is.null(propagule_interval)) propagule_interval <- max(c(1, ceiling(n_warmup / 10)))
+  propagule <- seq(from = propagule_interval, to = max(c(1, n_warmup)), by = propagule_interval)
 
   m_n <- matrix(rpois(n_species * n_patch, 0.5), nrow = n_species, ncol = n_patch)
 
