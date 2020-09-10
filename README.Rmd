@@ -1,0 +1,16 @@
+---
+title: "mcbrnet: An R package simulating metacommunity dynamics in a branching network"
+author: "Akira Terui"
+date: "9/10/2020"
+output: github_document:
+  toc: true
+  toc_depth: 2
+---
+
+# Overview
+
+The package `{mcbrnet}` is composed of two functions: `brnet()` and `mcsim()`.
+
+- `brnet`: Function `brnet()` generates a random branching network with the specified number of patches and probability of branching. The function returns adjacency and distance matrices, hypothetical environmental values at each patch, and the number of patches upstream (akin to watershed area in river networks). The output may be used in function `mcsim()` to simulate metacommunity dynamics in a branching network.
+
+- `mcsim`: Function `mcsim()` simulates metacommunity dynamics. By default, it produces a square-shaped landscape with randomly distributed habitat patches (x- and y-coordinates are drawn from a uniform distribution). If distance matrix is given, the function simulate metacommunity dynamics in the specified landscape, such as a branching network produced by `brnet()`. Function `mcsim()` shares many features with a recently developed function `simulate_MC()` that simulate metacommunity dynamics. However,
