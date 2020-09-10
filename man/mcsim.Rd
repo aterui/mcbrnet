@@ -44,7 +44,7 @@ mcsim(
 
 \item{n_patch}{numeric scalar. Number of patches in a metacommunity.}
 
-\item{carrying_capacity}{numeric scalar or vector (the length should be equal to the number of patches). Carrying capacities of individual patches.}
+\item{carrying_capacity}{numeric scalar or vector (length should be equal to the number of patches). Carrying capacities of individual patches.}
 
 \item{interaction_type}{character scalar. \code{"constant"} or \code{"random"}. \code{"constant"} assumes the single interaction strength of alpha for all pairs of species. \code{"random"} draws random numbers from a uniform distribution with \code{min_alpha} and \code{max_alpha}.}
 
@@ -54,7 +54,7 @@ mcsim(
 
 \item{max_alpha}{numeric scalar. Maximum value of a uniform distribution that generates alpha.}
 
-\item{r0}{numeric scalar or vector (the length should be equal to the number of species). Maximum population growth rate of the Beverton-Holt model.}
+\item{r0}{numeric scalar or vector (length should be equal to the number of species). Maximum population growth rate of the Beverton-Holt model.}
 
 \item{sd_niche_width}{numeric scalar. Niche width of species. Higher values indicate greater niche width.}
 
@@ -74,7 +74,7 @@ mcsim(
 
 \item{spatial_env_cor}{logical. Indicates whether spatial autocorrelation in temporal environmental variation is considered or not. Default \code{FALSE}.}
 
-\item{p_dispersal}{numeric scalar or vector (the length should be equal to the number of species). Probability of dispersal (success probability of a binomial distribution).}
+\item{p_dispersal}{numeric scalar or vector (length should be equal to the number of species). Probability of dispersal (success probability of a binomial distribution).}
 
 \item{theta}{numeric scalar. Dispersal parameter describing dispersal capability of species as \eqn{exp(-\theta d)}, where \code{d} is the distance between patches.}
 

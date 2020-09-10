@@ -6,12 +6,12 @@
 #' @param propagule_interval numeric scalar. Time interval for propagule introduction during warm-up. If \code{NULL}, a value of \code{ceiling(n_warmup / 10)} will be used.
 #' @param n_species numeric scalar. Number of species in a metacommunity.
 #' @param n_patch numeric scalar. Number of patches in a metacommunity.
-#' @param carrying_capacity numeric scalar or vector (the length should be equal to the number of patches). Carrying capacities of individual patches.
+#' @param carrying_capacity numeric scalar or vector (length should be equal to the number of patches). Carrying capacities of individual patches.
 #' @param interaction_type character scalar. \code{"constant"} or \code{"random"}. \code{"constant"} assumes the single interaction strength of alpha for all pairs of species. \code{"random"} draws random numbers from a uniform distribution with \code{min_alpha} and \code{max_alpha}.
 #' @param alpha species interaction strength.
 #' @param min_alpha numeric scalar. Minimum value of a uniform distribution that generates alpha.
 #' @param max_alpha numeric scalar. Maximum value of a uniform distribution that generates alpha.
-#' @param r0 numeric scalar or vector (the length should be equal to the number of species). Maximum population growth rate of the Beverton-Holt model.
+#' @param r0 numeric scalar or vector (length should be equal to the number of species). Maximum population growth rate of the Beverton-Holt model.
 #' @param sd_niche_width numeric scalar. Niche width of species. Higher values indicate greater niche width.
 #' @param optim_min numeric scalar. Minimum value of a uniform distribution that generates optimal environmental values of simulated species. Values are randomly assigned to species.
 #' @param optim_max numeric scalar. Maximum value of a uniform distribution that generates optimal environmental values of simulated species. Values are randomly assigned to species.
@@ -21,7 +21,7 @@
 #' @param sd_env numeric scalar. Temporal SD of environmental variation at each patch.
 #' @param phi numeric scalar. Parameter describing distance decay of spatial autocorrelation in temporal environmental variation (\eqn{\rho = exp(-\phi d)}, where \code{d} is the distance between patches).
 #' @param spatial_env_cor logical. Indicates whether spatial autocorrelation in temporal environmental variation is considered or not. Default \code{FALSE}.
-#' @param p_dispersal numeric scalar or vector (the length should be equal to the number of species). Probability of dispersal (success probability of a binomial distribution).
+#' @param p_dispersal numeric scalar or vector (length should be equal to the number of species). Probability of dispersal (success probability of a binomial distribution).
 #' @param theta numeric scalar. Dispersal parameter describing dispersal capability of species as \eqn{exp(-\theta d)}, where \code{d} is the distance between patches.
 #' @param plot logical. If \code{TRUE}, results are plotted.
 #'
@@ -75,17 +75,18 @@ mcsim <- function(n_warmup = 200,
     print("Only one carrying capacity is given: the model will assume carrying capacities are the same at all habitat patches")
     m_k <- matrix(carrying_capacity, nrow = n_species, ncol = n_patch)
   } else {
-    if (length(carrying_capacity) != n_patch) stop("carrying_capacity must have the length of one or n_patch")
+    if (length(carrying_capacity) != n_patch) stop("carrying_capacity must have length of one or n_patch")
     m_k <- matrix(rep(x = carrying_capacity, each = n_species), nrow = n_species, ncol = n_patch)
   }
 
   # species niche
   v_mu <- runif(n = n_species, min = optim_min, max = optim_max)
-  m_mu <- matrix(rep(x = v_mu, times = n_patch), nrow = n_species, ncol = n_patch) # optimal value
+  m_mu <- matrix(rep(x = v_mu, times = n_patch), nrow = n_species, ncol = n_patch)
+
   if (length(r0) == 1) {
     m_r0 <- matrix(rep(x = r0, times = n_species * n_patch), nrow = n_species, ncol = n_patch)
   } else {
-    if (length(r0) != n_species) stop("r0 must have the length of one or n_species")
+    if (length(r0) != n_species) stop("r0 must have length of one or n_species")
     m_r0 <- matrix(rep(x = r0, times = n_patch), nrow = n_species, ncol = n_patch)
   }
 
@@ -94,7 +95,7 @@ mcsim <- function(n_warmup = 200,
     print("Only one environmental value is given: the model will assume environmental conditions are the same at all habitat patches")
     v_mu_z <- rep(x = mu_env, times = n_patch)
   } else {
-    if (length(mu_env) != n_patch) stop("mu_env must have the length of n_patch")
+    if (length(mu_env) != n_patch) stop("mu_env must have length of n_patch")
     v_mu_z <- mu_env
   }
 
@@ -130,7 +131,7 @@ mcsim <- function(n_warmup = 200,
     diag(m_dispersal) <- 0
   }
 
-  if(!(length(p_dispersal) == 1 | length(p_dispersal) == n_species)) stop("p_dispersal must have the length of one or n_species")
+  if(!(length(p_dispersal) == 1 | length(p_dispersal) == n_species)) stop("p_dispersal must have length of one or n_species")
 
   # dynamics ----------------------------------------------------------------
 
