@@ -4,8 +4,9 @@ Title: Simulation functions for metacommunity dynamics in a branching network
 Version: 0.1.0
 Author: Akira Terui
 Maintainer: Akira Terui <hanabi0111@gmail.com>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Description: Simulation functions for metacommunity dynamics in a brancing network.    
+    \code{mcsim} Simulate metacommunity dynamics.   
+    \code{brnet} Generate a random branching network.    
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
@@ -18,3 +19,4 @@ Imports:
     ggplot2,
     mvtnorm,
     rlang
+Roxygen: list(markdown = TRUE)
