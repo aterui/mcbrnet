@@ -83,6 +83,7 @@ mcsim <- function(n_warmup = 200,
   v_mu <- runif(n = n_species, min = optim_min, max = optim_max)
   m_mu <- matrix(rep(x = v_mu, times = n_patch), nrow = n_species, ncol = n_patch)
 
+  if (any(r0 < 1)) stop("r0 must be greater than or equal to one")
   if (length(r0) == 1) {
     m_r0 <- matrix(rep(x = r0, times = n_species * n_patch), nrow = n_species, ncol = n_patch)
   } else {
@@ -117,7 +118,7 @@ mcsim <- function(n_warmup = 200,
 
   # dispersal matrix
   if (is.null(distance_matrix)) {
-    print("Distance matrix m_distance is not given: generate a square landscape with landscape_size (default: 10) on a side")
+    print("Distance matrix is not given: generate a square landscape with landscape_size (default: 10) on a side")
     v_x_coord <- runif(n = n_patch, min = 0, max = landscape_size)
     v_y_coord <- runif(n = n_patch, min = 0, max = landscape_size)
     m_distance <- data.matrix(dist(cbind(v_x_coord, v_y_coord), diag = TRUE, upper = TRUE))
@@ -131,7 +132,11 @@ mcsim <- function(n_warmup = 200,
     diag(m_dispersal) <- 0
   }
 
-  if(!(length(p_dispersal) == 1 | length(p_dispersal) == n_species)) stop("p_dispersal must have length of one or n_species")
+  if (length(p_dispersal) == 1) {
+    print("Only one dispersal probability is given: the model will assume dispersal probability is the same for all species")
+  } else {
+    if (length(p_dispersal) != n_species) stop("p_dispersal must have length of one or n_species")
+  }
 
   # dynamics ----------------------------------------------------------------
 
@@ -210,6 +215,11 @@ mcsim <- function(n_warmup = 200,
             labs(color = "Environmental \ndeviation")
     print(g)
   }
+
+  colnames(m_distance) <- sapply(X = seq_len(n_patch), function(x) paste0("patch_", x))
+  rownames(m_distance) <- sapply(X = seq_len(n_patch), function(x) paste0("patch_", x))
+  colnames(m_interaction) <- sapply(X = seq_len(n_species), function(x) paste0("sp_", x))
+  rownames(m_interaction) <- sapply(X = seq_len(n_species), function(x) paste0("sp_", x))
 
   return(list(dynamics = dplyr::as_tibble(m_dynamics),
               distance_matrix = m_distance,
