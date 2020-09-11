@@ -7,7 +7,7 @@ Akira Terui
   - [Overview](#overview)
   - [Installation](#installation)
   - [Instruction](#instruction)
-      - [`brnet()`: Basics](#brnet-basics)
+      - [`brnet()`](#brnet)
       - [`brnet()`: Customization](#brnet-customization)
   - [References](#references)
 
@@ -27,7 +27,7 @@ The package `mcbrnet` is composed of two functions: `brnet()` and
   - `mcsim`: Function `mcsim()` simulates metacommunity dynamics. By
     default, it produces a square-shaped landscape with randomly
     distributed habitat patches (x- and y-coordinates are drawn from a
-    uniform distribution). If distance matrix is given, the function
+    uniform distribution). If a distance matrix is given, the function
     simulates metacommunity dynamics in the specified landscape.
     Function `mcsim()` follows a general framework proposed by Thompson
     et al. (2020). However, it has several unique features that are
@@ -45,11 +45,14 @@ library(mcbrnet)
 
 # Instruction
 
-## `brnet()`: Basics
+## `brnet()`
+
+### Basic function
 
 The function `brnet()` generates a random branching network. The key
 arguments are the number of habitat patches (`n_patch`) and probability
-of branching (`p_branch`), which the user must specify. The branching
+of branching (`p_branch`), which the user must specify (otherwise, it
+will be set to be `n_patch = 100` and `p_branch = 0.5`). The branching
 network will be generated through the following steps:
 
 1.  Determine the number of branches in the network. An individual
@@ -60,22 +63,60 @@ network will be generated through the following steps:
     n_patch, prob = p_branch)`.
 
 2.  Determine the number of patches in each branch. The number of
-    patches in a branch `v_n_patch_branch` is drawn from a geometric
+    patches in each branch `v_n_patch_branch` is drawn from a geometric
     distribution as `v_n_patch_branch = rgeom(n = n_branch, prob =
     p_branch) + 1`.
 
 3.  Organize branches into a bifurcating branching network.
 
 The following script produce a branching network with `n_patch = 50` and
-`p_branch = 0.5` and returns adjacency and distance matrices. By
-default, the function visualizes the generated network using functions
-in package `igraph` (Csardi and Nepusz 2006):
+`p_branch = 0.5`, returning adjacency and distance matrices. By default,
+the function visualizes the generated network using functions in package
+`igraph` (Csardi and Nepusz 2006):
 
 ``` r
 net <- brnet(n_patch = 50, p_branch = 0.5)
 ```
 
 ![](README_files/figure-gfm/brnet_instruction_1-1.png)<!-- -->
+
+To view matrices, type the following script:
+
+``` r
+# adjacency matrix
+# select initial 10 patches for example
+net$adjacency_matrix[1:10, 1:10]
+```
+
+    ##       [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10]
+    ##  [1,]    0    0    0    0    0    0    0    0    0     0
+    ##  [2,]    0    0    1    0    0    0    0    0    0     0
+    ##  [3,]    0    1    0    0    0    0    0    0    0     0
+    ##  [4,]    0    0    0    0    1    0    0    0    0     0
+    ##  [5,]    0    0    0    1    0    0    0    0    0     0
+    ##  [6,]    0    0    0    0    0    0    1    0    0     0
+    ##  [7,]    0    0    0    0    0    1    0    1    0     0
+    ##  [8,]    0    0    0    0    0    0    1    0    1     0
+    ##  [9,]    0    0    0    0    0    0    0    1    0     1
+    ## [10,]    0    0    0    0    0    0    0    0    1     0
+
+``` r
+# distance matrix
+# select initial 10 patches for example
+net$distance_matrix[1:10, 1:10]
+```
+
+    ##       [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10]
+    ##  [1,]    0   10   11    4    5    3    4    5    6     7
+    ##  [2,]   10    0    1   10   11    7    6    5    4     5
+    ##  [3,]   11    1    0   11   12    8    7    6    5     6
+    ##  [4,]    4   10   11    0    1    3    4    5    6     7
+    ##  [5,]    5   11   12    1    0    4    5    6    7     8
+    ##  [6,]    3    7    8    3    4    0    1    2    3     4
+    ##  [7,]    4    6    7    4    5    1    0    1    2     3
+    ##  [8,]    5    5    6    5    6    2    1    0    1     2
+    ##  [9,]    6    4    5    6    7    3    2    1    0     1
+    ## [10,]    7    5    6    7    8    4    3    2    1     0
 
 ## `brnet()`: Customization
 
