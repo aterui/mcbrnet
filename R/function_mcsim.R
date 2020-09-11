@@ -216,10 +216,8 @@ mcsim <- function(n_warmup = 200,
     print(g)
   }
 
-  colnames(m_distance) <- sapply(X = seq_len(n_patch), function(x) paste0("patch_", x))
-  rownames(m_distance) <- sapply(X = seq_len(n_patch), function(x) paste0("patch_", x))
-  colnames(m_interaction) <- sapply(X = seq_len(n_species), function(x) paste0("sp_", x))
-  rownames(m_interaction) <- sapply(X = seq_len(n_species), function(x) paste0("sp_", x))
+  colnames(m_distance) <- rownames(m_distance) <- sapply(X = seq_len(n_patch), function(x) paste0("patch", x))
+  colnames(m_interaction) <- rownames(m_interaction) <- sapply(X = seq_len(n_species), function(x) paste0("sp", x))
 
   return(list(dynamics = dplyr::as_tibble(m_dynamics),
               distance_matrix = m_distance,
