@@ -117,7 +117,7 @@ brnet <- function(n_patch = 100,
       list_confluence <- lapply(seq_len(nrow(m_po)), function(x) cbind(v_end_id[m_po[x, 1]], v_start_id[m_po[x, 2]]))
       m_confluence <- do.call(rbind, list_confluence)
       m_confluence <- rbind(m_confluence, m_confluence[, c(2, 1)])
-    }else{
+    } else {
       n_confluence <- 0.5 * (n_branch - 1)
       v_parent_branch <- 1:n_confluence
       v_offspg_branch <- 2:n_branch
@@ -136,7 +136,7 @@ brnet <- function(n_patch = 100,
       list_confluence <- lapply(seq_len(nrow(m_po)), function(x) cbind(v_end_id[m_po[x, 1]], v_start_id[m_po[x, 2]]))
       m_confluence <- do.call(rbind, list_confluence)
       m_confluence <- rbind(m_confluence, m_confluence[, c(2, 1)])
-    }# ifelse
+    }
 
     m_neighbor_patch <- rbind(m_neighbor_inbranch, m_confluence)
     m_neighbor_patch <- m_neighbor_patch[complete.cases(m_neighbor_patch), ]
@@ -210,10 +210,10 @@ brnet <- function(n_patch = 100,
       v_env <- v_env[df_id$patch]
       m_adj <- m_adj[df_id$patch, df_id$patch]
       m_distance <- m_distance[df_id$patch, df_id$patch]
-    }else{
+    } else {
       df_id <- data.frame(branch = 1, patch = 1:n_patch)
     }
-  }else{
+  } else {
     df_id <- data.frame(branch = branch, patch = patch)
   }
 
@@ -236,9 +236,16 @@ brnet <- function(n_patch = 100,
     text(x = pc[1], y = pc[2], labels = "Environmental value", adj = 1)
   }
 
+
+  # return ------------------------------------------------------------------
+
+  rownames(m_adj) <- colnames(m_adj) <- sapply(seq_len(n_patch), function(x) paste0("patch", x))
+  rownames(m_distance) <- colnames(m_distance) <- sapply(seq_len(n_patch), function(x) paste0("patch", x))
+
   return(list(adjacency_matrix = m_adj,
               distance_matrix = m_distance,
-              environment = c(v_env),
-              watershed_area = c(v_wa),
-              branch_id = as.numeric(df_id$branch)))
+              patch_df = dplyr::tibble(patch_id = 1:n_patch,
+                                       branch_id = as.numeric(df_id$branch),
+                                       environment = c(v_env),
+                                       n_patch_upstream = c(v_wa))))
 }
