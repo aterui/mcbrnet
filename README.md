@@ -19,9 +19,9 @@ The package `mcbrnet` is composed of two functions: `brnet()` and
     with the specified number of patches and probability of branching.
     The function returns adjacency and distance matrices, hypothetical
     environmental values at each patch, and the number of patches
-    upstream (akin to watershed area in river networks). The output may
-    be used in function `mcsim()` to simulate metacommunity dynamics in
-    a branching network.
+    upstream (akin to the watershed area in river networks). The output
+    may be used in function `mcsim()` to simulate metacommunity dynamics
+    in a branching network.
 
   - `mcsim`: Function `mcsim()` simulates metacommunity dynamics. By
     default, it produces a square-shaped landscape with randomly
@@ -46,7 +46,7 @@ library(mcbrnet)
 
 ## `brnet()`
 
-### Basic function
+### Basic use
 
 The function `brnet()` generates a random branching network. The key
 arguments are the number of habitat patches (`n_patch`) and probability
@@ -57,23 +57,34 @@ network will be generated through the following steps:
 1.  Draw the number of branches in the network. An individual branch is
     defined as a series of connected patches from one confluence (or
     outlet) to the next confluence upstream (or upstream terminal). The
-    number of branches in a network N<sub>br</sub> is drawn from a
-    binomial distribution as N<sub>br</sub> \~ Binomial(N,
-    P<sub>br</sub>), where N is the number of patches and P<sub>br</sub>
-    is the branching probability.
+    number of branches in a network BR is drawn from a binomial
+    distribution as BR \~ Binomial(N, P<sub>br</sub>), where N is the
+    number of patches and P<sub>br</sub> is the branching probability.
 
 2.  Draw the number of patches in each branch. The number of patches in
-    each branch N<sub>bp</sub> is drawn from a geometric distribution as
-    N<sub>bp</sub> \~ Ge(P<sub>br</sub>) but conditional on
-    ΣN<sub>bp</sub> = N.
+    each branch N<sub>br</sub> is drawn from a geometric distribution as
+    N<sub>br</sub> \~ Ge(P<sub>br</sub>) but conditional on
+    ΣN<sub>br</sub> = N.
 
 3.  Organize branches into a bifurcating branching network.
 
+The function returns:
+
+  - `adjacency_matrix`: adjacency matrix.
+  - `distance_matrix`: distance matrix. Distance between patches is
+    measured as the number of patches required to reach from the focal
+    patch to the target patch along the network.
+  - `patch_df`: data frame. This data frame (`dplyr::tibble`) contains
+    unique patch ID `patch_id`, unique branch ID `branch_id`,
+    environmental value `environment` (see below for details), and the
+    number of upstream contributing patches `n_patch_upstream`
+    (including the focal patch itself; akin to the watershed area in
+    river networks).
+
 The following script produce a branching network with `n_patch = 50` and
-`p_branch = 0.5`, returning adjacency and distance matrices. By default,
-`brnet()` visualizes the generated network using functions in packages
-`igraph` (Csardi and Nepusz 2006) and `plotfunctions` (van Rij 2020)
-(`plot = FALSE` to disable):
+`p_branch = 0.5`. By default, `brnet()` visualizes the generated network
+using functions in packages `igraph` (Csardi and Nepusz 2006) and
+`plotfunctions` (van Rij 2020) (`plot = FALSE` to disable):
 
 ``` r
 net <- brnet(n_patch = 50, p_branch = 0.5)
@@ -83,8 +94,7 @@ net <- brnet(n_patch = 50, p_branch = 0.5)
 
 Patches are colored in accordance with randomly generated environmental
 values, and the size of patches is proportional to the number of patches
-upstream (see **Customization** for details). To view matrices, type the
-following script:
+upstream. To view matrices, type the following script:
 
 ``` r
 # adjacency matrix
@@ -92,17 +102,17 @@ following script:
 net$adjacency_matrix[1:10, 1:10]
 ```
 
-    ##       [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10]
-    ##  [1,]    0    0    0    0    0    0    0    0    0     0
-    ##  [2,]    0    0    1    0    0    0    0    0    0     0
-    ##  [3,]    0    1    0    0    0    0    0    0    0     0
-    ##  [4,]    0    0    0    0    1    0    0    0    0     0
-    ##  [5,]    0    0    0    1    0    0    0    0    0     0
-    ##  [6,]    0    0    0    0    0    0    1    0    0     0
-    ##  [7,]    0    0    0    0    0    1    0    1    0     0
-    ##  [8,]    0    0    0    0    0    0    1    0    1     0
-    ##  [9,]    0    0    0    0    0    0    0    1    0     1
-    ## [10,]    0    0    0    0    0    0    0    0    1     0
+    ##         patch1 patch2 patch3 patch4 patch5 patch6 patch7 patch8 patch9 patch10
+    ## patch1       0      0      0      0      0      0      0      0      0       0
+    ## patch2       0      0      1      0      0      0      0      0      0       0
+    ## patch3       0      1      0      0      0      0      0      0      0       0
+    ## patch4       0      0      0      0      1      0      0      0      0       0
+    ## patch5       0      0      0      1      0      0      0      0      0       0
+    ## patch6       0      0      0      0      0      0      1      0      0       0
+    ## patch7       0      0      0      0      0      1      0      1      0       0
+    ## patch8       0      0      0      0      0      0      1      0      1       0
+    ## patch9       0      0      0      0      0      0      0      1      0       1
+    ## patch10      0      0      0      0      0      0      0      0      1       0
 
 ``` r
 # distance matrix
@@ -110,26 +120,45 @@ net$adjacency_matrix[1:10, 1:10]
 net$distance_matrix[1:10, 1:10]
 ```
 
-    ##       [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10]
-    ##  [1,]    0   10   11    4    5    3    4    5    6     7
-    ##  [2,]   10    0    1   10   11    7    6    5    4     5
-    ##  [3,]   11    1    0   11   12    8    7    6    5     6
-    ##  [4,]    4   10   11    0    1    3    4    5    6     7
-    ##  [5,]    5   11   12    1    0    4    5    6    7     8
-    ##  [6,]    3    7    8    3    4    0    1    2    3     4
-    ##  [7,]    4    6    7    4    5    1    0    1    2     3
-    ##  [8,]    5    5    6    5    6    2    1    0    1     2
-    ##  [9,]    6    4    5    6    7    3    2    1    0     1
-    ## [10,]    7    5    6    7    8    4    3    2    1     0
+    ##         patch1 patch2 patch3 patch4 patch5 patch6 patch7 patch8 patch9 patch10
+    ## patch1       0     10     11      4      5      3      4      5      6       7
+    ## patch2      10      0      1     10     11      7      6      5      4       5
+    ## patch3      11      1      0     11     12      8      7      6      5       6
+    ## patch4       4     10     11      0      1      3      4      5      6       7
+    ## patch5       5     11     12      1      0      4      5      6      7       8
+    ## patch6       3      7      8      3      4      0      1      2      3       4
+    ## patch7       4      6      7      4      5      1      0      1      2       3
+    ## patch8       5      5      6      5      6      2      1      0      1       2
+    ## patch9       6      4      5      6      7      3      2      1      0       1
+    ## patch10      7      5      6      7      8      4      3      2      1       0
+
+The following script lets you view branch ID, environmental values, and
+the number of upstream contributing patches for each patch:
+
+``` r
+net$patch_df
+```
+
+    ## # A tibble: 50 x 4
+    ##    patch_id branch_id environment n_patch_upstream
+    ##       <int>     <dbl>       <dbl>            <dbl>
+    ##  1        1         1      -0.481               50
+    ##  2        2        12      -1.13                 2
+    ##  3        3        12      -0.974                1
+    ##  4        4        10       0.303                6
+    ##  5        5        10       0.370                5
+    ##  6        6         3      -0.431               26
+    ##  7        7         3      -0.345               25
+    ##  8        8         3      -0.595               24
+    ##  9        9         3      -0.594               23
+    ## 10       10        11      -0.180                6
+    ## # ... with 40 more rows
 
 ### Customization
 
-`brnet()` also returns (1) environmental values and (2) the number of
-upstream patches (including the focal patch itself; akin to watershed
-area in river networks) at each patch. These values are provided to
-facilitate simulations using `mcsim()` (see Section `mcsim()`).
-Environmental values are determined through an autoregressive process as
-follows:
+The user can change settings of how to simulate environmental values at
+each patch. Environmental values are determined through an
+autoregressive process, as detailed below:
 
 1.  Environmental values for upstream terminal patches (i.e., patches
     with no upstream patch) are drawn from a uniform distribution as
@@ -163,15 +192,6 @@ net <- brnet(n_patch = 50, p_branch = 0.5,
 ```
 
 ![](README_files/figure-gfm/brnet_instruction_2-1.png)<!-- -->
-
-The following script lets you view branch ID, environmental values, and
-the number of upstream contributing patches for each patch:
-
-``` r
-net$patch_df
-```
-
-    ## NULL
 
 # References
 
