@@ -5,43 +5,51 @@
 \title{Generate a random branching network}
 \usage{
 brnet(
-  n_patch = 100,
-  p_branch = 0.5,
+  n_patch,
+  p_branch,
   min_env = -1,
   max_env = 1,
   rho = 1,
   sd_env = 0.1,
   randomize_patch = TRUE,
-  plot = TRUE
+  plot = TRUE,
+  patch_label = NULL,
+  vertex_size = 3,
+  patch_size = FALSE,
+  vertex_scale = 10
 )
 }
 \arguments{
-\item{n_patch}{number of patches in a network.}
+\item{n_patch}{numeric value indicating the number of patches in a network.}
 
-\item{p_branch}{branching probability (success probability of a geometric distribution).}
+\item{p_branch}{numeric value indicating the branching probability (success probability of a geometric distribution).}
 
-\item{min_env}{minimum value of environmental condition in source streams (minimum of a uniform distribution).}
+\item{min_env}{numeric value indicating minimum value of environmental condition in source streams (minimum of a uniform distribution).}
 
-\item{max_env}{maximum value of environmental condition in source streams (maximum of a uniform distribution).}
+\item{max_env}{numeric value indicating maximum value of environmental condition in source streams (maximum of a uniform distribution).}
 
-\item{rho}{strength of spatial autocorrelation in environmental condition. The environmental condition at patch i \eqn{x}\out{<sub>i</sub>} is determined as \eqn{x}\out{<sub>i</sub>}\eqn{ = \rho}x\out{<sub>i-1</sub>}\eqn{ + \epsilon}\out{<sub>i</sub>}, where \eqn{\epsilon}\out{<sub>i</sub>} is the random variable drawn from a normal distribution with mean 0 and SD \eqn{\sigma}\out{<sub>env</sub>}.}
+\item{rho}{numeric value indicating the strength of spatial autocorrelation in environmental condition. The environmental condition at patch i \eqn{x}\out{<sub>i</sub>} is determined as \eqn{x}\out{<sub>i</sub>}\eqn{ = \rho}x\out{<sub>i-1</sub>}\eqn{ + \epsilon}\out{<sub>i</sub>}, where \eqn{\epsilon}\out{<sub>i</sub>} is the random variable drawn from a normal distribution with mean 0 and SD \eqn{\sigma}\out{<sub>env</sub>}.}
 
-\item{sd_env}{SD of environmental noise (\eqn{\sigma}\out{<sub>env</sub>}).}
+\item{sd_env}{numeric value indicating the SD of spatial environmental noise (\eqn{\sigma}\out{<sub>env</sub>}).}
 
 \item{randomize_patch}{logical indicating whether randomize patches or not. If \code{FALSE}, the function may generate a biased network with ordered patches. Default \code{TRUE}.}
 
-\item{plot}{logical. If \code{FALSE}, a plot of the generated network will not be shown. Default \code{TRUE}.}
+\item{plot}{logical indicating if a plot should be shown or not. If \code{FALSE}, a plot of the generated network will not be shown. Default \code{TRUE}.}
+
+\item{patch_label}{character string indicating a type of patch label (either \code{"patch", "branch", "n_upstream"}). \code{"patch"} shows patch ID, \code{"branch"} branch ID, and \code{"n_upstream"} the number of upstream contributing patches. If \code{NULL}, no label will be shown on patches in the plot. Default \code{NULL}.}
+
+\item{vertex_size}{vertex (patch) size in the plot. Default 3.}
+
+\item{patch_size}{logical. If \code{TRUE}, vertex size will be proportional to the number of upstream contributing patches. The vertex size will be equal to \code{0.3 * vertex_scale} at the upstream terminals and \code{1.3 * vertex_scale} at the root. Overrides \code{vertex_size}.}
+
+\item{vertex_scale}{numeric value scaling vertex size. Enabled if \code{patch_size = TRUE}.}
 }
 \value{
 \code{adjacency_matrix} adjacency matrix for the generated network.
 
 \code{distance_matrix} distance matrix for the generated network.
 
-\code{environment} environmental values for patches.
-
-\code{watershed_area} number of patches upstream. Patch 1 is set to be the root patch (i.e., outlet).
-
-\code{branch_id} branch id for each patch.
+\code{patch_df} a data frame containing patch attributes.
 }
 \description{
 Generate a random branching network
