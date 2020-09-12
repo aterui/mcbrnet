@@ -49,9 +49,9 @@ library(mcbrnet)
 ### Basic usage
 
 The key arguments are the number of habitat patches (`n_patch`) and
-probability of branching (`p_branch`), which the user must specify
-(otherwise, it will be set as `n_patch = 100` and `p_branch = 0.5`). The
-branching network will be generated through the following steps:
+probability of branching (`p_branch`), which users must specify. Using
+these parameters, the function generates a branching network through the
+following steps:
 
 1.  Draw the number of branches in the network. An individual branch is
     defined as a series of connected patches from one confluence (or
@@ -97,7 +97,7 @@ upstream. To view matrices, type the following script:
 
 ``` r
 # adjacency matrix
-# select initial 10 patches for example
+# showing 10 patches for example
 net$adjacency_matrix[1:10, 1:10]
 ```
 
@@ -115,7 +115,7 @@ net$adjacency_matrix[1:10, 1:10]
 
 ``` r
 # distance matrix
-# select initial 10 patches for example
+# showing 10 patches for example
 net$distance_matrix[1:10, 1:10]
 ```
 
