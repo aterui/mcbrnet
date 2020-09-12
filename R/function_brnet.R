@@ -1,19 +1,21 @@
 #' Generate a random branching network
 #'
-#' @param n_patch number of patches in a network.
-#' @param p_branch branching probability (success probability of a geometric distribution).
-#' @param min_env minimum value of environmental condition in source streams (minimum of a uniform distribution).
-#' @param max_env maximum value of environmental condition in source streams (maximum of a uniform distribution).
-#' @param rho strength of spatial autocorrelation in environmental condition. The environmental condition at patch i \eqn{x}\out{<sub>i</sub>} is determined as \eqn{x}\out{<sub>i</sub>}\eqn{ = \rho}x\out{<sub>i-1</sub>}\eqn{ + \epsilon}\out{<sub>i</sub>}, where \eqn{\epsilon}\out{<sub>i</sub>} is the random variable drawn from a normal distribution with mean 0 and SD \eqn{\sigma}\out{<sub>env</sub>}.
-#' @param sd_env SD of environmental noise (\eqn{\sigma}\out{<sub>env</sub>}).
+#' @param n_patch numeric value indicating the number of patches in a network.
+#' @param p_branch numeric value indicating the branching probability (success probability of a geometric distribution).
+#' @param min_env numeric value indicating minimum value of environmental condition in source streams (minimum of a uniform distribution).
+#' @param max_env numeric value indicating maximum value of environmental condition in source streams (maximum of a uniform distribution).
+#' @param rho numeric value indicating the strength of spatial autocorrelation in environmental condition. The environmental condition at patch i \eqn{x}\out{<sub>i</sub>} is determined as \eqn{x}\out{<sub>i</sub>}\eqn{ = \rho}x\out{<sub>i-1</sub>}\eqn{ + \epsilon}\out{<sub>i</sub>}, where \eqn{\epsilon}\out{<sub>i</sub>} is the random variable drawn from a normal distribution with mean 0 and SD \eqn{\sigma}\out{<sub>env</sub>}.
+#' @param sd_env numeric value indicating the SD of spatial environmental noise (\eqn{\sigma}\out{<sub>env</sub>}).
 #' @param randomize_patch logical indicating whether randomize patches or not. If \code{FALSE}, the function may generate a biased network with ordered patches. Default \code{TRUE}.
-#' @param plot logical. If \code{FALSE}, a plot of the generated network will not be shown. Default \code{TRUE}.
+#' @param plot logical indicating if a plot should be shown or not. If \code{FALSE}, a plot of the generated network will not be shown. Default \code{TRUE}.
+#' @param patch_label character string indicating a type of patch label (either \code{"patch", "branch", "n_upstream"}). \code{"patch"} shows patch ID, \code{"branch"} branch ID, and \code{"n_upstream"} the number of upstream contributing patches. If \code{NULL}, no label will be shown on patches in the plot. Default \code{NULL}.
+#' @param vertex_size vertex (patch) size in the plot. Default 3.
+#' @param patch_size logical. If \code{TRUE}, vertex size will be proportional to the number of upstream contributing patches. The vertex size will be equal to \code{0.3 * vertex_scale} at the upstream terminals and \code{1.3 * vertex_scale} at the root. Overrides \code{vertex_size}.
+#' @param vertex_scale numeric value scaling vertex size. Enabled if \code{patch_size = TRUE}.
 #'
 #' @return \code{adjacency_matrix} adjacency matrix for the generated network.
 #' @return \code{distance_matrix} distance matrix for the generated network.
-#' @return \code{environment} environmental values for patches.
-#' @return \code{watershed_area} number of patches upstream. Patch 1 is set to be the root patch (i.e., outlet).
-#' @return \code{branch_id} branch id for each patch.
+#' @return \code{patch_df} a data frame containing patch attributes.
 #'
 #' @importFrom dplyr %>%
 #' @importFrom grDevices grey
@@ -34,7 +36,11 @@ brnet <- function(n_patch,
                   rho = 1,
                   sd_env = 0.1,
                   randomize_patch = TRUE,
-                  plot = TRUE) {
+                  plot = TRUE,
+                  patch_label = NULL,
+                  vertex_size = 3,
+                  patch_size = FALSE,
+                  vertex_scale = 10) {
 
   # define functions and variables ------------------------------------------
 
@@ -205,7 +211,7 @@ brnet <- function(n_patch,
 
   if (randomize_patch == TRUE) {
     if (n_branch > 1) {
-      df_id <- data.frame(branch = as.character(c(1, resample(2:n_branch)))) %>%
+      df_id <- dplyr::tibble(branch = as.character(c(1, resample(2:n_branch)))) %>%
         dplyr::left_join(data.frame(patch, branch = as.character(branch)), by = "branch")
       v_wa <- v_wa[df_id$patch]
       v_env <- v_env[df_id$patch]
@@ -225,12 +231,31 @@ brnet <- function(n_patch,
     adj <- igraph::graph.adjacency(adjmatrix = m_adj, mode = "undirected")
     colvalue <- data.frame(color = viridis::viridis(n_patch, alpha = 0.6), value = sort(v_env))
     layout_tree <- igraph::layout_as_tree(adj, root = 1, flip.y = F)
-    par(mar = c(5, 8, 4, 3))
+
+    if (is.null(patch_label)) {
+      vertex_label <- NA
+    } else {
+      if (patch_label == "patch") vertex_label <- 1:n_patch
+      if (patch_label == "branch") vertex_label <- df_id$branch
+      if (patch_label == "n_upstream") vertex_label <- v_wa
+      if (!(patch_label %in% c("patch", "branch", "n_upstream"))) stop("patch_label must be either patch, branch, or n_upstrem")
+    }
+
+    if (patch_size == TRUE) {
+      vertex_size <- I(scale(v_wa, center = min(v_wa), scale = max(v_wa) - min(v_wa)) + 0.3) * vertex_scale
+    }
+
     igraph::plot.igraph(adj, layout = layout_tree,
-                        vertex.size = I(scale(v_wa, center = min(v_wa), scale = max(v_wa) - min(v_wa)) + 0.3) * 10,
-                        vertex.label = NA,
+                        vertex.size = vertex_size,
+                        vertex.label = vertex_label,
+                        vertex.label.cex = 0.8,
+                        vertex.label.dist = 0.8,
+                        vertex.label.degree = pi,
+                        vertex.label.color = grey(0.3),
                         vertex.frame.color = grey(0.5),
-                        vertex.color = colvalue$color[match(v_env, colvalue$value)])
+                        vertex.color = colvalue$color[match(v_env, colvalue$value)],
+                        edge.width = 1.8,
+                        edge.color = "steelblue")
     plotfunctions::gradientLegend(valRange = range(v_env), color = viridis::viridis(n_patch),
                                   pos = 0.8, side = 2, dec = 2)
     pc <- c(plotfunctions::getCoords(0, side = 1), plotfunctions::getCoords(1, side = 2))
