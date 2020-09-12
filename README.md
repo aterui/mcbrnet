@@ -155,9 +155,8 @@ net$patch_df
 
 ### Customization
 
-There is some flexibility in how to simulate environmental values at
-each patch. Environmental values are determined through an
-autoregressive process, as detailed below:
+There is some flexibility in how to simulate environmental values, which
+are determined through an autoregressive process, as detailed below:
 
 1.  Environmental values for upstream terminal patches (i.e., patches
     with no upstream patch) are drawn from a uniform distribution as
@@ -173,8 +172,8 @@ autoregressive process, as detailed below:
     ω)(ρz<sub>2,x-1</sub> + ε<sub>2,x</sub>), where ω =
     s<sub>1</sub>/(s<sub>1</sub> + s<sub>2</sub>).
 
-The users can change the values of `min_env` (default: min<sub>env</sub>
-= -1), `max_env` (max<sub>env</sub> = 1), `rho` (ρ = 1), and `sd_env`
+Users may change the values of `min_env` (default: min<sub>env</sub> =
+-1), `max_env` (max<sub>env</sub> = 1), `rho` (ρ = 1), and `sd_env`
 (σ<sub>env</sub> = 0.1). Increasing the range of `min_env` and
 `max_env` leads to greater variation in environmental values at upstream
 terminals. `rho` (0 ≤ ρ ≤ 1) determines the strength of longitudinal
