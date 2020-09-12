@@ -46,13 +46,12 @@ library(mcbrnet)
 
 ## `brnet()`
 
-### Basic use
+### Basic usage
 
-The function `brnet()` generates a random branching network. The key
-arguments are the number of habitat patches (`n_patch`) and probability
-of branching (`p_branch`), which the user must specify (otherwise, it
-will be set as `n_patch = 100` and `p_branch = 0.5`). The branching
-network will be generated through the following steps:
+The key arguments are the number of habitat patches (`n_patch`) and
+probability of branching (`p_branch`), which the user must specify
+(otherwise, it will be set as `n_patch = 100` and `p_branch = 0.5`). The
+branching network will be generated through the following steps:
 
 1.  Draw the number of branches in the network. An individual branch is
     defined as a series of connected patches from one confluence (or
@@ -156,7 +155,7 @@ net$patch_df
 
 ### Customization
 
-The user can change settings of how to simulate environmental values at
+There is some flexibility in how to simulate environmental values at
 each patch. Environmental values are determined through an
 autoregressive process, as detailed below:
 
@@ -181,10 +180,10 @@ The users can change the values of `min_env` (default: min<sub>env</sub>
 terminals. `rho` (0 ≤ ρ ≤ 1) determines the strength of longitudinal
 autocorrelation (the greater the stronger autocorrelation). `sd_env`
 (σ<sub>env</sub> \> 0) determines the strength of local environmental
-noise. The following script produce a network with greater environmental
-variation at upstream terminals (z<sub>1</sub> \~ Uniform(-3, 3)),
-weaker longitudinal autocorrelation (ρ = 0.5), and stronger local noises
-(σ<sub>env</sub> = 0.5).
+noise. The following script produces a network with greater
+environmental variation at upstream terminals (z<sub>1</sub> \~
+Uniform(-3, 3)), weaker longitudinal autocorrelation (ρ = 0.5), and
+stronger local noises (σ<sub>env</sub> = 0.5).
 
 ``` r
 net <- brnet(n_patch = 50, p_branch = 0.5,
