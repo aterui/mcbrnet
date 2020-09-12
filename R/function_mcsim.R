@@ -85,10 +85,12 @@ mcsim <- function(n_species = 5,
 
   if (any(r0 < 1)) stop("r0 must be greater than or equal to one")
   if (length(r0) == 1) {
+    v_r0 <- rep(x = r0, times = n_species)
     m_r0 <- matrix(rep(x = r0, times = n_species * n_patch), nrow = n_species, ncol = n_patch)
   } else {
     if (length(r0) != n_species) stop("r0 must have length of one or n_species")
-    m_r0 <- matrix(rep(x = r0, times = n_patch), nrow = n_species, ncol = n_patch)
+    v_r0 <- r0
+    m_r0 <- matrix(rep(x = v_r0, times = n_patch), nrow = n_species, ncol = n_patch)
   }
 
   # environmental variation among patches
@@ -134,8 +136,10 @@ mcsim <- function(n_species = 5,
 
   if (length(p_dispersal) == 1) {
     print("Only one dispersal probability is given: the model will assume dispersal probability is the same for all species")
+    v_p_dispersal <- rep(x = p_dispersal, times = n_species)
   } else {
     if (length(p_dispersal) != n_species) stop("p_dispersal must have length of one or n_species")
+    v_p_dispersal <- p_dispersal
   }
 
   # dynamics ----------------------------------------------------------------
@@ -175,7 +179,7 @@ mcsim <- function(n_species = 5,
     m_r_xt <- m_r0 * exp(- ((m_mu - m_z_xt) / (sqrt(2) * sd_niche_width))^2)
     m_n_hat <- (m_n * m_r_xt) / (1 + ((m_r0 - 1) / m_k) * (m_interaction %*% m_n))
 
-    m_e_hat <- m_n_hat * p_dispersal
+    m_e_hat <- m_n_hat * v_p_dispersal
     v_e_sum <- rowSums(m_e_hat)
     m_i_raw <- m_e_hat %*% m_dispersal
     v_i_sum <- rowSums(m_i_raw)
@@ -201,25 +205,37 @@ mcsim <- function(n_species = 5,
   }
   close(pb)
 
+
+  # visualization -----------------------------------------------------------
+
   if (plot == TRUE) {
     sample_patch <- sample(1:n_patch, size = min(c(n_patch, 5)), replace = FALSE)
     sample_species <- sample(1:n_species, size = min(c(n_species, 5)), replace = FALSE)
 
     g <- dplyr::as_tibble(m_dynamics) %>%
-            dplyr::filter(.data$patch %in% sample_patch, .data$species %in% sample_species) %>%
-            ggplot() +
-            facet_grid(rows = vars(.data$species), cols = vars(.data$patch),
-                       labeller = labeller(.rows = label_both, .cols = label_both)) +
-            geom_line(mapping = aes(x = .data$timestep, y = .data$abundance, color = abs(.data$niche_optim - .data$env))) +
-            scale_color_viridis_c(alpha = 0.8) +
-            labs(color = "Environmental \ndeviation")
+           dplyr::filter(.data$patch %in% sample_patch, .data$species %in% sample_species) %>%
+           ggplot() +
+           facet_grid(rows = vars(.data$species), cols = vars(.data$patch),
+                      labeller = labeller(.rows = label_both, .cols = label_both)) +
+           geom_line(mapping = aes(x = .data$timestep, y = .data$abundance, color = abs(.data$niche_optim - .data$env))) +
+           scale_color_viridis_c(alpha = 0.8) +
+           labs(color = "Environmental \ndeviation")
     print(g)
   }
+
+
+  # return ------------------------------------------------------------------
 
   colnames(m_distance) <- rownames(m_distance) <- sapply(X = seq_len(n_patch), function(x) paste0("patch", x))
   colnames(m_interaction) <- rownames(m_interaction) <- sapply(X = seq_len(n_species), function(x) paste0("sp", x))
 
-  return(list(dynamics = dplyr::as_tibble(m_dynamics),
+  species_df <- dplyr::as_tibble(m_dynamics) %>%
+                  dplyr::group_by(species) %>%
+                  dplyr::summarise(mean_abundance = mean(abundance)) %>%
+                  dplyr::right_join(dplyr::tibble(species = 1:n_species, r0 = v_r0, niche_optim = v_mu, p_dispersal = v_p_dispersal), by = "species")
+
+  return(list(dynamics_df = dplyr::as_tibble(m_dynamics),
+              species_df = species_df,
               distance_matrix = m_distance,
               interaction_matrix = m_interaction))
 }
