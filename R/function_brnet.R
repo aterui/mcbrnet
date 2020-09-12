@@ -27,8 +27,8 @@
 #'
 #' @export
 #'
-brnet <- function(n_patch = 100,
-                  p_branch = 0.5,
+brnet <- function(n_patch,
+                  p_branch,
                   min_env = -1,
                   max_env = 1,
                   rho = 1,
