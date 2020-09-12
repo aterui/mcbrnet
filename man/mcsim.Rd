@@ -5,12 +5,12 @@
 \title{Simulate metacommunity dynamics}
 \usage{
 mcsim(
+  n_species = 5,
+  n_patch = 5,
   n_warmup = 200,
   n_burnin = 200,
   n_timestep = 1000,
   propagule_interval = NULL,
-  n_species = 5,
-  n_patch = 5,
   carrying_capacity = 100,
   interaction_type = "constant",
   alpha = 0,
@@ -32,6 +32,10 @@ mcsim(
 )
 }
 \arguments{
+\item{n_species}{numeric scalar. Number of species in a metacommunity.}
+
+\item{n_patch}{numeric scalar. Number of patches in a metacommunity.}
+
 \item{n_warmup}{numeric scalar. Number of time-steps for warm-up.}
 
 \item{n_burnin}{numeric scalar. Number of time-steps for burn-in.}
@@ -39,10 +43,6 @@ mcsim(
 \item{n_timestep}{numeric scalar. Number of time-steps to be saved.}
 
 \item{propagule_interval}{numeric scalar. Time interval for propagule introduction during warm-up. If \code{NULL}, a value of \code{ceiling(n_warmup / 10)} will be used.}
-
-\item{n_species}{numeric scalar. Number of species in a metacommunity.}
-
-\item{n_patch}{numeric scalar. Number of patches in a metacommunity.}
 
 \item{carrying_capacity}{numeric scalar or vector (length should be equal to the number of patches). Carrying capacities of individual patches.}
 
