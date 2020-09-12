@@ -82,6 +82,7 @@ brnet <- function(n_patch = 100,
   # adjacency matrix: linear network ----------------------------------------
 
   if (p_branch == 0 | n_branch == 1) {
+    v_n_patch_branch <- n_patch
     m_adj <- matrix(0, nrow = n_patch, ncol = n_patch)
     x <- 1:(n_patch - 1)
     y <- 2:n_patch
@@ -220,7 +221,7 @@ brnet <- function(n_patch = 100,
 
   # visualization -----------------------------------------------------------
 
-  if (plot == T) {
+  if (plot == TRUE) {
     adj <- igraph::graph.adjacency(adjmatrix = m_adj, mode = "undirected")
     colvalue <- data.frame(color = viridis::viridis(n_patch, alpha = 0.6), value = sort(v_env))
     layout_tree <- igraph::layout_as_tree(adj, root = 1, flip.y = F)
