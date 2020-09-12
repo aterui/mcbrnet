@@ -2,16 +2,16 @@
 #'
 #' @param n_patch numeric value indicating the number of patches in a network.
 #' @param p_branch numeric value indicating the branching probability (success probability of a geometric distribution).
-#' @param min_env numeric value indicating minimum value of environmental condition in source streams (minimum of a uniform distribution).
-#' @param max_env numeric value indicating maximum value of environmental condition in source streams (maximum of a uniform distribution).
-#' @param rho numeric value indicating the strength of spatial autocorrelation in environmental condition. The environmental condition at patch i \eqn{x}\out{<sub>i</sub>} is determined as \eqn{x}\out{<sub>i</sub>}\eqn{ = \rho}x\out{<sub>i-1</sub>}\eqn{ + \epsilon}\out{<sub>i</sub>}, where \eqn{\epsilon}\out{<sub>i</sub>} is the random variable drawn from a normal distribution with mean 0 and SD \eqn{\sigma}\out{<sub>env</sub>}.
+#' @param min_env numeric value indicating minimum value of environmental condition at upstream terminals (minimum of a uniform distribution).
+#' @param max_env numeric value indicating maximum value of environmental condition at upstream terminals (maximum of a uniform distribution).
+#' @param rho numeric value indicating the strength of spatial autocorrelation in environmental condition. The environmental condition at patch x \eqn{z}\out{<sub>x</sub>} is determined as \eqn{z}\out{<sub>x</sub>}\eqn{ = \rho}z\out{<sub>x-1</sub>}\eqn{ + \epsilon}\out{<sub>x</sub>}, where \eqn{\epsilon}\out{<sub>x</sub>} is the random variable drawn from a normal distribution with mean 0 and SD \eqn{\sigma}\out{<sub>env</sub>}. See \href{https://github.com/aterui/mcbrnet}{github page} for further details.
 #' @param sd_env numeric value indicating the SD of spatial environmental noise (\eqn{\sigma}\out{<sub>env</sub>}).
 #' @param randomize_patch logical indicating whether randomize patches or not. If \code{FALSE}, the function may generate a biased network with ordered patches. Default \code{TRUE}.
 #' @param plot logical indicating if a plot should be shown or not. If \code{FALSE}, a plot of the generated network will not be shown. Default \code{TRUE}.
-#' @param patch_label character string indicating a type of patch label (either \code{"patch", "branch", "n_upstream"}). \code{"patch"} shows patch ID, \code{"branch"} branch ID, and \code{"n_upstream"} the number of upstream contributing patches. If \code{NULL}, no label will be shown on patches in the plot. Default \code{NULL}.
-#' @param vertex_size vertex (patch) size in the plot. Default 3.
-#' @param patch_size logical. If \code{TRUE}, vertex size will be proportional to the number of upstream contributing patches. The vertex size will be equal to \code{0.3 * vertex_scale} at the upstream terminals and \code{1.3 * vertex_scale} at the root. Overrides \code{vertex_size}.
-#' @param vertex_scale numeric value scaling vertex size. Enabled if \code{patch_size = TRUE}.
+#' @param patch_label character string indicating a type of patch (vertex) label (either \code{"patch", "branch", "n_upstream"}). \code{"patch"} shows patch ID, \code{"branch"} branch ID, and \code{"n_upstream"} the number of upstream contributing patches. If \code{NULL}, no label will be shown on patches in the plot. Default \code{NULL}.
+#' @param patch_size patch (vertex) size in the plot. Default 3.
+#' @param patch_scaling logical. If \code{TRUE}, patch (vertex) size will be proportional to the number of upstream contributing patches. The patch (vertex) size will be equal to \code{0.3 * scale_factor} at the upstream terminals and \code{1.3 * scale_factor} at the root. Overrides \code{patch_size}.
+#' @param scale_factor numeric value scaling patch (vertex) size. Enabled if \code{patch_scaling = TRUE}.
 #'
 #' @return \code{adjacency_matrix} adjacency matrix for the generated network.
 #' @return \code{distance_matrix} distance matrix for the generated network.
@@ -21,6 +21,8 @@
 #' @importFrom grDevices grey
 #' @importFrom graphics par text
 #' @importFrom stats complete.cases rbinom rgeom rnorm runif
+#'
+#' @section Reference: see \href{https://github.com/aterui/mcbrnet}{github page} for instruction
 #'
 #' @author Akira Terui, \email{hanabi0111@gmail.com}
 #'
@@ -38,9 +40,9 @@ brnet <- function(n_patch,
                   randomize_patch = TRUE,
                   plot = TRUE,
                   patch_label = NULL,
-                  vertex_size = 3,
-                  patch_size = FALSE,
-                  vertex_scale = 10) {
+                  patch_size = 3,
+                  patch_scaling = FALSE,
+                  scale_factor = 8) {
 
   # define functions and variables ------------------------------------------
 
@@ -241,10 +243,13 @@ brnet <- function(n_patch,
       if (!(patch_label %in% c("patch", "branch", "n_upstream"))) stop("patch_label must be either patch, branch, or n_upstrem")
     }
 
-    if (patch_size == TRUE) {
-      vertex_size <- I(scale(v_wa, center = min(v_wa), scale = max(v_wa) - min(v_wa)) + 0.3) * vertex_scale
+    if (patch_scaling == TRUE) {
+      vertex_size <- I(scale(v_wa, center = min(v_wa), scale = max(v_wa) - min(v_wa)) + 0.3) * scale_factor
+    } else {
+      vertex_size <- patch_size
     }
 
+    par(mar = c(5.1, 8, 4.1, 2.1))
     igraph::plot.igraph(adj, layout = layout_tree,
                         vertex.size = vertex_size,
                         vertex.label = vertex_label,

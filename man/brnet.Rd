@@ -14,9 +14,9 @@ brnet(
   randomize_patch = TRUE,
   plot = TRUE,
   patch_label = NULL,
-  vertex_size = 3,
-  patch_size = FALSE,
-  vertex_scale = 10
+  patch_size = 3,
+  patch_scaling = FALSE,
+  scale_factor = 8
 )
 }
 \arguments{
@@ -24,11 +24,11 @@ brnet(
 
 \item{p_branch}{numeric value indicating the branching probability (success probability of a geometric distribution).}
 
-\item{min_env}{numeric value indicating minimum value of environmental condition in source streams (minimum of a uniform distribution).}
+\item{min_env}{numeric value indicating minimum value of environmental condition at upstream terminals (minimum of a uniform distribution).}
 
-\item{max_env}{numeric value indicating maximum value of environmental condition in source streams (maximum of a uniform distribution).}
+\item{max_env}{numeric value indicating maximum value of environmental condition at upstream terminals (maximum of a uniform distribution).}
 
-\item{rho}{numeric value indicating the strength of spatial autocorrelation in environmental condition. The environmental condition at patch i \eqn{x}\out{<sub>i</sub>} is determined as \eqn{x}\out{<sub>i</sub>}\eqn{ = \rho}x\out{<sub>i-1</sub>}\eqn{ + \epsilon}\out{<sub>i</sub>}, where \eqn{\epsilon}\out{<sub>i</sub>} is the random variable drawn from a normal distribution with mean 0 and SD \eqn{\sigma}\out{<sub>env</sub>}.}
+\item{rho}{numeric value indicating the strength of spatial autocorrelation in environmental condition. The environmental condition at patch x \eqn{z}\out{<sub>x</sub>} is determined as \eqn{z}\out{<sub>x</sub>}\eqn{ = \rho}z\out{<sub>x-1</sub>}\eqn{ + \epsilon}\out{<sub>x</sub>}, where \eqn{\epsilon}\out{<sub>x</sub>} is the random variable drawn from a normal distribution with mean 0 and SD \eqn{\sigma}\out{<sub>env</sub>}. See \href{https://github.com/aterui/mcbrnet}{github page} for further details.}
 
 \item{sd_env}{numeric value indicating the SD of spatial environmental noise (\eqn{\sigma}\out{<sub>env</sub>}).}
 
@@ -36,13 +36,13 @@ brnet(
 
 \item{plot}{logical indicating if a plot should be shown or not. If \code{FALSE}, a plot of the generated network will not be shown. Default \code{TRUE}.}
 
-\item{patch_label}{character string indicating a type of patch label (either \code{"patch", "branch", "n_upstream"}). \code{"patch"} shows patch ID, \code{"branch"} branch ID, and \code{"n_upstream"} the number of upstream contributing patches. If \code{NULL}, no label will be shown on patches in the plot. Default \code{NULL}.}
+\item{patch_label}{character string indicating a type of patch (vertex) label (either \code{"patch", "branch", "n_upstream"}). \code{"patch"} shows patch ID, \code{"branch"} branch ID, and \code{"n_upstream"} the number of upstream contributing patches. If \code{NULL}, no label will be shown on patches in the plot. Default \code{NULL}.}
 
-\item{vertex_size}{vertex (patch) size in the plot. Default 3.}
+\item{patch_size}{patch (vertex) size in the plot. Default 3.}
 
-\item{patch_size}{logical. If \code{TRUE}, vertex size will be proportional to the number of upstream contributing patches. The vertex size will be equal to \code{0.3 * vertex_scale} at the upstream terminals and \code{1.3 * vertex_scale} at the root. Overrides \code{vertex_size}.}
+\item{patch_scaling}{logical. If \code{TRUE}, patch (vertex) size will be proportional to the number of upstream contributing patches. The patch (vertex) size will be equal to \code{0.3 * scale_factor} at the upstream terminals and \code{1.3 * scale_factor} at the root. Overrides \code{patch_size}.}
 
-\item{vertex_scale}{numeric value scaling vertex size. Enabled if \code{patch_size = TRUE}.}
+\item{scale_factor}{numeric value scaling patch (vertex) size. Enabled if \code{patch_scaling = TRUE}.}
 }
 \value{
 \code{adjacency_matrix} adjacency matrix for the generated network.
@@ -54,6 +54,10 @@ brnet(
 \description{
 Generate a random branching network
 }
+\section{Reference}{
+ see \href{https://github.com/aterui/mcbrnet}{github page} for instruction
+}
+
 \examples{
 brnet(n_patch = 100, p_branch = 0.5)
 
