@@ -1,14 +1,13 @@
-mcbrnet: An R package for simulating metacommunity dynamics in a
+mcbrnet: an R package for simulating metacommunity dynamics in a
 branching network
 ================
 Akira Terui
-9/10/2020
+September 11, 2020
 
   - [Overview](#overview)
   - [Installation](#installation)
   - [Instruction](#instruction)
       - [`brnet()`](#brnet)
-      - [`brnet()`: Customization](#brnet-customization)
   - [References](#references)
 
 # Overview
@@ -52,27 +51,29 @@ library(mcbrnet)
 The function `brnet()` generates a random branching network. The key
 arguments are the number of habitat patches (`n_patch`) and probability
 of branching (`p_branch`), which the user must specify (otherwise, it
-will be set to be `n_patch = 100` and `p_branch = 0.5`). The branching
+will be set as `n_patch = 100` and `p_branch = 0.5`). The branching
 network will be generated through the following steps:
 
-1.  Determine the number of branches in the network. An individual
-    branch is defined as a series of connected patches from one
-    confluence (or outlet) to the next confluence upstream (or upstream
-    terminal). The number of branches in a network `n_branch` is drawn
-    from a binomial distribution as `n_branch = rbinom(n = 1, size =
-    n_patch, prob = p_branch)`.
+1.  Draw the number of branches in the network. An individual branch is
+    defined as a series of connected patches from one confluence (or
+    outlet) to the next confluence upstream (or upstream terminal). The
+    number of branches in a network N<sub>br</sub> is drawn from a
+    binomial distribution as N<sub>br</sub> \~ Binomial(N,
+    P<sub>br</sub>), where N is the number of patches and P<sub>br</sub>
+    is the branching probability.
 
-2.  Determine the number of patches in each branch. The number of
-    patches in each branch `v_n_patch_branch` is drawn from a geometric
-    distribution as `v_n_patch_branch = rgeom(n = n_branch, prob =
-    p_branch) + 1`.
+2.  Draw the number of patches in each branch. The number of patches in
+    each branch N<sub>bp</sub> is drawn from a geometric distribution as
+    N<sub>bp</sub> \~ Ge(P<sub>br</sub>) but conditional on
+    ΣN<sub>bp</sub> = N.
 
 3.  Organize branches into a bifurcating branching network.
 
 The following script produce a branching network with `n_patch = 50` and
 `p_branch = 0.5`, returning adjacency and distance matrices. By default,
-the function visualizes the generated network using functions in package
-`igraph` (Csardi and Nepusz 2006):
+`brnet()` visualizes the generated network using functions in packages
+`igraph` (Csardi and Nepusz 2006) and `plotfunctions` (van Rij 2020)
+(`plot = FALSE` to disable):
 
 ``` r
 net <- brnet(n_patch = 50, p_branch = 0.5)
@@ -80,7 +81,10 @@ net <- brnet(n_patch = 50, p_branch = 0.5)
 
 ![](README_files/figure-gfm/brnet_instruction_1-1.png)<!-- -->
 
-To view matrices, type the following script:
+Patches are colored in accordance with randomly generated environmental
+values, and the size of patches is proportional to the number of patches
+upstream (see **Customization** for details). To view matrices, type the
+following script:
 
 ``` r
 # adjacency matrix
@@ -118,13 +122,65 @@ net$distance_matrix[1:10, 1:10]
     ##  [9,]    6    4    5    6    7    3    2    1    0     1
     ## [10,]    7    5    6    7    8    4    3    2    1     0
 
-## `brnet()`: Customization
+### Customization
+
+`brnet()` also returns (1) environmental values and (2) the number of
+upstream patches (including the focal patch itself; akin to watershed
+area in river networks) at each patch. These values are provided to
+facilitate simulations using `mcsim()` (see Section `mcsim()`).
+Environmental values are determined through an autoregressive process as
+follows:
+
+1.  Environmental values for upstream terminal patches (i.e., patches
+    with no upstream patch) are drawn from a uniform distribution as
+    z<sub>1</sub> \~ Uniform(min<sub>env</sub>, max<sub>env</sub>).
+
+2.  Downstream environmental values are determined by an autoregressive
+    process as z<sub>x</sub> = ρz<sub>x-1</sub> + ε<sub>x</sub>, where
+    ε<sub>x</sub> \~ Normal(0, σ<sup>2</sup><sub>env</sub>). At
+    bifurcation patches (or confluence), the environmental value takes a
+    weighted mean of the two contributing patches given the size of
+    these patches *s* (the number of upstream contributing patches):
+    z<sub>x</sub> = ω(ρz<sub>1,x-1</sub> + ε<sub>1,x</sub>) + (1 -
+    ω)(ρz<sub>2,x-1</sub> + ε<sub>2,x</sub>), where ω =
+    s<sub>1</sub>/(s<sub>1</sub> + s<sub>2</sub>).
+
+The users can change the values of `min_env` (default: min<sub>env</sub>
+= -1), `max_env` (max<sub>env</sub> = 1), `rho` (ρ = 1), and `sd_env`
+(σ<sub>env</sub> = 0.1). Increasing the range of `min_env` and
+`max_env` leads to greater variation in environmental values at upstream
+terminals. `rho` (0 ≤ ρ ≤ 1) determines the strength of longitudinal
+autocorrelation (the greater the stronger autocorrelation). `sd_env`
+(σ<sub>env</sub> \> 0) determines the strength of local environmental
+noise. The following script produce a network with greater environmental
+variation at upstream terminals (z<sub>1</sub> \~ Uniform(-3, 3)),
+weaker longitudinal autocorrelation (ρ = 0.5), and stronger local noises
+(σ<sub>env</sub> = 0.5).
+
+``` r
+net <- brnet(n_patch = 50, p_branch = 0.5,
+             min_env = -3, max_env = 3, rho = 0.5, sd_env = 0.5)
+```
+
+![](README_files/figure-gfm/brnet_instruction_2-1.png)<!-- -->
+
+The following script lets you view branch ID, environmental values, and
+the number of upstream contributing patches for each patch:
+
+``` r
+net$patch_df
+```
+
+    ## NULL
 
 # References
 
   - Csardi G, Nepusz T: The igraph software package for complex network
     research, InterJournal, Complex Systems 1695. 2006.
     <http://igraph.org>
+  - Jacolien van Rij (2020). plotfunctions: Various Functions to
+    Facilitate Visualization of Data and Analysis. R package version
+    1.4. <https://CRAN.R-project.org/package=plotfunctions>
   - Thompson, P.L., Guzman, L.M., De Meester, L., Horváth, Z., Ptacnik,
     R., Vanschoenwinkel, B., Viana, D.S. and Chase, J.M. (2020), A
     process‐based metacommunity framework linking local and regional
