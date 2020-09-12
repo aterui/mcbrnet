@@ -1,11 +1,11 @@
 #' Simulate metacommunity dynamics
 #'
+#' @param n_species numeric scalar. Number of species in a metacommunity.
+#' @param n_patch numeric scalar. Number of patches in a metacommunity.
 #' @param n_warmup numeric scalar. Number of time-steps for warm-up.
 #' @param n_burnin numeric scalar. Number of time-steps for burn-in.
 #' @param n_timestep numeric scalar. Number of time-steps to be saved.
 #' @param propagule_interval numeric scalar. Time interval for propagule introduction during warm-up. If \code{NULL}, a value of \code{ceiling(n_warmup / 10)} will be used.
-#' @param n_species numeric scalar. Number of species in a metacommunity.
-#' @param n_patch numeric scalar. Number of patches in a metacommunity.
 #' @param carrying_capacity numeric scalar or vector (length should be equal to the number of patches). Carrying capacities of individual patches.
 #' @param interaction_type character scalar. \code{"constant"} or \code{"random"}. \code{"constant"} assumes the single interaction strength of alpha for all pairs of species. \code{"random"} draws random numbers from a uniform distribution with \code{min_alpha} and \code{max_alpha}.
 #' @param alpha species interaction strength.
@@ -42,12 +42,12 @@
 #'
 #' @export
 #'
-mcsim <- function(n_warmup = 200,
+mcsim <- function(n_species = 5,
+                  n_patch = 5,
+                  n_warmup = 200,
                   n_burnin = 200,
                   n_timestep = 1000,
                   propagule_interval = NULL,
-                  n_species = 5,
-                  n_patch = 5,
                   carrying_capacity = 100,
                   interaction_type = "constant",
                   alpha = 0,
