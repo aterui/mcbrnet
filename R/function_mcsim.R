@@ -157,7 +157,7 @@ mcsim <- function(n_species = 5,
   m_z <- mvtnorm::rmvnorm(n_sim, mean = v_mu_z, sigma = m_sigma)
 
   # community
-  colname <- c("abundance", "species", "niche_optim", "r_xt", "patch", "mean_env", "env", "timestep")
+  colname <- c("timestep", "patch", "mean_env", "env", "species", "niche_optim", "r_xt", "abundance")
   m_dynamics <- matrix(NA, nrow = n_species * n_patch * n_timestep, ncol = length(colname))
   colnames(m_dynamics) <- colname
   st_row <- seq(from = 1, to = nrow(m_dynamics), by = n_species * n_patch)
@@ -192,14 +192,14 @@ mcsim <- function(n_species = 5,
 
     if (n > n_discard) {
       row_id <- st_row[n - n_discard]:(st_row[n - n_discard] + n_species * n_patch - 1)
-      m_dynamics[row_id, ] <- cbind(c(m_n),
-                                    rep(x = 1:n_species, times = n_patch),
-                                    c(m_mu),
-                                    c(m_r_xt),
+      m_dynamics[row_id, ] <- cbind(I(n - n_discard),
                                     rep(x = 1:n_patch, each = n_species),
                                     rep(x = v_mu_z, each = n_species),
                                     c(m_z_xt),
-                                    I(n - n_discard))
+                                    rep(x = 1:n_species, times = n_patch),
+                                    c(m_mu),
+                                    c(m_r_xt),
+                                    c(m_n))
     }
     setTxtProgressBar(pb, n)
   }
@@ -219,7 +219,7 @@ mcsim <- function(n_species = 5,
                       labeller = labeller(.rows = label_both, .cols = label_both)) +
            geom_line(mapping = aes(x = .data$timestep, y = .data$abundance, color = abs(.data$niche_optim - .data$env))) +
            scale_color_viridis_c(alpha = 0.8) +
-           labs(color = "Environmental \ndeviation")
+           labs(color = "Deviation \nfrom niche optimum")
     print(g)
   }
 
@@ -229,7 +229,7 @@ mcsim <- function(n_species = 5,
   colnames(m_distance) <- rownames(m_distance) <- sapply(X = seq_len(n_patch), function(x) paste0("patch", x))
   colnames(m_interaction) <- rownames(m_interaction) <- sapply(X = seq_len(n_species), function(x) paste0("sp", x))
 
-  species_df <- dplyr::as_tibble(m_dynamics) %>%
+  df_species <- dplyr::as_tibble(m_dynamics) %>%
                   dplyr::group_by(.data$species) %>%
                   dplyr::summarise(mean_abundance = mean(.data$abundance)) %>%
                   dplyr::right_join(dplyr::tibble(species = 1:n_species,
@@ -238,36 +238,26 @@ mcsim <- function(n_species = 5,
                                                   p_dispersal = v_p_dispersal),
                                     by = "species")
 
-  gamma_df <- dplyr::as_tibble(m_dynamics) %>%
-                dplyr::filter(.data$abundance > 0) %>%
-                dplyr::group_by(.data$timestep) %>%
-                dplyr::summarise(gamma_d = n_distinct(.data$species)) %>%
-                dplyr::right_join(as_tibble(m_dynamics), by = c("timestep"))
+  df_dyn <- dplyr::as_tibble(m_dynamics)
 
-  dynamics_df <- gamma_df %>%
-                    dplyr::filter(.data$abundance > 0) %>%
-                    dplyr::group_by(.data$patch, .data$timestep) %>%
-                    dplyr::summarise(alpha_d = dplyr::n_distinct(.data$species)) %>%
-                    dplyr::right_join(gamma_df, by = c("timestep", "patch"))
-
-  diversity_df <- dynamics_df %>% ungroup() %>%
-                    dplyr::summarise(mean_alpha = mean(.data$alpha_d),
-                                     mean_beta = mean(.data$gamma_d) - mean(.data$alpha_d),
-                                     mean_gamma = mean(.data$gamma_d))
-
-  patch_df <- dynamics_df %>%
+  df_patch <- df_dyn %>%
                 dplyr::group_by(.data$patch) %>%
-                dplyr::summarise(local_alpha = mean(alpha_d)) %>%
-                dplyr::left_join(tibble(patch = seq_len(n_patch),
-                                        mu_env = v_mu_z,
-                                        connectivity = rowSums(m_dispersal)),
+                dplyr::summarise(alpha_div = sum(.data$abundance > 0) / n_timestep) %>%
+                dplyr::left_join(dplyr::tibble(patch = seq_len(n_patch),
+                                               mu_env = v_mu_z,
+                                               connectivity = rowSums(m_dispersal)),
                                  by = "patch")
 
+  alpha_div <- sum(df_dyn$abundance > 0) / (n_timestep * n_patch)
+  gamma_div <- mean(tapply(X = df_dyn$species[df_dyn$abundance > 0],
+                           INDEX = df_dyn$timestep[df_dyn$abundance > 0],
+                           FUN = dplyr::n_distinct))
+  beta_div <- gamma_div - alpha_div
 
-  return(list(dynamics_df = dynamics_df,
-              species_df = species_df,
-              patch_df = patch_df,
-              diversity_df = diversity_df,
+  return(list(df_dynamics = df_dyn,
+              df_species = df_species,
+              df_patch = df_patch,
+              df_diversity = dplyr::tibble(alpha_div, beta_div, gamma_div),
               distance_matrix = m_distance,
               interaction_matrix = m_interaction))
 }
