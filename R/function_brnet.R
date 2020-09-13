@@ -15,7 +15,7 @@
 #'
 #' @return \code{adjacency_matrix} adjacency matrix for the generated network.
 #' @return \code{distance_matrix} distance matrix for the generated network.
-#' @return \code{patch_df} a data frame containing patch attributes.
+#' @return \code{df_patch} a data frame containing patch attributes.
 #'
 #' @importFrom dplyr %>%
 #' @importFrom grDevices grey
