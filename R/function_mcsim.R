@@ -230,12 +230,44 @@ mcsim <- function(n_species = 5,
   colnames(m_interaction) <- rownames(m_interaction) <- sapply(X = seq_len(n_species), function(x) paste0("sp", x))
 
   species_df <- dplyr::as_tibble(m_dynamics) %>%
-                  dplyr::group_by(species) %>%
-                  dplyr::summarise(mean_abundance = mean(abundance)) %>%
-                  dplyr::right_join(dplyr::tibble(species = 1:n_species, r0 = v_r0, niche_optim = v_mu, p_dispersal = v_p_dispersal), by = "species")
+                  dplyr::group_by(.data$species) %>%
+                  dplyr::summarise(mean_abundance = mean(.data$abundance)) %>%
+                  dplyr::right_join(dplyr::tibble(species = 1:n_species,
+                                                  r0 = v_r0,
+                                                  niche_optim = v_mu,
+                                                  p_dispersal = v_p_dispersal),
+                                    by = "species")
 
-  return(list(dynamics_df = dplyr::as_tibble(m_dynamics),
+  gamma_df <- dplyr::as_tibble(m_dynamics) %>%
+                dplyr::filter(.data$abundance > 0) %>%
+                dplyr::group_by(.data$timestep) %>%
+                dplyr::summarise(gamma_d = n_distinct(.data$species)) %>%
+                dplyr::right_join(as_tibble(m_dynamics), by = c("timestep"))
+
+  dynamics_df <- gamma_df %>%
+                    dplyr::filter(.data$abundance > 0) %>%
+                    dplyr::group_by(.data$patch, .data$timestep) %>%
+                    dplyr::summarise(alpha_d = dplyr::n_distinct(.data$species)) %>%
+                    dplyr::right_join(gamma_df, by = c("timestep", "patch"))
+
+  diversity_df <- dynamics_df %>% ungroup() %>%
+                    dplyr::summarise(mean_alpha = mean(.data$alpha_d),
+                                     mean_beta = mean(.data$gamma_d) - mean(.data$alpha_d),
+                                     mean_gamma = mean(.data$gamma_d))
+
+  patch_df <- dynamics_df %>%
+                dplyr::group_by(.data$patch) %>%
+                dplyr::summarise(local_alpha = mean(alpha_d)) %>%
+                dplyr::left_join(tibble(patch = seq_len(n_patch),
+                                        mu_env = v_mu_z,
+                                        connectivity = rowSums(m_dispersal)),
+                                 by = "patch")
+
+
+  return(list(dynamics_df = dynamics_df,
               species_df = species_df,
+              patch_df = patch_df,
+              diversity_df = diversity_df,
               distance_matrix = m_distance,
               interaction_matrix = m_interaction))
 }
