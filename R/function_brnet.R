@@ -275,7 +275,7 @@ brnet <- function(n_patch,
 
   return(list(adjacency_matrix = m_adj,
               distance_matrix = m_distance,
-              patch_df = dplyr::tibble(patch_id = 1:n_patch,
+              df_patch = dplyr::tibble(patch_id = 1:n_patch,
                                        branch_id = as.numeric(df_id$branch),
                                        environment = c(v_env),
                                        n_patch_upstream = c(v_wa))))
