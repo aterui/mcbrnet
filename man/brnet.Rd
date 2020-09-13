@@ -14,7 +14,7 @@ brnet(
   randomize_patch = TRUE,
   plot = TRUE,
   patch_label = NULL,
-  patch_size = 3,
+  patch_size = 6,
   patch_scaling = FALSE,
   scale_factor = 8
 )
@@ -38,7 +38,7 @@ brnet(
 
 \item{patch_label}{character string indicating a type of patch (vertex) label (either \code{"patch", "branch", "n_upstream"}). \code{"patch"} shows patch ID, \code{"branch"} branch ID, and \code{"n_upstream"} the number of upstream contributing patches. If \code{NULL}, no label will be shown on patches in the plot. Default \code{NULL}.}
 
-\item{patch_size}{patch (vertex) size in the plot. Default 3.}
+\item{patch_size}{patch (vertex) size in the plot. Default 6.}
 
 \item{patch_scaling}{logical. If \code{TRUE}, patch (vertex) size will be proportional to the number of upstream contributing patches. The patch (vertex) size will be equal to \code{0.3 * scale_factor} at the upstream terminals and \code{1.3 * scale_factor} at the root. Overrides \code{patch_size}.}
 
@@ -49,7 +49,7 @@ brnet(
 
 \code{distance_matrix} distance matrix for the generated network.
 
-\code{patch_df} a data frame containing patch attributes.
+\code{df_patch} a data frame containing patch attributes.
 }
 \description{
 Generate a random branching network
