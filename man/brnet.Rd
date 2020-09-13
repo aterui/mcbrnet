@@ -15,7 +15,7 @@ brnet(
   plot = TRUE,
   patch_label = NULL,
   patch_size = 6,
-  patch_scaling = FALSE,
+  patch_scaling = TRUE,
   scale_factor = 8
 )
 }

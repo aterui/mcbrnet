@@ -2,7 +2,7 @@ mcbrnet: an R package for simulating metacommunity dynamics in a
 branching network
 ================
 Akira Terui
-September 11, 2020
+September 13, 2020
 
   - [Overview](#overview)
   - [Installation](#installation)
@@ -73,12 +73,11 @@ The function returns:
   - `distance_matrix`: distance matrix. Distance between patches is
     measured as the number of patches required to reach from the focal
     patch to the target patch along the network.
-  - `patch_df`: data frame. This data frame (`dplyr::tibble`) contains
-    unique patch ID `patch_id`, unique branch ID `branch_id`,
-    environmental value `environment` (see below for details), and the
-    number of upstream contributing patches `n_patch_upstream`
-    (including the focal patch itself; akin to the watershed area in
-    river networks).
+  - `df_patch`: a data frame (`dplyr::tibble`) containing unique patch
+    ID `patch_id`, unique branch ID `branch_id`, environmental value
+    `environment` (see below for details), and the number of upstream
+    contributing patches `n_patch_upstream` (including the focal patch
+    itself; akin to the watershed area in river networks).
 
 The following script produce a branching network with `n_patch = 50` and
 `p_branch = 0.5`. By default, `brnet()` visualizes the generated network
@@ -135,7 +134,7 @@ The following script lets you view branch ID, environmental values, and
 the number of upstream contributing patches for each patch:
 
 ``` r
-net$patch_df
+net$df_patch
 ```
 
     ## # A tibble: 50 x 4
