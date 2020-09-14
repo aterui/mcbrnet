@@ -16,8 +16,9 @@
 #' @param sd_niche_width numeric value (length should be one or equal to \code{n_species}). Niche width of species. Higher values indicate greater niche width.
 #' @param optim_min numeric value. Minimum value of a uniform distribution that generates optimal environmental values of simulated species. Values are randomly assigned to species. Enabled if \code{niche_optim = NULL}.
 #' @param optim_max numeric value. Maximum value of a uniform distribution that generates optimal environmental values of simulated species. Values are randomly assigned to species. Enabled if \code{niche_optim = NULL}.
+#' @param xy_coord data frame. Each row should correspond to an individual patch, with x and y coordinates (columns). Defualt \code{NULL}.
 #' @param distance_matrix numeric value. Distance matrix indicating distance between habitat patches. If \code{NULL}, a square landscape with randomly distributed patches will be generated. Default \code{NULL}.
-#' @param landscape_size numeric value. Length of a landscape on a side. Active only when \code{dispersal_matrix = NULL}.
+#' @param landscape_size numeric value. Length of a landscape on a side. Enabled if \code{dispersal_matrix = NULL}.
 #' @param mean_env numeric value (length should be one or equal to \code{n_patch}). Mean environmental values of patches.
 #' @param sd_env numeric value. Standard deviation of temporal environmental variation at each patch.
 #' @param spatial_env_cor logical. If \code{TRUE}, spatial autocorrelation in temporal environmental fluctuation is considered. Default \code{FALSE}.
@@ -62,6 +63,7 @@ mcsim <- function(n_species = 5,
                   sd_niche_width = 1,
                   optim_min = -1,
                   optim_max = 1,
+                  xy_coord = NULL,
                   distance_matrix = NULL,
                   landscape_size = 10,
                   mean_env = 0,
@@ -126,40 +128,51 @@ mcsim <- function(n_species = 5,
     message("Single value of mean_env is given: assume environmental conditions are the same at all habitat patches")
     v_mu_z <- rep(x = mean_env, times = n_patch)
   } else {
-    if (length(mean_env) != n_patch) stop("mean_env must have length of n_patch")
+    if (length(mean_env) != n_patch) stop("mean_env must have length of one or n_patch")
     v_mu_z <- mean_env
   }
 
   # interaction matrix
   if (interaction_type == "constant") {
     if (alpha < 0 | length(alpha) != 1) stop("invalid value of alpha - the value must be a positive scalar")
-    alpha <- alpha
-  }
-
-  if (interaction_type == "random") {
+    m_interaction <- matrix(alpha, nrow = n_species, ncol = n_species)
+    diag(m_interaction) <- 1
+  } else {
+    if (interaction_type != "random") stop("invalid interaction_type")
     if (min_alpha < 0 | max_alpha < 0) stop("invalid values of min_alpha and/or max_alpha - values must be positive values")
     if (is.null(min_alpha) | is.null(max_alpha)) stop("provide min_alpha and max_alpha")
     if (min_alpha > max_alpha) stop("max_alpha must exceed min_alpha")
     alpha <- runif(n = n_species * n_species, min = min_alpha, max = max_alpha)
+    m_interaction <- matrix(alpha, nrow = n_species, ncol = n_species)
+    diag(m_interaction) <- 1
   }
 
-  m_interaction <- matrix(alpha, nrow = n_species, ncol = n_species)
-  diag(m_interaction) <- 1
-
   # dispersal matrix
-  if (is.null(distance_matrix)) {
-    message("Distance matrix is not given: generate a square landscape with landscape_size (default: 10) on a side")
+  if (is.null(distance_matrix) & is.null(xy_coord)) {
+    message("Neither xy_coord nor distance_matrix is given: generate a square landscape with landscape_size (default: 10) on a side")
     v_x_coord <- runif(n = n_patch, min = 0, max = landscape_size)
     v_y_coord <- runif(n = n_patch, min = 0, max = landscape_size)
-    m_distance <- data.matrix(dist(cbind(v_x_coord, v_y_coord), diag = TRUE, upper = TRUE))
+    df_xy_coord <- dplyr::tibble(x_coord = v_x_coord, y_coord = v_y_coord)
+    m_distance <- data.matrix(dist(df_xy_coord, diag = TRUE, upper = TRUE))
     m_dispersal <- data.matrix(exp(-theta * m_distance))
     diag(m_dispersal) <- 0
   } else {
-    m_distance <- distance_matrix
-    if (is.matrix(m_distance) == 0) stop("Distance matrix should be provided as matrix")
-    if (nrow(m_distance) != n_patch) stop("Invalid dimension of distance matrix m_distance: distance_matrix must have a dimension of n_patch * n_patch")
-    m_dispersal <- exp(-theta * m_distance)
-    diag(m_dispersal) <- 0
+    if (!is.null(xy_coord) & is.null(m_distance)) {
+      if (nrow(xy_coord) != n_patch) stop("Row numbers must match n_patch")
+      if (nrow(xy_coord) != 2) stop("columns must be only x- and y-cooridnates")
+      df_xy_coord <- dplyr::as_tibble(xy_coord)
+      m_distance <- data.matrix(dist(df_xy_coord, diag = TRUE, upper = TRUE))
+      m_dispersal <- data.matrix(exp(-theta * m_distance))
+      diag(m_dispersal) <- 0
+    } else {
+      if (!is.null(xy_coord)) message("Both xy_coord and distance_matrix are given: argument xy_coord is ignored")
+      if (is.matrix(m_distance) == 0) stop("Distance matrix should be provided as matrix")
+      if (nrow(m_distance) != n_patch) stop("Invalid dimension: distance_matrix must have a dimension of n_patch * n_patch")
+      df_xy_coord <- NULL
+      m_distance <- distance_matrix
+      m_dispersal <- exp(-theta * m_distance)
+      diag(m_dispersal) <- 0
+    }
   }
 
   if (length(p_dispersal) == 1) {
@@ -290,6 +303,7 @@ mcsim <- function(n_species = 5,
               df_species = df_species,
               df_patch = df_patch,
               df_diversity = dplyr::tibble(alpha_div, beta_div, gamma_div),
+              df_xy_coord = df_xy_coord,
               distance_matrix = m_distance,
               interaction_matrix = m_interaction))
 }
