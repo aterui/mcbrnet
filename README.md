@@ -8,6 +8,12 @@ September 13, 2020
   - [Installation](#installation)
   - [Instruction](#instruction)
       - [`brnet()`](#brnet)
+          - [Basic usage](#basic-usage)
+          - [Visualization](#visualization)
+          - [Environmental values](#environmental-values)
+      - [`mcsim()`](#mcsim)
+          - [Basic usage](#basic-usage-1)
+          - [Model description](#model-description)
   - [References](#references)
 
 # Overview
@@ -85,10 +91,11 @@ using functions in packages `igraph` (Csardi and Nepusz 2006) and
 `plotfunctions` (van Rij 2020) (`plot = FALSE` to disable):
 
 ``` r
+set.seed(1)
 net <- brnet(n_patch = 50, p_branch = 0.5)
 ```
 
-![](README_files/figure-gfm/brnet_instruction_1-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
 
 Patches are colored in accordance with randomly generated environmental
 values, and the size of patches is proportional to the number of patches
@@ -152,7 +159,46 @@ net$df_patch
     ## 10       10        11      -0.180                6
     ## # ... with 40 more rows
 
-### Customization
+### Visualization
+
+Users may add patch labels using the argument `patch_label`:
+
+``` r
+# patch ID
+set.seed(1)
+net <- brnet(n_patch = 50, p_branch = 0.5, patch_label = "patch")
+```
+
+![](README_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
+
+``` r
+# branch ID
+set.seed(1)
+net <- brnet(n_patch = 50, p_branch = 0.5, patch_label = "branch")
+```
+
+![](README_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
+
+``` r
+# number of upstream contributing patches
+set.seed(1)
+net <- brnet(n_patch = 50, p_branch = 0.5, patch_label = "n_upstream")
+```
+
+![](README_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
+
+To remove patch size variation, set `patch_scaling = FALSE` and specify
+`patch_size`:
+
+``` r
+# number of upstream contributing patches
+set.seed(1)
+net <- brnet(n_patch = 50, p_branch = 0.5, patch_scaling = FALSE, patch_size = 8)
+```
+
+![](README_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
+
+### Environmental values
 
 There is some flexibility in how to simulate environmental values, which
 are determined through an autoregressive process, as detailed below:
@@ -189,6 +235,115 @@ net <- brnet(n_patch = 50, p_branch = 0.5,
 ```
 
 ![](README_files/figure-gfm/brnet_instruction_2-1.png)<!-- -->
+
+## `mcsim()`
+
+### Basic usage
+
+The key arguments are the number of habitat patches (`n_patch`) and the
+number of species in a metacommunity (`n_species`). By default,
+`mcsim()` simulates metacommunity dynamics with 200 warm-up
+(initialization with species introductions), 200 burn-in (burn-in period
+with no species introductions), and 1000 time-steps for records. The
+function returns:
+
+  - `df_dynamics` a data frame containing simulated metacommunity
+    dynamics.
+  - `df_species` a data frame containing species attributes.
+  - `df_patch` a data frame containing patch attributes.
+  - `df_diversity` a data frame containing diversity metrics (α, β, and
+    γ).
+  - `distance_matrix` a distance matrix. By default, a square-shaped
+    landscape is generated and patches are randomly distributed through
+    a Poisson point process. Distance between these patches are
+    measured.
+  - `interaction_matrix` a species interaction matrix, in which species
+    X (column) influences species Y (row).
+
+<!-- end list -->
+
+``` r
+mc <- mcsim(n_patch = 5, n_species = 5)
+```
+
+To access:
+
+``` r
+mc
+```
+
+    ## $df_dynamics
+    ## # A tibble: 25,000 x 8
+    ##    timestep patch mean_env     env species niche_optim  r_xt abundance
+    ##       <dbl> <dbl>    <dbl>   <dbl>   <dbl>       <dbl> <dbl>     <dbl>
+    ##  1        1     1        0 -0.0284       1       0.103  3.97       116
+    ##  2        1     1        0 -0.0284       2       0.305  3.78       104
+    ##  3        1     1        0 -0.0284       3       0.863  2.69        55
+    ##  4        1     1        0 -0.0284       4       0.381  3.68       104
+    ##  5        1     1        0 -0.0284       5      -0.492  3.59        90
+    ##  6        1     2        0  0.0467       1       0.103  3.99        94
+    ##  7        1     2        0  0.0467       2       0.305  3.87        85
+    ##  8        1     2        0  0.0467       3       0.863  2.87        72
+    ##  9        1     2        0  0.0467       4       0.381  3.78        73
+    ## 10        1     2        0  0.0467       5      -0.492  3.46        73
+    ## # ... with 24,990 more rows
+    ## 
+    ## $df_species
+    ## # A tibble: 5 x 5
+    ##   species mean_abundance    r0 niche_optim p_dispersal
+    ##     <dbl>          <dbl> <dbl>       <dbl>       <dbl>
+    ## 1       1           98.1     4       0.103         0.1
+    ## 2       2           93.1     4       0.305         0.1
+    ## 3       3           57.8     4       0.863         0.1
+    ## 4       4           89.5     4       0.381         0.1
+    ## 5       5           83.7     4      -0.492         0.1
+    ## 
+    ## $df_patch
+    ## # A tibble: 5 x 4
+    ##   patch alpha_div mu_env connectivity
+    ##   <dbl>     <dbl>  <dbl>        <dbl>
+    ## 1     1         5      0       0.176 
+    ## 2     2         5      0       0.0419
+    ## 3     3         5      0       0.0923
+    ## 4     4         5      0       0.0589
+    ## 5     5         5      0       0.127 
+    ## 
+    ## $df_diversity
+    ## # A tibble: 1 x 3
+    ##   alpha_div beta_div gamma_div
+    ##       <dbl>    <dbl>     <dbl>
+    ## 1         5        0         5
+    ## 
+    ## $distance_matrix
+    ##          patch1   patch2   patch3   patch4   patch5
+    ## patch1 0.000000 5.915728 2.817654 3.002999 2.752147
+    ## patch2 5.915728 0.000000 5.555938 8.790871 3.347126
+    ## patch3 2.817654 5.555938 0.000000 5.313542 3.739870
+    ## patch4 3.002999 8.790871 5.313542 0.000000 5.471905
+    ## patch5 2.752147 3.347126 3.739870 5.471905 0.000000
+    ## 
+    ## $interaction_matrix
+    ##     sp1 sp2 sp3 sp4 sp5
+    ## sp1   1   0   0   0   0
+    ## sp2   0   1   0   0   0
+    ## sp3   0   0   1   0   0
+    ## sp4   0   0   0   1   0
+    ## sp5   0   0   0   0   1
+
+### Model description
+
+Metacommunity dynamics are simulated through local community dynamics,
+immigration and emigration. Specifically, the expected number of
+individuals of species i at patch x at time t, N<sub>ix</sub>(t), is
+described as:
+
+N<sub>ix</sub>(t) = n<sub>ix</sub>(t) + I<sub>ix</sub>(t-1) -
+E<sub>ix</sub>(t-1)
+
+where n<sub>ix</sub>(t) is the expected number of individuals at time t
+given the local community dynamics at t-1, I<sub>ix</sub>(t-1) the
+number of immigrants to patch x, and the number of emigrants from patch
+x.
 
 # References
 
