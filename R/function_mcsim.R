@@ -6,22 +6,23 @@
 #' @param n_burnin numeric value. Number of time-steps for burn-in.
 #' @param n_timestep numeric value. Number of time-steps to be saved.
 #' @param propagule_interval numeric value. Time interval for propagule introduction during warm-up. If \code{NULL}, a value of \code{ceiling(n_warmup / 10)} will be used.
-#' @param carrying_capacity numeric value (length should be equal to one or the number of patches). Carrying capacities of individual patches.
+#' @param carrying_capacity numeric value (length should be one or equal to \code{n_patch}). Carrying capacities of individual patches.
 #' @param interaction_type character string. \code{"constant"} or \code{"random"}. \code{"constant"} assumes the single interaction strength of alpha for all pairs of species. \code{"random"} draws random numbers from a uniform distribution with \code{min_alpha} and \code{max_alpha}.
 #' @param alpha numeric value. Species interaction strength.
 #' @param min_alpha numeric value. Minimum value of a uniform distribution that generates alpha.
 #' @param max_alpha numeric value. Maximum value of a uniform distribution that generates alpha.
-#' @param r0 numeric value (length should be equal to one or the number of species). Maximum population growth rate of the Beverton-Holt model.
-#' @param sd_niche_width numeric value. Niche width of species. Higher values indicate greater niche width.
-#' @param optim_min numeric value. Minimum value of a uniform distribution that generates optimal environmental values of simulated species. Values are randomly assigned to species.
-#' @param optim_max numeric value. Maximum value of a uniform distribution that generates optimal environmental values of simulated species. Values are randomly assigned to species.
+#' @param r0 numeric value (length should be one or equal to \code{n_species}). Maximum reproductive number of the Beverton-Holt model.
+#' @param niche_optim numeric value (length should be one or equal to \code{n_species}). Niche optimum of species (environmental value that maximizes the reproductive number). Default \code{NULL}.
+#' @param sd_niche_width numeric value (length should be one or equal to \code{n_species}). Niche width of species. Higher values indicate greater niche width.
+#' @param optim_min numeric value. Minimum value of a uniform distribution that generates optimal environmental values of simulated species. Values are randomly assigned to species. Enabled if \code{niche_optim = NULL}.
+#' @param optim_max numeric value. Maximum value of a uniform distribution that generates optimal environmental values of simulated species. Values are randomly assigned to species. Enabled if \code{niche_optim = NULL}.
 #' @param distance_matrix numeric value. Distance matrix indicating distance between habitat patches. If \code{NULL}, a square landscape with randomly distributed patches will be generated. Default \code{NULL}.
 #' @param landscape_size numeric value. Length of a landscape on a side. Active only when \code{dispersal_matrix = NULL}.
-#' @param mean_env numeric value (length should be equal to one or the number of patches). Mean environmental values of patches.
-#' @param sd_env numeric value. Temporal SD of environmental variation at each patch.
+#' @param mean_env numeric value (length should be one or equal to \code{n_patch}). Mean environmental values of patches.
+#' @param sd_env numeric value. Standard deviation of temporal environmental variation at each patch.
 #' @param phi numeric value. Parameter describing distance decay of spatial autocorrelation in temporal environmental variation.
 #' @param spatial_env_cor logical. Indicates whether spatial autocorrelation in temporal environmental variation is considered or not. Default \code{FALSE}.
-#' @param p_dispersal numeric value or vector (length should be equal to one or the number of species). Probability of dispersal.
+#' @param p_dispersal numeric value (length should be one or equal to \code{n_species}). Probability of dispersal.
 #' @param theta numeric value. Dispersal parameter describing dispersal capability of species.
 #' @param plot logical. If \code{TRUE}, five sample patches and species of \code{df_dynamics} are plotted.
 #'
@@ -55,6 +56,7 @@ mcsim <- function(n_species = 5,
                   min_alpha = NULL,
                   max_alpha = NULL,
                   r0 = 4,
+                  niche_optim = NULL,
                   sd_niche_width = 1,
                   optim_min = -1,
                   optim_max = 1,
@@ -73,7 +75,7 @@ mcsim <- function(n_species = 5,
 
   # carrying capacity
   if (length(carrying_capacity) == 1) {
-    message("Only one carrying capacity is given: the model will assume carrying capacities are the same at all habitat patches")
+    message("Single value of carrying_capacity is given: assume carrying capacities are the same at all habitat patches")
     m_k <- matrix(carrying_capacity, nrow = n_species, ncol = n_patch)
   } else {
     if (length(carrying_capacity) != n_patch) stop("carrying_capacity must have length of one or n_patch")
@@ -81,9 +83,32 @@ mcsim <- function(n_species = 5,
   }
 
   # species niche
-  v_mu <- runif(n = n_species, min = optim_min, max = optim_max)
-  m_mu <- matrix(rep(x = v_mu, times = n_patch), nrow = n_species, ncol = n_patch)
 
+  ## niche optimum
+  if (is.null(niche_optim)) {
+    message("niche_optim is not given: generate species niche optimum randomly")
+    v_mu <- runif(n = n_species, min = optim_min, max = optim_max)
+    m_mu <- matrix(rep(x = v_mu, times = n_patch), nrow = n_species, ncol = n_patch)
+  } else {
+    if (length(niche_optim) == 1) {
+      message("Single value of niche_optim is given: assume niche optimum are the same for all species")
+      m_mu <- matrix(niche_optim, nrow = n_species, ncol = n_patch)
+    } else {
+      if (length(niche_optim) != n_species) stop("niche_optim must have length of one or n_species")
+      m_mu <- matrix(rep(x = niche_optim, times = n_patch), nrow = n_species, ncol = n_patch)
+    }
+  }
+
+  ## niche width
+  if (length(sd_niche_width) == 1) {
+    message("Single value of sd_niche_width is given: assume niche width are the same for all species")
+    m_sd_niche_width <- matrix(sd_niche_width, nrow = n_species, ncol = n_patch)
+  } else {
+    if (length(sd_niche_width) != n_species) stop("sd_niche_width must have length of one or n_species")
+    m_sd_niche_width <- matrix(rep(x = sd_niche_width, times = n_patch), nrow = n_species, ncol = n_patch)
+  }
+
+  ## maximum reproductive number
   if (any(r0 < 1)) stop("r0 must be greater than or equal to one")
   if (length(r0) == 1) {
     v_r0 <- rep(x = r0, times = n_species)
@@ -96,7 +121,7 @@ mcsim <- function(n_species = 5,
 
   # environmental variation among patches
   if (length(mean_env) == 1) {
-    message("Only one environmental value is given: the model will assume environmental conditions are the same at all habitat patches")
+    message("Single value of mean_env is given: assume environmental conditions are the same at all habitat patches")
     v_mu_z <- rep(x = mean_env, times = n_patch)
   } else {
     if (length(mean_env) != n_patch) stop("mean_env must have length of n_patch")
@@ -136,7 +161,7 @@ mcsim <- function(n_species = 5,
   }
 
   if (length(p_dispersal) == 1) {
-    message("Only one dispersal probability is given: the model will assume dispersal probability is the same for all species")
+    message("Single value of dispersal probability is given: assume dispersal probability is the same for all species")
     v_p_dispersal <- rep(x = p_dispersal, times = n_species)
   } else {
     if (length(p_dispersal) != n_species) stop("p_dispersal must have length of one or n_species")
@@ -178,7 +203,7 @@ mcsim <- function(n_species = 5,
     }
 
     m_z_xt <- matrix(rep(x = m_z[n, ], each = n_species), nrow = n_species, ncol = n_patch)
-    m_r_xt <- m_r0 * exp(- ((m_mu - m_z_xt) / (sqrt(2) * sd_niche_width))^2)
+    m_r_xt <- m_r0 * exp(- ((m_mu - m_z_xt) / (sqrt(2) * m_sd_niche_width))^2)
     m_n_hat <- (m_n * m_r_xt) / (1 + ((m_r0 - 1) / m_k) * (m_interaction %*% m_n))
 
     m_e_hat <- m_n_hat * v_p_dispersal
@@ -238,6 +263,7 @@ mcsim <- function(n_species = 5,
                   dplyr::right_join(dplyr::tibble(species = 1:n_species,
                                                   r0 = v_r0,
                                                   niche_optim = v_mu,
+                                                  niche_width = sd_niche_width,
                                                   p_dispersal = v_p_dispersal),
                                     by = "species")
 

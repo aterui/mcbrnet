@@ -17,6 +17,7 @@ mcsim(
   min_alpha = NULL,
   max_alpha = NULL,
   r0 = 4,
+  niche_optim = NULL,
   sd_niche_width = 1,
   optim_min = -1,
   optim_max = 1,
@@ -44,7 +45,7 @@ mcsim(
 
 \item{propagule_interval}{numeric value. Time interval for propagule introduction during warm-up. If \code{NULL}, a value of \code{ceiling(n_warmup / 10)} will be used.}
 
-\item{carrying_capacity}{numeric value (length should be equal to one or the number of patches). Carrying capacities of individual patches.}
+\item{carrying_capacity}{numeric value (length should be one or equal to \code{n_patch}). Carrying capacities of individual patches.}
 
 \item{interaction_type}{character string. \code{"constant"} or \code{"random"}. \code{"constant"} assumes the single interaction strength of alpha for all pairs of species. \code{"random"} draws random numbers from a uniform distribution with \code{min_alpha} and \code{max_alpha}.}
 
@@ -54,27 +55,29 @@ mcsim(
 
 \item{max_alpha}{numeric value. Maximum value of a uniform distribution that generates alpha.}
 
-\item{r0}{numeric value (length should be equal to one or the number of species). Maximum population growth rate of the Beverton-Holt model.}
+\item{r0}{numeric value (length should be one or equal to \code{n_species}). Maximum reproductive number of the Beverton-Holt model.}
 
-\item{sd_niche_width}{numeric value. Niche width of species. Higher values indicate greater niche width.}
+\item{niche_optim}{numeric value (length should be one or equal to \code{n_species}). Niche optimum of species (environmental value that maximizes the reproductive number). Default \code{NULL}.}
 
-\item{optim_min}{numeric value. Minimum value of a uniform distribution that generates optimal environmental values of simulated species. Values are randomly assigned to species.}
+\item{sd_niche_width}{numeric value (length should be one or equal to \code{n_species}). Niche width of species. Higher values indicate greater niche width.}
 
-\item{optim_max}{numeric value. Maximum value of a uniform distribution that generates optimal environmental values of simulated species. Values are randomly assigned to species.}
+\item{optim_min}{numeric value. Minimum value of a uniform distribution that generates optimal environmental values of simulated species. Values are randomly assigned to species. Enabled if \code{niche_optim = NULL}.}
+
+\item{optim_max}{numeric value. Maximum value of a uniform distribution that generates optimal environmental values of simulated species. Values are randomly assigned to species. Enabled if \code{niche_optim = NULL}.}
 
 \item{distance_matrix}{numeric value. Distance matrix indicating distance between habitat patches. If \code{NULL}, a square landscape with randomly distributed patches will be generated. Default \code{NULL}.}
 
 \item{landscape_size}{numeric value. Length of a landscape on a side. Active only when \code{dispersal_matrix = NULL}.}
 
-\item{mean_env}{numeric value (length should be equal to one or the number of patches). Mean environmental values of patches.}
+\item{mean_env}{numeric value (length should be one or equal to \code{n_patch}). Mean environmental values of patches.}
 
-\item{sd_env}{numeric value. Temporal SD of environmental variation at each patch.}
+\item{sd_env}{numeric value. Standard deviation of temporal environmental variation at each patch.}
 
 \item{phi}{numeric value. Parameter describing distance decay of spatial autocorrelation in temporal environmental variation.}
 
 \item{spatial_env_cor}{logical. Indicates whether spatial autocorrelation in temporal environmental variation is considered or not. Default \code{FALSE}.}
 
-\item{p_dispersal}{numeric value or vector (length should be equal to one or the number of species). Probability of dispersal.}
+\item{p_dispersal}{numeric value (length should be one or equal to \code{n_species}). Probability of dispersal.}
 
 \item{theta}{numeric value. Dispersal parameter describing dispersal capability of species.}
 
