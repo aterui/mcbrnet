@@ -2,17 +2,19 @@ mcbrnet: an R package for simulating metacommunity dynamics in a
 branching network
 ================
 Akira Terui
-September 13, 2020
+September 14, 2020
 
   - [Overview](#overview)
   - [Installation](#installation)
   - [Instruction](#instruction)
       - [`brnet()`](#brnet)
           - [Basic usage](#basic-usage)
-          - [Visualization](#visualization)
-          - [Environmental values](#environmental-values)
+          - [Quick start](#quick-start)
+          - [Custom: visualization](#custom-visualization)
+          - [Custom: environment](#custom-environment)
       - [`mcsim()`](#mcsim)
           - [Basic usage](#basic-usage-1)
+          - [Quick start](#quick-start-1)
           - [Model description](#model-description)
   - [References](#references)
 
@@ -73,17 +75,29 @@ following steps:
 
 3.  Organize branches into a bifurcating branching network.
 
+Sample script:
+
+``` r
+net <- brnet(n_patch = 50, p_branch = 0.5)
+```
+
 The function returns:
 
   - `adjacency_matrix`: adjacency matrix.
   - `distance_matrix`: distance matrix. Distance between patches is
     measured as the number of patches required to reach from the focal
     patch to the target patch along the network.
-  - `df_patch`: a data frame (`dplyr::tibble`) containing unique patch
-    ID `patch_id`, unique branch ID `branch_id`, environmental value
-    `environment` (see below for details), and the number of upstream
-    contributing patches `n_patch_upstream` (including the focal patch
-    itself; akin to the watershed area in river networks).
+  - `df_patch`: a data frame (`dplyr::tibble`) containing patch
+    attributes.
+      - *patch\_id*: patch ID.
+      - *branch\_id*: branch ID.
+      - *environment*: environmental value for each patch (see below for
+        details)
+      - *n\_patch\_upstream*: the number of upstream contributing
+        patches (including the focal patch itself; akin to the watershed
+        area in river networks).
+
+### Quick start
 
 The following script produce a branching network with `n_patch = 50` and
 `p_branch = 0.5`. By default, `brnet()` visualizes the generated network
@@ -91,11 +105,10 @@ using functions in packages `igraph` (Csardi and Nepusz 2006) and
 `plotfunctions` (van Rij 2020) (`plot = FALSE` to disable):
 
 ``` r
-set.seed(1)
 net <- brnet(n_patch = 50, p_branch = 0.5)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
 
 Patches are colored in accordance with randomly generated environmental
 values, and the size of patches is proportional to the number of patches
@@ -159,46 +172,42 @@ net$df_patch
     ## 10       10        11      -0.180                6
     ## # ... with 40 more rows
 
-### Visualization
+### Custom: visualization
 
 Users may add patch labels using the argument `patch_label`:
 
 ``` r
 # patch ID
-set.seed(1)
 net <- brnet(n_patch = 50, p_branch = 0.5, patch_label = "patch")
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
 
 ``` r
 # branch ID
-set.seed(1)
 net <- brnet(n_patch = 50, p_branch = 0.5, patch_label = "branch")
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
 
 ``` r
 # number of upstream contributing patches
-set.seed(1)
 net <- brnet(n_patch = 50, p_branch = 0.5, patch_label = "n_upstream")
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
 
 To remove patch size variation, set `patch_scaling = FALSE` and specify
 `patch_size`:
 
 ``` r
 # number of upstream contributing patches
-set.seed(1)
 net <- brnet(n_patch = 50, p_branch = 0.5, patch_scaling = FALSE, patch_size = 8)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
 
-### Environmental values
+### Custom: environment
 
 There is some flexibility in how to simulate environmental values, which
 are determined through an autoregressive process, as detailed below:
@@ -208,12 +217,13 @@ are determined through an autoregressive process, as detailed below:
     z<sub>1</sub> \~ Uniform(min<sub>env</sub>, max<sub>env</sub>).
 
 2.  Downstream environmental values are determined by an autoregressive
-    process as z<sub>x</sub> = ρz<sub>x-1</sub> + ε<sub>x</sub>, where
-    ε<sub>x</sub> \~ Normal(0, σ<sup>2</sup><sub>env</sub>). At
-    bifurcation patches (or confluence), the environmental value takes a
-    weighted mean of the two contributing patches given the size of
-    these patches *s* (the number of upstream contributing patches):
-    z<sub>x</sub> = ω(ρz<sub>1,x-1</sub> + ε<sub>1,x</sub>) + (1 -
+    process as z<sub>x</sub> = ρz<sub>x-1</sub> + ε<sub>x</sub> (‘x-1’
+    means one patch upstream), where ε<sub>x</sub> \~ Normal(0,
+    σ<sup>2</sup><sub>env</sub>). At bifurcation patches (or
+    confluence), the environmental value takes a weighted mean of the
+    two contributing patches given the size of these patches *s* (the
+    number of upstream contributing patches): z<sub>x</sub> =
+    ω(ρz<sub>1,x-1</sub> + ε<sub>1,x</sub>) + (1 -
     ω)(ρz<sub>2,x-1</sub> + ε<sub>2,x</sub>), where ω =
     s<sub>1</sub>/(s<sub>1</sub> + s<sub>2</sub>).
 
@@ -241,16 +251,44 @@ net <- brnet(n_patch = 50, p_branch = 0.5,
 ### Basic usage
 
 The key arguments are the number of habitat patches (`n_patch`) and the
-number of species in a metacommunity (`n_species`). By default,
-`mcsim()` simulates metacommunity dynamics with 200 warm-up
-(initialization with species introductions), 200 burn-in (burn-in period
-with no species introductions), and 1000 time-steps for records. The
-function returns:
+number of species in a metacommunity (`n_species`). The metacommunity
+dynamics are simulated through (1) local dynamics (population growth and
+competition among species), (2) immigration and (3) emigration. By
+default, `mcsim()` simulates metacommunity dynamics with 200 warm-up
+(initialization with species introductions: `n_warmup`), 200 burn-in
+(burn-in period with no species introductions: `n_burnin`), and 1000
+time-steps for records (`n_timestep`).
+
+Sample script:
+
+``` r
+mc <- mcsim(n_patch = 5, n_species = 5)
+```
+
+The function returns:
 
   - `df_dynamics` a data frame containing simulated metacommunity
-    dynamics.
+    dynamics\*.
+      - *timestep*: time-step.
+      - *patch*: patch ID.
+      - *mean\_env*: mean environmental condition at each patch.
+      - *env*: environmental condition at patch x and time-step t.
+      - *species*: species ID.
+      - *niche\_optim*: optimal environmental value for species i.
+      - *r\_xt*: reproductive number of species i at patch x and
+        time-step t.
+      - *abundance*: abundance of species i at patch x.
   - `df_species` a data frame containing species attributes.
+      - *species*: species ID.
+      - *mean\_abundance*: mean abundance (arithmetic) of species i
+        across sites and time-steps.
+      - *r0*: maximum reproductive number of species i.
+      - *niche\_optim*: optimal environmental value for species i.
+      - *p\_dispersal*: dispersal probability of species i.
   - `df_patch` a data frame containing patch attributes.
+      - *patch*: patch ID.
+      - *alpha\_div*: alpha diversity averaged across time-steps.
+      - *mu\_env*:
   - `df_diversity` a data frame containing diversity metrics (α, β, and
     γ).
   - `distance_matrix` a distance matrix. By default, a square-shaped
@@ -260,75 +298,10 @@ function returns:
   - `interaction_matrix` a species interaction matrix, in which species
     X (column) influences species Y (row).
 
-<!-- end list -->
+\*NOTE: The warm-up and burn-in periods will not be included in return
+values.
 
-``` r
-mc <- mcsim(n_patch = 5, n_species = 5)
-```
-
-To access:
-
-``` r
-mc
-```
-
-    ## $df_dynamics
-    ## # A tibble: 25,000 x 8
-    ##    timestep patch mean_env     env species niche_optim  r_xt abundance
-    ##       <dbl> <dbl>    <dbl>   <dbl>   <dbl>       <dbl> <dbl>     <dbl>
-    ##  1        1     1        0 -0.0284       1       0.103  3.97       116
-    ##  2        1     1        0 -0.0284       2       0.305  3.78       104
-    ##  3        1     1        0 -0.0284       3       0.863  2.69        55
-    ##  4        1     1        0 -0.0284       4       0.381  3.68       104
-    ##  5        1     1        0 -0.0284       5      -0.492  3.59        90
-    ##  6        1     2        0  0.0467       1       0.103  3.99        94
-    ##  7        1     2        0  0.0467       2       0.305  3.87        85
-    ##  8        1     2        0  0.0467       3       0.863  2.87        72
-    ##  9        1     2        0  0.0467       4       0.381  3.78        73
-    ## 10        1     2        0  0.0467       5      -0.492  3.46        73
-    ## # ... with 24,990 more rows
-    ## 
-    ## $df_species
-    ## # A tibble: 5 x 5
-    ##   species mean_abundance    r0 niche_optim p_dispersal
-    ##     <dbl>          <dbl> <dbl>       <dbl>       <dbl>
-    ## 1       1           98.1     4       0.103         0.1
-    ## 2       2           93.1     4       0.305         0.1
-    ## 3       3           57.8     4       0.863         0.1
-    ## 4       4           89.5     4       0.381         0.1
-    ## 5       5           83.7     4      -0.492         0.1
-    ## 
-    ## $df_patch
-    ## # A tibble: 5 x 4
-    ##   patch alpha_div mu_env connectivity
-    ##   <dbl>     <dbl>  <dbl>        <dbl>
-    ## 1     1         5      0       0.176 
-    ## 2     2         5      0       0.0419
-    ## 3     3         5      0       0.0923
-    ## 4     4         5      0       0.0589
-    ## 5     5         5      0       0.127 
-    ## 
-    ## $df_diversity
-    ## # A tibble: 1 x 3
-    ##   alpha_div beta_div gamma_div
-    ##       <dbl>    <dbl>     <dbl>
-    ## 1         5        0         5
-    ## 
-    ## $distance_matrix
-    ##          patch1   patch2   patch3   patch4   patch5
-    ## patch1 0.000000 5.915728 2.817654 3.002999 2.752147
-    ## patch2 5.915728 0.000000 5.555938 8.790871 3.347126
-    ## patch3 2.817654 5.555938 0.000000 5.313542 3.739870
-    ## patch4 3.002999 8.790871 5.313542 0.000000 5.471905
-    ## patch5 2.752147 3.347126 3.739870 5.471905 0.000000
-    ## 
-    ## $interaction_matrix
-    ##     sp1 sp2 sp3 sp4 sp5
-    ## sp1   1   0   0   0   0
-    ## sp2   0   1   0   0   0
-    ## sp3   0   0   1   0   0
-    ## sp4   0   0   0   1   0
-    ## sp5   0   0   0   0   1
+### Quick start
 
 ### Model description
 
