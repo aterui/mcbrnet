@@ -1,33 +1,34 @@
 #' Simulate metacommunity dynamics
 #'
-#' @param n_species numeric scalar. Number of species in a metacommunity.
-#' @param n_patch numeric scalar. Number of patches in a metacommunity.
-#' @param n_warmup numeric scalar. Number of time-steps for warm-up.
-#' @param n_burnin numeric scalar. Number of time-steps for burn-in.
-#' @param n_timestep numeric scalar. Number of time-steps to be saved.
-#' @param propagule_interval numeric scalar. Time interval for propagule introduction during warm-up. If \code{NULL}, a value of \code{ceiling(n_warmup / 10)} will be used.
-#' @param carrying_capacity numeric scalar or vector (length should be equal to the number of patches). Carrying capacities of individual patches.
-#' @param interaction_type character scalar. \code{"constant"} or \code{"random"}. \code{"constant"} assumes the single interaction strength of alpha for all pairs of species. \code{"random"} draws random numbers from a uniform distribution with \code{min_alpha} and \code{max_alpha}.
-#' @param alpha species interaction strength.
-#' @param min_alpha numeric scalar. Minimum value of a uniform distribution that generates alpha.
-#' @param max_alpha numeric scalar. Maximum value of a uniform distribution that generates alpha.
-#' @param r0 numeric scalar or vector (length should be equal to the number of species). Maximum population growth rate of the Beverton-Holt model.
-#' @param sd_niche_width numeric scalar. Niche width of species. Higher values indicate greater niche width.
-#' @param optim_min numeric scalar. Minimum value of a uniform distribution that generates optimal environmental values of simulated species. Values are randomly assigned to species.
-#' @param optim_max numeric scalar. Maximum value of a uniform distribution that generates optimal environmental values of simulated species. Values are randomly assigned to species.
-#' @param distance_matrix numeric matrix. Distance matrix indicating distance between habitat patches. If \code{NULL}, a square landscape with randomly distributed patches will be generated. Default \code{NULL}.
-#' @param landscape_size numeric scalar. Length of a landscape on a side. Active only when \code{dispersal_matrix = NULL}.
-#' @param mu_env numeric scalar or vector (with length equal to the number of patches). Mean environmental values of patches.
-#' @param sd_env numeric scalar. Temporal SD of environmental variation at each patch.
-#' @param phi numeric scalar. Parameter describing distance decay of spatial autocorrelation in temporal environmental variation (\eqn{\rho = exp(-\phi d)}, where \code{d} is the distance between patches).
+#' @param n_species numeric value. Number of species in a metacommunity.
+#' @param n_patch numeric value. Number of patches in a metacommunity.
+#' @param n_warmup numeric value. Number of time-steps for warm-up.
+#' @param n_burnin numeric value. Number of time-steps for burn-in.
+#' @param n_timestep numeric value. Number of time-steps to be saved.
+#' @param propagule_interval numeric value. Time interval for propagule introduction during warm-up. If \code{NULL}, a value of \code{ceiling(n_warmup / 10)} will be used.
+#' @param carrying_capacity numeric value (length should be equal to one or the number of patches). Carrying capacities of individual patches.
+#' @param interaction_type character string. \code{"constant"} or \code{"random"}. \code{"constant"} assumes the single interaction strength of alpha for all pairs of species. \code{"random"} draws random numbers from a uniform distribution with \code{min_alpha} and \code{max_alpha}.
+#' @param alpha numeric value. Species interaction strength.
+#' @param min_alpha numeric value. Minimum value of a uniform distribution that generates alpha.
+#' @param max_alpha numeric value. Maximum value of a uniform distribution that generates alpha.
+#' @param r0 numeric value (length should be equal to one or the number of species). Maximum population growth rate of the Beverton-Holt model.
+#' @param sd_niche_width numeric value. Niche width of species. Higher values indicate greater niche width.
+#' @param optim_min numeric value. Minimum value of a uniform distribution that generates optimal environmental values of simulated species. Values are randomly assigned to species.
+#' @param optim_max numeric value. Maximum value of a uniform distribution that generates optimal environmental values of simulated species. Values are randomly assigned to species.
+#' @param distance_matrix numeric value. Distance matrix indicating distance between habitat patches. If \code{NULL}, a square landscape with randomly distributed patches will be generated. Default \code{NULL}.
+#' @param landscape_size numeric value. Length of a landscape on a side. Active only when \code{dispersal_matrix = NULL}.
+#' @param mu_env numeric value (length should be equal to one or the number of patches). Mean environmental values of patches.
+#' @param sd_env numeric value. Temporal SD of environmental variation at each patch.
+#' @param phi numeric value. Parameter describing distance decay of spatial autocorrelation in temporal environmental variation.
 #' @param spatial_env_cor logical. Indicates whether spatial autocorrelation in temporal environmental variation is considered or not. Default \code{FALSE}.
-#' @param p_dispersal numeric scalar or vector (length should be equal to the number of species). Probability of dispersal (success probability of a binomial distribution).
-#' @param theta numeric scalar. Dispersal parameter describing dispersal capability of species as \eqn{exp(-\theta d)}, where \code{d} is the distance between patches.
-#' @param plot logical. If \code{TRUE}, results are plotted.
+#' @param p_dispersal numeric value or vector (length should be equal to one or the number of species). Probability of dispersal.
+#' @param theta numeric value. Dispersal parameter describing dispersal capability of species.
+#' @param plot logical. If \code{TRUE}, five sample patches and species of \code{df_dynamics} are plotted.
 #'
-#' @return \code{dynamics} temporal metacommunity dynamics.
-#' @return \code{distance_matrix} distance matrix.
-#' @return \code{interaction_matrix} species interaction matrix.
+#' @return \code{df_dynamics} a data frame containing simulated metacommunity dynamics.
+#' @return \code{df_species} a data frame containing species attributes.
+#' @return \code{df_patch} a data frame containing patch attributes.
+#' @return \code{df_diversity} a data frame containing diversity metrics.
 #'
 #' @importFrom dplyr %>% filter
 #' @importFrom ggplot2 ggplot vars labeller geom_line aes scale_color_viridis_c labs facet_grid label_both
