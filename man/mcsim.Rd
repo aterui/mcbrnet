@@ -25,8 +25,8 @@ mcsim(
   landscape_size = 10,
   mean_env = 0,
   sd_env = 0.1,
-  phi = 1,
   spatial_env_cor = FALSE,
+  phi = 1,
   p_dispersal = 0.1,
   theta = 1,
   plot = FALSE
@@ -37,23 +37,23 @@ mcsim(
 
 \item{n_patch}{numeric value. Number of patches in a metacommunity.}
 
-\item{n_warmup}{numeric value. Number of time-steps for warm-up.}
+\item{n_warmup}{numeric value. Number of time-steps for warm-up. Default \code{200}.}
 
-\item{n_burnin}{numeric value. Number of time-steps for burn-in.}
+\item{n_burnin}{numeric value. Number of time-steps for burn-in. Default \code{200}.}
 
-\item{n_timestep}{numeric value. Number of time-steps to be saved.}
+\item{n_timestep}{numeric value. Number of time-steps to be saved. Default \code{1000}.}
 
 \item{propagule_interval}{numeric value. Time interval for propagule introduction during warm-up. If \code{NULL}, a value of \code{ceiling(n_warmup / 10)} will be used.}
 
-\item{carrying_capacity}{numeric value (length should be one or equal to \code{n_patch}). Carrying capacities of individual patches.}
+\item{carrying_capacity}{numeric value (length should be one or equal to \code{n_patch}). Carrying capacities of individual patches. Default \code{100}.}
 
-\item{interaction_type}{character string. \code{"constant"} or \code{"random"}. \code{"constant"} assumes the single interaction strength of alpha for all pairs of species. \code{"random"} draws random numbers from a uniform distribution with \code{min_alpha} and \code{max_alpha}.}
+\item{interaction_type}{character string. \code{"constant"} or \code{"random"}. \code{"constant"} assumes the unique interaction strength of \code{alpha} for all pairs of species. \code{"random"} draws random numbers from a uniform distribution with \code{min_alpha} and \code{max_alpha}.}
 
-\item{alpha}{numeric value. Species interaction strength.}
+\item{alpha}{numeric value. Species interaction strength. Enabled if \code{interaction_type = "constant"}. Default \code{0}.}
 
-\item{min_alpha}{numeric value. Minimum value of a uniform distribution that generates alpha.}
+\item{min_alpha}{numeric value. Minimum value of a uniform distribution that generates species interaction strength. Enabled if \code{interaction_type = "random"}. Default \code{NULL}.}
 
-\item{max_alpha}{numeric value. Maximum value of a uniform distribution that generates alpha.}
+\item{max_alpha}{numeric value. Maximum value of a uniform distribution that generates species interaction strength. Enabled if \code{interaction_type = "random"}. Default \code{NULL}.}
 
 \item{r0}{numeric value (length should be one or equal to \code{n_species}). Maximum reproductive number of the Beverton-Holt model.}
 
@@ -73,9 +73,9 @@ mcsim(
 
 \item{sd_env}{numeric value. Standard deviation of temporal environmental variation at each patch.}
 
-\item{phi}{numeric value. Parameter describing distance decay of spatial autocorrelation in temporal environmental variation.}
+\item{spatial_env_cor}{logical. If \code{TRUE}, spatial autocorrelation in temporal environmental fluctuation is considered. Default \code{FALSE}.}
 
-\item{spatial_env_cor}{logical. Indicates whether spatial autocorrelation in temporal environmental variation is considered or not. Default \code{FALSE}.}
+\item{phi}{numeric value. Parameter describing distance decay of spatial autocorrelation in temporal environmental fluctuation. Enabled if \code{spatial_env_cor = TRUE}.}
 
 \item{p_dispersal}{numeric value (length should be one or equal to \code{n_species}). Probability of dispersal.}
 
@@ -95,8 +95,12 @@ mcsim(
 \description{
 Simulate metacommunity dynamics
 }
+\section{Reference}{
+ see \href{https://github.com/aterui/mcbrnet}{github page} for instruction
+}
+
 \examples{
-mcsim(n_warmup = 200, n_burnin = 200, n_timestep = 1000)
+mcsim(n_patch = 5, n_species = 5)
 
 }
 \author{

@@ -2,15 +2,15 @@
 #'
 #' @param n_species numeric value. Number of species in a metacommunity.
 #' @param n_patch numeric value. Number of patches in a metacommunity.
-#' @param n_warmup numeric value. Number of time-steps for warm-up.
-#' @param n_burnin numeric value. Number of time-steps for burn-in.
-#' @param n_timestep numeric value. Number of time-steps to be saved.
+#' @param n_warmup numeric value. Number of time-steps for warm-up. Default \code{200}.
+#' @param n_burnin numeric value. Number of time-steps for burn-in. Default \code{200}.
+#' @param n_timestep numeric value. Number of time-steps to be saved. Default \code{1000}.
 #' @param propagule_interval numeric value. Time interval for propagule introduction during warm-up. If \code{NULL}, a value of \code{ceiling(n_warmup / 10)} will be used.
-#' @param carrying_capacity numeric value (length should be one or equal to \code{n_patch}). Carrying capacities of individual patches.
-#' @param interaction_type character string. \code{"constant"} or \code{"random"}. \code{"constant"} assumes the single interaction strength of alpha for all pairs of species. \code{"random"} draws random numbers from a uniform distribution with \code{min_alpha} and \code{max_alpha}.
-#' @param alpha numeric value. Species interaction strength.
-#' @param min_alpha numeric value. Minimum value of a uniform distribution that generates alpha.
-#' @param max_alpha numeric value. Maximum value of a uniform distribution that generates alpha.
+#' @param carrying_capacity numeric value (length should be one or equal to \code{n_patch}). Carrying capacities of individual patches. Default \code{100}.
+#' @param interaction_type character string. \code{"constant"} or \code{"random"}. \code{"constant"} assumes the unique interaction strength of \code{alpha} for all pairs of species. \code{"random"} draws random numbers from a uniform distribution with \code{min_alpha} and \code{max_alpha}.
+#' @param alpha numeric value. Species interaction strength. Enabled if \code{interaction_type = "constant"}. Default \code{0}.
+#' @param min_alpha numeric value. Minimum value of a uniform distribution that generates species interaction strength. Enabled if \code{interaction_type = "random"}. Default \code{NULL}.
+#' @param max_alpha numeric value. Maximum value of a uniform distribution that generates species interaction strength. Enabled if \code{interaction_type = "random"}. Default \code{NULL}.
 #' @param r0 numeric value (length should be one or equal to \code{n_species}). Maximum reproductive number of the Beverton-Holt model.
 #' @param niche_optim numeric value (length should be one or equal to \code{n_species}). Niche optimum of species (environmental value that maximizes the reproductive number). Default \code{NULL}.
 #' @param sd_niche_width numeric value (length should be one or equal to \code{n_species}). Niche width of species. Higher values indicate greater niche width.
@@ -20,8 +20,8 @@
 #' @param landscape_size numeric value. Length of a landscape on a side. Active only when \code{dispersal_matrix = NULL}.
 #' @param mean_env numeric value (length should be one or equal to \code{n_patch}). Mean environmental values of patches.
 #' @param sd_env numeric value. Standard deviation of temporal environmental variation at each patch.
-#' @param phi numeric value. Parameter describing distance decay of spatial autocorrelation in temporal environmental variation.
-#' @param spatial_env_cor logical. Indicates whether spatial autocorrelation in temporal environmental variation is considered or not. Default \code{FALSE}.
+#' @param spatial_env_cor logical. If \code{TRUE}, spatial autocorrelation in temporal environmental fluctuation is considered. Default \code{FALSE}.
+#' @param phi numeric value. Parameter describing distance decay of spatial autocorrelation in temporal environmental fluctuation. Enabled if \code{spatial_env_cor = TRUE}.
 #' @param p_dispersal numeric value (length should be one or equal to \code{n_species}). Probability of dispersal.
 #' @param theta numeric value. Dispersal parameter describing dispersal capability of species.
 #' @param plot logical. If \code{TRUE}, five sample patches and species of \code{df_dynamics} are plotted.
@@ -37,10 +37,12 @@
 #' @importFrom utils setTxtProgressBar txtProgressBar
 #' @importFrom rlang .data
 #'
+#' @section Reference: see \href{https://github.com/aterui/mcbrnet}{github page} for instruction
+#'
 #' @author Akira Terui, \email{hanabi0111@gmail.com}
 #'
 #' @examples
-#' mcsim(n_warmup = 200, n_burnin = 200, n_timestep = 1000)
+#' mcsim(n_patch = 5, n_species = 5)
 #'
 #' @export
 #'
@@ -64,8 +66,8 @@ mcsim <- function(n_species = 5,
                   landscape_size = 10,
                   mean_env = 0,
                   sd_env = 0.1,
-                  phi = 1,
                   spatial_env_cor = FALSE,
+                  phi = 1,
                   p_dispersal = 0.1,
                   theta = 1,
                   plot = FALSE
