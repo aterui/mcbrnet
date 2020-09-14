@@ -22,7 +22,7 @@ mcsim(
   optim_max = 1,
   distance_matrix = NULL,
   landscape_size = 10,
-  mu_env = 0,
+  mean_env = 0,
   sd_env = 0.1,
   phi = 1,
   spatial_env_cor = FALSE,
@@ -66,7 +66,7 @@ mcsim(
 
 \item{landscape_size}{numeric value. Length of a landscape on a side. Active only when \code{dispersal_matrix = NULL}.}
 
-\item{mu_env}{numeric value (length should be equal to one or the number of patches). Mean environmental values of patches.}
+\item{mean_env}{numeric value (length should be equal to one or the number of patches). Mean environmental values of patches.}
 
 \item{sd_env}{numeric value. Temporal SD of environmental variation at each patch.}
 

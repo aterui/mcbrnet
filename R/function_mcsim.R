@@ -17,7 +17,7 @@
 #' @param optim_max numeric value. Maximum value of a uniform distribution that generates optimal environmental values of simulated species. Values are randomly assigned to species.
 #' @param distance_matrix numeric value. Distance matrix indicating distance between habitat patches. If \code{NULL}, a square landscape with randomly distributed patches will be generated. Default \code{NULL}.
 #' @param landscape_size numeric value. Length of a landscape on a side. Active only when \code{dispersal_matrix = NULL}.
-#' @param mu_env numeric value (length should be equal to one or the number of patches). Mean environmental values of patches.
+#' @param mean_env numeric value (length should be equal to one or the number of patches). Mean environmental values of patches.
 #' @param sd_env numeric value. Temporal SD of environmental variation at each patch.
 #' @param phi numeric value. Parameter describing distance decay of spatial autocorrelation in temporal environmental variation.
 #' @param spatial_env_cor logical. Indicates whether spatial autocorrelation in temporal environmental variation is considered or not. Default \code{FALSE}.
@@ -60,7 +60,7 @@ mcsim <- function(n_species = 5,
                   optim_max = 1,
                   distance_matrix = NULL,
                   landscape_size = 10,
-                  mu_env = 0,
+                  mean_env = 0,
                   sd_env = 0.1,
                   phi = 1,
                   spatial_env_cor = FALSE,
@@ -73,7 +73,7 @@ mcsim <- function(n_species = 5,
 
   # carrying capacity
   if (length(carrying_capacity) == 1) {
-    print("Only one carrying capacity is given: the model will assume carrying capacities are the same at all habitat patches")
+    message("Only one carrying capacity is given: the model will assume carrying capacities are the same at all habitat patches")
     m_k <- matrix(carrying_capacity, nrow = n_species, ncol = n_patch)
   } else {
     if (length(carrying_capacity) != n_patch) stop("carrying_capacity must have length of one or n_patch")
@@ -95,12 +95,12 @@ mcsim <- function(n_species = 5,
   }
 
   # environmental variation among patches
-  if (length(mu_env) == 1) {
-    print("Only one environmental value is given: the model will assume environmental conditions are the same at all habitat patches")
-    v_mu_z <- rep(x = mu_env, times = n_patch)
+  if (length(mean_env) == 1) {
+    message("Only one environmental value is given: the model will assume environmental conditions are the same at all habitat patches")
+    v_mu_z <- rep(x = mean_env, times = n_patch)
   } else {
-    if (length(mu_env) != n_patch) stop("mu_env must have length of n_patch")
-    v_mu_z <- mu_env
+    if (length(mean_env) != n_patch) stop("mean_env must have length of n_patch")
+    v_mu_z <- mean_env
   }
 
   # interaction matrix
@@ -121,7 +121,7 @@ mcsim <- function(n_species = 5,
 
   # dispersal matrix
   if (is.null(distance_matrix)) {
-    print("Distance matrix is not given: generate a square landscape with landscape_size (default: 10) on a side")
+    message("Distance matrix is not given: generate a square landscape with landscape_size (default: 10) on a side")
     v_x_coord <- runif(n = n_patch, min = 0, max = landscape_size)
     v_y_coord <- runif(n = n_patch, min = 0, max = landscape_size)
     m_distance <- data.matrix(dist(cbind(v_x_coord, v_y_coord), diag = TRUE, upper = TRUE))
@@ -136,7 +136,7 @@ mcsim <- function(n_species = 5,
   }
 
   if (length(p_dispersal) == 1) {
-    print("Only one dispersal probability is given: the model will assume dispersal probability is the same for all species")
+    message("Only one dispersal probability is given: the model will assume dispersal probability is the same for all species")
     v_p_dispersal <- rep(x = p_dispersal, times = n_species)
   } else {
     if (length(p_dispersal) != n_species) stop("p_dispersal must have length of one or n_species")
@@ -158,7 +158,8 @@ mcsim <- function(n_species = 5,
   m_z <- mvtnorm::rmvnorm(n_sim, mean = v_mu_z, sigma = m_sigma)
 
   # community
-  colname <- c("timestep", "patch", "mean_env", "env", "species", "niche_optim", "r_xt", "abundance")
+  colname <- c("timestep", "patch", "mean_env", "env", "carrying_capacity",
+               "species", "niche_optim", "r_xt", "abundance")
   m_dynamics <- matrix(NA, nrow = n_species * n_patch * n_timestep, ncol = length(colname))
   colnames(m_dynamics) <- colname
   st_row <- seq(from = 1, to = nrow(m_dynamics), by = n_species * n_patch)
@@ -197,6 +198,7 @@ mcsim <- function(n_species = 5,
                                     rep(x = 1:n_patch, each = n_species),
                                     rep(x = v_mu_z, each = n_species),
                                     c(m_z_xt),
+                                    c(m_k),
                                     rep(x = 1:n_species, times = n_patch),
                                     c(m_mu),
                                     c(m_r_xt),
@@ -245,7 +247,8 @@ mcsim <- function(n_species = 5,
                 dplyr::group_by(.data$patch) %>%
                 dplyr::summarise(alpha_div = sum(.data$abundance > 0) / n_timestep) %>%
                 dplyr::left_join(dplyr::tibble(patch = seq_len(n_patch),
-                                               mu_env = v_mu_z,
+                                               mean_env = mean_env,
+                                               carrying_capacity = carrying_capacity,
                                                connectivity = rowSums(m_dispersal)),
                                  by = "patch")
 
