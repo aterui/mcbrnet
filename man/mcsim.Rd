@@ -32,60 +32,62 @@ mcsim(
 )
 }
 \arguments{
-\item{n_species}{numeric scalar. Number of species in a metacommunity.}
+\item{n_species}{numeric value. Number of species in a metacommunity.}
 
-\item{n_patch}{numeric scalar. Number of patches in a metacommunity.}
+\item{n_patch}{numeric value. Number of patches in a metacommunity.}
 
-\item{n_warmup}{numeric scalar. Number of time-steps for warm-up.}
+\item{n_warmup}{numeric value. Number of time-steps for warm-up.}
 
-\item{n_burnin}{numeric scalar. Number of time-steps for burn-in.}
+\item{n_burnin}{numeric value. Number of time-steps for burn-in.}
 
-\item{n_timestep}{numeric scalar. Number of time-steps to be saved.}
+\item{n_timestep}{numeric value. Number of time-steps to be saved.}
 
-\item{propagule_interval}{numeric scalar. Time interval for propagule introduction during warm-up. If \code{NULL}, a value of \code{ceiling(n_warmup / 10)} will be used.}
+\item{propagule_interval}{numeric value. Time interval for propagule introduction during warm-up. If \code{NULL}, a value of \code{ceiling(n_warmup / 10)} will be used.}
 
-\item{carrying_capacity}{numeric scalar or vector (length should be equal to the number of patches). Carrying capacities of individual patches.}
+\item{carrying_capacity}{numeric value (length should be equal to one or the number of patches). Carrying capacities of individual patches.}
 
-\item{interaction_type}{character scalar. \code{"constant"} or \code{"random"}. \code{"constant"} assumes the single interaction strength of alpha for all pairs of species. \code{"random"} draws random numbers from a uniform distribution with \code{min_alpha} and \code{max_alpha}.}
+\item{interaction_type}{character string. \code{"constant"} or \code{"random"}. \code{"constant"} assumes the single interaction strength of alpha for all pairs of species. \code{"random"} draws random numbers from a uniform distribution with \code{min_alpha} and \code{max_alpha}.}
 
-\item{alpha}{species interaction strength.}
+\item{alpha}{numeric value. Species interaction strength.}
 
-\item{min_alpha}{numeric scalar. Minimum value of a uniform distribution that generates alpha.}
+\item{min_alpha}{numeric value. Minimum value of a uniform distribution that generates alpha.}
 
-\item{max_alpha}{numeric scalar. Maximum value of a uniform distribution that generates alpha.}
+\item{max_alpha}{numeric value. Maximum value of a uniform distribution that generates alpha.}
 
-\item{r0}{numeric scalar or vector (length should be equal to the number of species). Maximum population growth rate of the Beverton-Holt model.}
+\item{r0}{numeric value (length should be equal to one or the number of species). Maximum population growth rate of the Beverton-Holt model.}
 
-\item{sd_niche_width}{numeric scalar. Niche width of species. Higher values indicate greater niche width.}
+\item{sd_niche_width}{numeric value. Niche width of species. Higher values indicate greater niche width.}
 
-\item{optim_min}{numeric scalar. Minimum value of a uniform distribution that generates optimal environmental values of simulated species. Values are randomly assigned to species.}
+\item{optim_min}{numeric value. Minimum value of a uniform distribution that generates optimal environmental values of simulated species. Values are randomly assigned to species.}
 
-\item{optim_max}{numeric scalar. Maximum value of a uniform distribution that generates optimal environmental values of simulated species. Values are randomly assigned to species.}
+\item{optim_max}{numeric value. Maximum value of a uniform distribution that generates optimal environmental values of simulated species. Values are randomly assigned to species.}
 
-\item{distance_matrix}{numeric matrix. Distance matrix indicating distance between habitat patches. If \code{NULL}, a square landscape with randomly distributed patches will be generated. Default \code{NULL}.}
+\item{distance_matrix}{numeric value. Distance matrix indicating distance between habitat patches. If \code{NULL}, a square landscape with randomly distributed patches will be generated. Default \code{NULL}.}
 
-\item{landscape_size}{numeric scalar. Length of a landscape on a side. Active only when \code{dispersal_matrix = NULL}.}
+\item{landscape_size}{numeric value. Length of a landscape on a side. Active only when \code{dispersal_matrix = NULL}.}
 
-\item{mu_env}{numeric scalar or vector (with length equal to the number of patches). Mean environmental values of patches.}
+\item{mu_env}{numeric value (length should be equal to one or the number of patches). Mean environmental values of patches.}
 
-\item{sd_env}{numeric scalar. Temporal SD of environmental variation at each patch.}
+\item{sd_env}{numeric value. Temporal SD of environmental variation at each patch.}
 
-\item{phi}{numeric scalar. Parameter describing distance decay of spatial autocorrelation in temporal environmental variation (\eqn{\rho = exp(-\phi d)}, where \code{d} is the distance between patches).}
+\item{phi}{numeric value. Parameter describing distance decay of spatial autocorrelation in temporal environmental variation.}
 
 \item{spatial_env_cor}{logical. Indicates whether spatial autocorrelation in temporal environmental variation is considered or not. Default \code{FALSE}.}
 
-\item{p_dispersal}{numeric scalar or vector (length should be equal to the number of species). Probability of dispersal (success probability of a binomial distribution).}
+\item{p_dispersal}{numeric value or vector (length should be equal to one or the number of species). Probability of dispersal.}
 
-\item{theta}{numeric scalar. Dispersal parameter describing dispersal capability of species as \eqn{exp(-\theta d)}, where \code{d} is the distance between patches.}
+\item{theta}{numeric value. Dispersal parameter describing dispersal capability of species.}
 
-\item{plot}{logical. If \code{TRUE}, results are plotted.}
+\item{plot}{logical. If \code{TRUE}, five sample patches and species of \code{df_dynamics} are plotted.}
 }
 \value{
-\code{dynamics} temporal metacommunity dynamics.
+\code{df_dynamics} a data frame containing simulated metacommunity dynamics.
 
-\code{distance_matrix} distance matrix.
+\code{df_species} a data frame containing species attributes.
 
-\code{interaction_matrix} species interaction matrix.
+\code{df_patch} a data frame containing patch attributes.
+
+\code{df_diversity} a data frame containing diversity metrics.
 }
 \description{
 Simulate metacommunity dynamics
