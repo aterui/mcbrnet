@@ -447,21 +447,21 @@ follow a multi-variate normal distribution:
 
 <img src="https://latex.codecogs.com/gif.latex?z_%7Bx%7D%28t%29%20%5Csim%20MVN%28%5Cboldsymbol%7B%5Cmu_%7Bz%7D%7D%2C%20%5Cboldsymbol%7B%5COmega_z%7D%29"/>
 
-**μ<sub>z</sub>** is the vector of mean environmental conditions
-(argument `mean_env`) and Ω<sub>z</sub> is the variance-covariance
-matrix. If `spatial_auto_cor = FALSE`, the off-diagonal element of the
-matrix is set to be zero while diagonal elements are
-σ<sub>z</sub><sup>2</sup> (σ<sub>z</sub>; argument `sd_env`). If
-`spatial_auto_cor = TRUE`, spatial autocorrelation is considered by
-describing the off-diagonal elements as:
+**μ<sub>z</sub>** is the vector of mean environmental conditions of
+patches (argument `mean_env`) and Ω<sub>z</sub> is the
+variance-covariance matrix. If `spatial_auto_cor = FALSE`, the
+off-diagonal elements of the matrix are set to be zero while diagonal
+elements are σ<sub>z</sub><sup>2</sup> (σ<sub>z</sub>; argument
+`sd_env`). If `spatial_auto_cor = TRUE`, spatial autocorrelation is
+considered by describing the off-diagonal elements as:
 
 <img src="https://latex.codecogs.com/gif.latex?%5COmega_%7Bxy%7D%20%3D%20%5Csigma_%7Bz%7D%5E2%20e%5E%7B-%5Cphi%20d_%7Bxy%7D%7D"/>
 
-where \&Omega<sub>xy</sub> denotes the temporal covariance of
-environmental conditions betwee patch x and y, which is assumed to decay
-exponentially with increasing distance between the patches. The
-parameter φ (argument `phi`) determines the strength of distance decay
-(larger values lead to sharper declines).
+where Ω<sub>xy</sub> denotes the temporal covariance of environmental
+conditions betwee patch x and y, which is assumed to decay exponentially
+with increasing distance between the patches. The parameter φ (argument
+`phi`) determines the strength of distance decay (larger values lead to
+sharper declines).
 
 \*NOTE: α<sub>ii</sub> is set to be 1.
 
