@@ -10,11 +10,13 @@ September 14, 2020
       - [`brnet()`](#brnet)
           - [Basic usage](#basic-usage)
           - [Quick start](#quick-start)
-          - [Custom: visualization](#custom-visualization)
-          - [Custom: environment](#custom-environment)
+          - [Custom setting:
+            visualization](#custom-setting-visualization)
+          - [Custom setting: environment](#custom-setting-environment)
       - [`mcsim()`](#mcsim)
           - [Basic usage](#basic-usage-1)
           - [Quick start](#quick-start-1)
+          - [Custom setting](#custom-setting)
           - [Model description](#model-description)
   - [References](#references)
 
@@ -172,7 +174,7 @@ net$df_patch
     ## 10       10        11      -0.180                6
     ## # ... with 40 more rows
 
-### Custom: visualization
+### Custom setting: visualization
 
 Users may add patch labels using the argument `patch_label`:
 
@@ -207,7 +209,7 @@ net <- brnet(n_patch = 50, p_branch = 0.5, patch_scaling = FALSE, patch_size = 8
 
 ![](README_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
 
-### Custom: environment
+### Custom setting: environment
 
 There is some flexibility in how to simulate environmental values, which
 are determined through an autoregressive process, as detailed below:
@@ -253,11 +255,7 @@ net <- brnet(n_patch = 50, p_branch = 0.5,
 The key arguments are the number of habitat patches (`n_patch`) and the
 number of species in a metacommunity (`n_species`). The metacommunity
 dynamics are simulated through (1) local dynamics (population growth and
-competition among species), (2) immigration and (3) emigration. By
-default, `mcsim()` simulates metacommunity dynamics with 200 warm-up
-(initialization with species introductions: `n_warmup`), 200 burn-in
-(burn-in period with no species introductions: `n_burnin`), and 1000
-time-steps for records (`n_timestep`).
+competition among species), (2) immigration and (3) emigration.
 
 Sample script:
 
@@ -273,6 +271,7 @@ The function returns:
       - *patch*: patch ID.
       - *mean\_env*: mean environmental condition at each patch.
       - *env*: environmental condition at patch x and time-step t.
+      - *carrying\_capacity*: carrying capacity at each patch.
       - *species*: species ID.
       - *niche\_optim*: optimal environmental value for species i.
       - *r\_xt*: reproductive number of species i at patch x and
@@ -288,13 +287,13 @@ The function returns:
   - `df_patch` a data frame containing patch attributes.
       - *patch*: patch ID.
       - *alpha\_div*: alpha diversity averaged across time-steps.
-      - *mu\_env*:
+      - *mean\_env*: mean environmental condition at each patch.
+      - *carrying\_capacity*: carrying capacity at each patch.
+      - *connectivity*: structural connectivity at each patch. See below
+        for details.
   - `df_diversity` a data frame containing diversity metrics (α, β, and
     γ).
-  - `distance_matrix` a distance matrix. By default, a square-shaped
-    landscape is generated and patches are randomly distributed through
-    a Poisson point process. Distance between these patches are
-    measured.
+  - `distance_matrix` a distance matrix used in the simulation.
   - `interaction_matrix` a species interaction matrix, in which species
     X (column) influences species Y (row).
 
@@ -303,20 +302,188 @@ values.
 
 ### Quick start
 
+The following script simulates metacommunity dynamics with `n_patch = 5`
+and `n_species = 5`. By default, `mcsim()` simulates metacommunity
+dynamics with 200 warm-up (initialization with species introductions:
+`n_warmup`), 200 burn-in (burn-in period with no species introductions:
+`n_burnin`), and 1000 time-steps for records (`n_timestep`).
+
+``` r
+mc <- mcsim(n_patch = 5, n_species = 5)
+```
+
+Users can visualize the simulated dynamics using `plot = TRUE`, which
+will show five sample patches and species that are randomly chosen:
+
+``` r
+mc <- mcsim(n_patch = 5, n_species = 5, plot = TRUE)
+```
+
+![](README_files/figure-gfm/unnamed-chunk-19-1.png)<!-- -->
+
+Return values are organized as a named list:
+
+``` r
+mc
+```
+
+    ## $df_dynamics
+    ## # A tibble: 25,000 x 9
+    ##    timestep patch mean_env    env carrying_capaci~ species niche_optim  r_xt
+    ##       <dbl> <dbl>    <dbl>  <dbl>            <dbl>   <dbl>       <dbl> <dbl>
+    ##  1        1     1        0 0.0394              100       1     -0.298   3.78
+    ##  2        1     1        0 0.0394              100       2     -0.138   3.94
+    ##  3        1     1        0 0.0394              100       3     -0.764   2.90
+    ##  4        1     1        0 0.0394              100       4     -0.122   3.95
+    ##  5        1     1        0 0.0394              100       5     -0.0474  3.98
+    ##  6        1     2        0 0.0829              100       1     -0.298   3.72
+    ##  7        1     2        0 0.0829              100       2     -0.138   3.90
+    ##  8        1     2        0 0.0829              100       3     -0.764   2.80
+    ##  9        1     2        0 0.0829              100       4     -0.122   3.92
+    ## 10        1     2        0 0.0829              100       5     -0.0474  3.97
+    ## # ... with 24,990 more rows, and 1 more variable: abundance <dbl>
+    ## 
+    ## $df_species
+    ## # A tibble: 5 x 6
+    ##   species mean_abundance    r0 niche_optim niche_width p_dispersal
+    ##     <dbl>          <dbl> <dbl>       <dbl>       <dbl>       <dbl>
+    ## 1       1           93.1     4     -0.298            1         0.1
+    ## 2       2           97.6     4     -0.138            1         0.1
+    ## 3       3           65.3     4     -0.764            1         0.1
+    ## 4       4           97.8     4     -0.122            1         0.1
+    ## 5       5           98.3     4     -0.0474           1         0.1
+    ## 
+    ## $df_patch
+    ## # A tibble: 5 x 5
+    ##   patch alpha_div mean_env carrying_capacity connectivity
+    ##   <dbl>     <dbl>    <dbl>             <dbl>        <dbl>
+    ## 1     1         5        0               100       0.0185
+    ## 2     2         5        0               100       1.07  
+    ## 3     3         5        0               100       1.04  
+    ## 4     4         5        0               100       0.114 
+    ## 5     5         5        0               100       1.11  
+    ## 
+    ## $df_diversity
+    ## # A tibble: 1 x 3
+    ##   alpha_div beta_div gamma_div
+    ##       <dbl>    <dbl>     <dbl>
+    ## 1         5        0         5
+    ## 
+    ## $df_xy_coord
+    ## # A tibble: 5 x 2
+    ##   x_coord y_coord
+    ##     <dbl>   <dbl>
+    ## 1   7.36     7.42
+    ## 2   2.85     4.39
+    ## 3   2.77     5.13
+    ## 4   0.688    2.39
+    ## 5   3.31     4.79
+    ## 
+    ## $distance_matrix
+    ##          patch1    patch2    patch3   patch4    patch5
+    ## patch1 0.000000 5.4352670 5.1292848 8.353332 4.8294217
+    ## patch2 5.435267 0.0000000 0.7475175 2.940507 0.6112653
+    ## patch3 5.129285 0.7475175 0.0000000 3.438982 0.6388782
+    ## patch4 8.353332 2.9405067 3.4389818 0.000000 3.5515759
+    ## patch5 4.829422 0.6112653 0.6388782 3.551576 0.0000000
+    ## 
+    ## $interaction_matrix
+    ##     sp1 sp2 sp3 sp4 sp5
+    ## sp1   1   0   0   0   0
+    ## sp2   0   1   0   0   0
+    ## sp3   0   0   1   0   0
+    ## sp4   0   0   0   1   0
+    ## sp5   0   0   0   0   1
+
+### Custom setting
+
+Users can modify parameters related to local community dynamics,
+dispersal, and landscape structure.
+
+#### Local community dynamics
+
+Local community dynamics is
+
+#### Competition
+
+#### Dispersal
+
 ### Model description
 
-Metacommunity dynamics are simulated through local community dynamics,
-immigration and emigration. Specifically, the expected number of
-individuals of species i at patch x at time t, N<sub>ix</sub>(t), is
-described as:
+The metacommunity dynamics are described as a function of local
+community dynamics and dispersal (Thompson et al. 2020). Specifically,
+the realized number of individuals N<sub>ix</sub>(t + 1) (species i at
+patch x and time t + 1) is given as:
 
-N<sub>ix</sub>(t) = n<sub>ix</sub>(t) + I<sub>ix</sub>(t-1) -
-E<sub>ix</sub>(t-1)
+<img src="https://latex.codecogs.com/gif.latex?N_%7Bix%7D%28t&plus;1%29%20%3D%20Poisson%28n_%7Bix%7D%28t%29%20&plus;%20I_%7Bix%7D%28t%29%20-%20E_%7Bix%7D%28t%29%29"/>
 
-where n<sub>ix</sub>(t) is the expected number of individuals at time t
-given the local community dynamics at t-1, I<sub>ix</sub>(t-1) the
-number of immigrants to patch x, and the number of emigrants from patch
-x.
+where n<sub>ix</sub>(t) is the expected number of individuals given the
+local community dynamics at time t, I<sub>ix</sub>(t) the expected
+number of immigrants to patch x, and E<sub>ix</sub>(t) the expected
+number of emigrants from patch x.
+
+#### Local community dynamics
+
+Local community dynamics are simulated based on the Beverton-Holt model:
+
+<img src="https://latex.codecogs.com/gif.latex?n_%7Bix%7D%28t%29%3D%20%5Cfrac%7BN_%7Bix%7D%28t%29r_%7Bix%7D%28t%29%7D%7B1%20&plus;%20%5Cfrac%7B%28r_0_%7Bi%7D%20-%201%29%7D%7BK_x%7D%5Csum_j%20%5Calpha_%7Bij%7D%20N_%7Bjx%7D%28t%29%7D"/>
+
+where r<sub>ix</sub>(t) is the reproductive rate of species i given the
+environmental condition at patch x and time t, r<sub>0,i</sub> the
+maximum reproductive rate of species i (argument `r0`), K<sub>x</sub>
+the carrying capacity at patch x (argument `carrying_capacity`), and
+α<sub>ij</sub>\* the interaction coefficient with species j (argument
+`alpha`). The density-independent reproductive rate r<sub>ix</sub>(t) is
+affected by environments and determined by a gaussian function:
+
+<img src="https://latex.codecogs.com/gif.latex?r_%7Bix%7D%28t%29%20%3D%20r_%7B0%2Ci%7De%5E%7B-%5Cfrac%7B%28%5Cmu_%7Bi%7D-z_%7Bx%7D%28t%29%29%5E2%7D%7B2%5Csigma%5E2_%7Bniche%7D%7D%7D"/>
+
+where μ<sub>i</sub> is the optimal environmental value for species i
+(argument `niche_optim`), z<sub>x</sub>(t) the environmental value at
+patch x and time t, and σ<sub>niche</sub> the niche width of species i
+(argument `sd_niche_width`). Environmental may vary spatially and
+temporarily. The environmental value z<sub>x</sub>(t) is assumed to
+follow a multi-variate normal distribution:
+
+<img src="https://latex.codecogs.com/gif.latex?z_%7Bx%7D%28t%29%20%5Csim%20MVN%28%5Cboldsymbol%7B%5Cmu_%7Bz%7D%7D%2C%20%5Cboldsymbol%7B%5COmega_z%7D%29"/>
+
+**μ<sub>z</sub>** is the vector of mean environmental conditions
+(argument `mean_env`) and Ω<sub>z</sub> is the variance-covariance
+matrix. If `spatial_auto_cor = FALSE`, the off-diagonal element of the
+matrix is set to be zero while diagonal elements are
+σ<sub>z</sub><sup>2</sup> (σ<sub>z</sub>; argument `sd_env`). If
+`spatial_auto_cor = TRUE`, spatial autocorrelation is considered by
+describing the off-diagonal elements as:
+
+<img src="https://latex.codecogs.com/gif.latex?%5COmega_%7Bxy%7D%20%3D%20%5Csigma_%7Bz%7D%5E2%20e%5E%7B-%5Cphi%20d_%7Bxy%7D%7D"/>
+
+where \&Omega<sub>xy</sub> denotes the temporal covariance of
+environmental conditions betwee patch x and y, which is assumed to decay
+exponentially with increasing distance between the patches. The
+parameter φ (argument `phi`) determines the strength of distance decay
+(larger values lead to sharper declines).
+
+\*NOTE: α<sub>ii</sub> is set to be 1.
+
+#### Dispersal
+
+The expected number of emigrants at time t E<sub>ix</sub>(t) is the
+product of dispersal probability P<sub>dispersal</sub> (argument
+`p_dispersal`) and n<sub>ix</sub>(t). The immigration probability at
+patch x, ξ<sub>ix</sub>, is calculated given the structural connectivity
+of patch x, in which the model assumes the exponential decay of
+successful immigration with increasing separation distance between
+habitat patches:
+
+<img src="https://latex.codecogs.com/gif.latex?%5Cxi_%7Bix%7D%20%28t%29%20%3D%20%5Cfrac%7B%5Csum_%7By%2C%20y%20%5Cneq%20x%7D%20E_%7Biy%7D%28t%29e%5E%7B-%5Ctheta%20d_%7Bxy%7D%7D%7D%7B%5Csum_x%20%5Csum_%7By%2C%20y%20%5Cneq%20x%7D%20E_%7Biy%7D%28t%29e%5E%7B-%5Ctheta%20d_%7Bxy%7D%7D%7D"/>
+
+where d<sub>xy</sub> is the separation distance between patch x and y.
+The parameter θ (argument `theta`) dictates the dispersal distance of
+species (θ<sup>-1</sup> corresponds to the expected dispersal distance)
+and is assumed to be constant across species. The expected number of
+immigrants is then calculated as:
+
+<img src="https://latex.codecogs.com/gif.latex?I_%7Bix%7D%28t%29%20%3D%20%5Cxi_%7Bix%7D%28t%29%5Csum_x%20E_%7Bix%7D"/>
 
 # References
 
