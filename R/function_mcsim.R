@@ -22,7 +22,7 @@
 #' @param mean_env numeric value (length should be one or equal to \code{n_patch}). Mean environmental values of patches.
 #' @param sd_env numeric value. Standard deviation of temporal environmental variation at each patch.
 #' @param spatial_env_cor logical. If \code{TRUE}, spatial autocorrelation in temporal environmental fluctuation is considered. Default \code{FALSE}.
-#' @param phi numeric value. Parameter describing distance decay of spatial autocorrelation in temporal environmental fluctuation. Enabled if \code{spatial_env_cor = TRUE}.
+#' @param phi numeric value. A parameter describing the distance decay of spatial autocorrelation in temporal environmental fluctuation. Enabled if \code{spatial_env_cor = TRUE}.
 #' @param p_dispersal numeric value (length should be one or equal to \code{n_species}). Probability of dispersal.
 #' @param theta numeric value. Dispersal parameter describing dispersal capability of species.
 #' @param plot logical. If \code{TRUE}, five sample patches and species of \code{df_dynamics} are plotted.
@@ -79,7 +79,7 @@ mcsim <- function(n_species = 5,
 
   # carrying capacity
   if (length(carrying_capacity) == 1) {
-    message("Single value of carrying_capacity is given: assume carrying capacities are the same at all habitat patches")
+    message("single value of carrying_capacity is given: assume carrying capacities are the same at all habitat patches")
     m_k <- matrix(carrying_capacity, nrow = n_species, ncol = n_patch)
   } else {
     if (length(carrying_capacity) != n_patch) stop("carrying_capacity must have length of one or n_patch")
@@ -95,17 +95,19 @@ mcsim <- function(n_species = 5,
     m_mu <- matrix(rep(x = v_mu, times = n_patch), nrow = n_species, ncol = n_patch)
   } else {
     if (length(niche_optim) == 1) {
-      message("Single value of niche_optim is given: assume niche optimum are the same for all species")
+      message("single value of niche_optim is given: assume niche optimum are the same for all species")
+      v_mu <- rep(x = niche_optim, times = n_species)
       m_mu <- matrix(niche_optim, nrow = n_species, ncol = n_patch)
     } else {
       if (length(niche_optim) != n_species) stop("niche_optim must have length of one or n_species")
+      v_mu <- niche_optim
       m_mu <- matrix(rep(x = niche_optim, times = n_patch), nrow = n_species, ncol = n_patch)
     }
   }
 
   ## niche width
   if (length(sd_niche_width) == 1) {
-    message("Single value of sd_niche_width is given: assume niche width are the same for all species")
+    message("single value of sd_niche_width is given: assume niche width are the same for all species")
     m_sd_niche_width <- matrix(sd_niche_width, nrow = n_species, ncol = n_patch)
   } else {
     if (length(sd_niche_width) != n_species) stop("sd_niche_width must have length of one or n_species")
@@ -125,7 +127,7 @@ mcsim <- function(n_species = 5,
 
   # environmental variation among patches
   if (length(mean_env) == 1) {
-    message("Single value of mean_env is given: assume environmental conditions are the same at all habitat patches")
+    message("single value of mean_env is given: assume environmental conditions are the same at all habitat patches")
     v_mu_z <- rep(x = mean_env, times = n_patch)
   } else {
     if (length(mean_env) != n_patch) stop("mean_env must have length of one or n_patch")
@@ -148,8 +150,8 @@ mcsim <- function(n_species = 5,
   }
 
   # dispersal matrix
-  if (is.null(distance_matrix) & is.null(xy_coord)) {
-    message("Neither xy_coord nor distance_matrix is given: generate a square landscape with landscape_size (default: 10) on a side")
+  if (is.null(xy_coord) & is.null(distance_matrix)) {
+    message("neither xy_coord nor distance_matrix is given: generate a square landscape with landscape_size (default: 10) on a side")
     v_x_coord <- runif(n = n_patch, min = 0, max = landscape_size)
     v_y_coord <- runif(n = n_patch, min = 0, max = landscape_size)
     df_xy_coord <- dplyr::tibble(x_coord = v_x_coord, y_coord = v_y_coord)
@@ -157,17 +159,18 @@ mcsim <- function(n_species = 5,
     m_dispersal <- data.matrix(exp(-theta * m_distance))
     diag(m_dispersal) <- 0
   } else {
-    if (!is.null(xy_coord) & is.null(m_distance)) {
-      if (nrow(xy_coord) != n_patch) stop("Row numbers must match n_patch")
-      if (nrow(xy_coord) != 2) stop("columns must be only x- and y-cooridnates")
+    if (!is.null(xy_coord) & is.null(distance_matrix)) {
+      if (nrow(xy_coord) != n_patch) stop("row numbers must match n_patch")
+      if (ncol(xy_coord) != 2) stop("the number of columns must be two, describing x- and y-cooridnates")
+      colnames(xy_coord) <- c("x_coord", "y_coord")
       df_xy_coord <- dplyr::as_tibble(xy_coord)
       m_distance <- data.matrix(dist(df_xy_coord, diag = TRUE, upper = TRUE))
       m_dispersal <- data.matrix(exp(-theta * m_distance))
       diag(m_dispersal) <- 0
     } else {
-      if (!is.null(xy_coord)) message("Both xy_coord and distance_matrix are given: argument xy_coord is ignored")
-      if (is.matrix(m_distance) == 0) stop("Distance matrix should be provided as matrix")
-      if (nrow(m_distance) != n_patch) stop("Invalid dimension: distance_matrix must have a dimension of n_patch * n_patch")
+      if (!is.null(xy_coord)) message("both xy_coord and distance_matrix are given: argument xy_coord is ignored")
+      if (is.matrix(distance_matrix) == 0) stop("distance matrix should be provided as matrix")
+      if (nrow(distance_matrix) != n_patch) stop("invalid dimension: distance_matrix must have a dimension of n_patch * n_patch")
       df_xy_coord <- NULL
       m_distance <- distance_matrix
       m_dispersal <- exp(-theta * m_distance)
@@ -176,7 +179,7 @@ mcsim <- function(n_species = 5,
   }
 
   if (length(p_dispersal) == 1) {
-    message("Single value of dispersal probability is given: assume dispersal probability is the same for all species")
+    message("single value of dispersal probability is given: assume dispersal probability is the same for all species")
     v_p_dispersal <- rep(x = p_dispersal, times = n_species)
   } else {
     if (length(p_dispersal) != n_species) stop("p_dispersal must have length of one or n_species")
@@ -207,13 +210,13 @@ mcsim <- function(n_species = 5,
   if (is.null(propagule_interval)) propagule_interval <- max(c(1, ceiling(n_warmup / 10)))
   propagule <- seq(from = propagule_interval, to = max(c(1, n_warmup)), by = propagule_interval)
 
-  m_n <- matrix(rpois(n_species * n_patch, 0.5), nrow = n_species, ncol = n_patch)
+  m_n <- matrix(rpois(n = n_species * n_patch, lambda = 0.5), nrow = n_species, ncol = n_patch)
 
   pb <- txtProgressBar(min = 0, max = n_sim, style = 3)
   for (n in 1:n_sim) {
     if (n_warmup > 0) {
       if (n %in% propagule) {
-        m_n <- m_n + matrix(rpois(n_species * n_patch, 0.5), nrow = n_species, ncol = n_patch)
+        m_n <- m_n + matrix(rpois(n = n_species * n_patch, lambda = 0.5), nrow = n_species, ncol = n_patch)
       }
     }
 

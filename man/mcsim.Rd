@@ -21,6 +21,7 @@ mcsim(
   sd_niche_width = 1,
   optim_min = -1,
   optim_max = 1,
+  xy_coord = NULL,
   distance_matrix = NULL,
   landscape_size = 10,
   mean_env = 0,
@@ -65,9 +66,11 @@ mcsim(
 
 \item{optim_max}{numeric value. Maximum value of a uniform distribution that generates optimal environmental values of simulated species. Values are randomly assigned to species. Enabled if \code{niche_optim = NULL}.}
 
+\item{xy_coord}{data frame. Each row should correspond to an individual patch, with x and y coordinates (columns). Defualt \code{NULL}.}
+
 \item{distance_matrix}{numeric value. Distance matrix indicating distance between habitat patches. If \code{NULL}, a square landscape with randomly distributed patches will be generated. Default \code{NULL}.}
 
-\item{landscape_size}{numeric value. Length of a landscape on a side. Active only when \code{dispersal_matrix = NULL}.}
+\item{landscape_size}{numeric value. Length of a landscape on a side. Enabled if \code{dispersal_matrix = NULL}.}
 
 \item{mean_env}{numeric value (length should be one or equal to \code{n_patch}). Mean environmental values of patches.}
 
@@ -75,7 +78,7 @@ mcsim(
 
 \item{spatial_env_cor}{logical. If \code{TRUE}, spatial autocorrelation in temporal environmental fluctuation is considered. Default \code{FALSE}.}
 
-\item{phi}{numeric value. Parameter describing distance decay of spatial autocorrelation in temporal environmental fluctuation. Enabled if \code{spatial_env_cor = TRUE}.}
+\item{phi}{numeric value. A parameter describing the distance decay of spatial autocorrelation in temporal environmental fluctuation. Enabled if \code{spatial_env_cor = TRUE}.}
 
 \item{p_dispersal}{numeric value (length should be one or equal to \code{n_species}). Probability of dispersal.}
 
