@@ -207,7 +207,7 @@ mcsim <- function(n_species = 5,
   colnames(m_dynamics) <- colname
   st_row <- seq(from = 1, to = nrow(m_dynamics), by = n_species * n_patch)
 
-  if (is.null(propagule_interval)) propagule_interval <- max(c(1, ceiling(n_warmup / 10)))
+  if (is.null(propagule_interval)) propagule_interval <- ceiling(n_warmup / 10)
   propagule <- seq(from = propagule_interval, to = max(c(1, n_warmup)), by = propagule_interval)
 
   m_n <- matrix(rpois(n = n_species * n_patch, lambda = 0.5), nrow = n_species, ncol = n_patch)
