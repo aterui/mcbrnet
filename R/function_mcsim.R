@@ -141,8 +141,8 @@ mcsim <- function(n_species = 5,
     diag(m_interaction) <- 1
   } else {
     if (interaction_type != "random") stop("invalid interaction_type")
-    if (min_alpha < 0 | max_alpha < 0) stop("invalid values of min_alpha and/or max_alpha - values must be positive values")
     if (is.null(min_alpha) | is.null(max_alpha)) stop("provide min_alpha and max_alpha")
+    if (min_alpha < 0 | max_alpha < 0) stop("invalid values of min_alpha and/or max_alpha - values must be positive values")
     if (min_alpha > max_alpha) stop("max_alpha must exceed min_alpha")
     alpha <- runif(n = n_species * n_species, min = min_alpha, max = max_alpha)
     m_interaction <- matrix(alpha, nrow = n_species, ncol = n_species)
