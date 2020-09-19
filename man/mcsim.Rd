@@ -19,7 +19,7 @@ mcsim(
   r0 = 4,
   niche_optim = NULL,
   sd_niche_width = 1,
-  niche_cost = 1,
+  niche_cost = Inf,
   min_optim = -1,
   max_optim = 1,
   xy_coord = NULL,
