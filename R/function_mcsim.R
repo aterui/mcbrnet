@@ -80,7 +80,7 @@ mcsim <- function(n_species = 5,
   # define function ---------------------------------------------------------
 
   fun_r <- function(r0, z, mu, sd, nu) {
-    r0 * exp(- ((sd^2)/(2 * nu^2))) * exp(- ((mu - z) / (sqrt(2) * sd))^2)
+    r0 * exp(- ((sd^2) / (2 * nu^2))) * exp(- ((mu - z) / (sqrt(2) * sd))^2)
   }
 
   # parameter setup ---------------------------------------------------------
