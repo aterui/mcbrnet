@@ -15,8 +15,8 @@
 #' @param niche_optim numeric value (length should be one or equal to \code{n_species}). Niche optimum of species (environmental value that maximizes the reproductive number). Default \code{NULL}.
 #' @param sd_niche_width numeric value (length should be one or equal to \code{n_species}). Niche width of species. Higher values indicate greater niche width.
 #' @param niche_cost numeric value. Determine the cost of wide niche (smaller values imply greater costs of wider niche).
-#' @param optim_min numeric value. Minimum value of a uniform distribution that generates optimal environmental values of simulated species. Values are randomly assigned to species. Enabled if \code{niche_optim = NULL}.
-#' @param optim_max numeric value. Maximum value of a uniform distribution that generates optimal environmental values of simulated species. Values are randomly assigned to species. Enabled if \code{niche_optim = NULL}.
+#' @param min_optim numeric value. Minimum value of a uniform distribution that generates optimal environmental values of simulated species. Values are randomly assigned to species. Enabled if \code{niche_optim = NULL}.
+#' @param max_optim numeric value. Maximum value of a uniform distribution that generates optimal environmental values of simulated species. Values are randomly assigned to species. Enabled if \code{niche_optim = NULL}.
 #' @param xy_coord data frame. Each row should correspond to an individual patch, with x and y coordinates (columns). Defualt \code{NULL}.
 #' @param distance_matrix numeric value. Distance matrix indicating distance between habitat patches. If \code{NULL}, a square landscape with randomly distributed patches will be generated. Default \code{NULL}.
 #' @param landscape_size numeric value. Length of a landscape on a side. Enabled if \code{dispersal_matrix = NULL}.
@@ -63,8 +63,8 @@ mcsim <- function(n_species = 5,
                   niche_optim = NULL,
                   sd_niche_width = 1,
                   niche_cost = 1,
-                  optim_min = -1,
-                  optim_max = 1,
+                  min_optim = -1,
+                  max_optim = 1,
                   xy_coord = NULL,
                   distance_matrix = NULL,
                   landscape_size = 10,
@@ -99,7 +99,7 @@ mcsim <- function(n_species = 5,
   ## niche optimum
   if (is.null(niche_optim)) {
     message("niche_optim is not given: generate species niche optimum randomly")
-    v_mu <- runif(n = n_species, min = optim_min, max = optim_max)
+    v_mu <- runif(n = n_species, min = min_optim, max = max_optim)
     m_mu <- matrix(rep(x = v_mu, times = n_patch), nrow = n_species, ncol = n_patch)
   } else {
     if (length(niche_optim) == 1) {
@@ -283,18 +283,21 @@ mcsim <- function(n_species = 5,
   colnames(m_distance) <- rownames(m_distance) <- sapply(X = seq_len(n_patch), function(x) paste0("patch", x))
   colnames(m_interaction) <- rownames(m_interaction) <- sapply(X = seq_len(n_species), function(x) paste0("sp", x))
 
-  df_species <- dplyr::as_tibble(m_dynamics) %>%
+  # dynamics
+  df_dyn <- dplyr::as_tibble(m_dynamics)
+
+  # species attributes
+  df_species <- df_dyn %>%
                   dplyr::group_by(.data$species) %>%
                   dplyr::summarise(mean_abundance = mean(.data$abundance)) %>%
                   dplyr::right_join(dplyr::tibble(species = 1:n_species,
                                                   r0 = v_r0,
                                                   niche_optim = v_mu,
-                                                  niche_width = sd_niche_width,
+                                                  sd_niche_width = sd_niche_width,
                                                   p_dispersal = v_p_dispersal),
                                     by = "species")
 
-  df_dyn <- dplyr::as_tibble(m_dynamics)
-
+  # patch attributes
   df_patch <- df_dyn %>%
                 dplyr::group_by(.data$patch) %>%
                 dplyr::summarise(alpha_div = sum(.data$abundance > 0) / n_timestep) %>%
@@ -304,12 +307,20 @@ mcsim <- function(n_species = 5,
                                                connectivity = rowSums(m_dispersal)),
                                  by = "patch")
 
+  # diversity metrics
   alpha_div <- sum(df_dyn$abundance > 0) / (n_timestep * n_patch)
-  gamma_div <- mean(tapply(X = df_dyn$species[df_dyn$abundance > 0],
-                           INDEX = df_dyn$timestep[df_dyn$abundance > 0],
-                           FUN = dplyr::n_distinct))
+
+  if (sum(df_dyn$abundance) == 0) {
+    gamma_div <- 0
+  } else {
+    gamma_div <- mean(tapply(X = df_dyn$species[df_dyn$abundance > 0],
+                             INDEX = df_dyn$timestep[df_dyn$abundance > 0],
+                             FUN = dplyr::n_distinct))
+  }
+
   beta_div <- gamma_div - alpha_div
 
+  # return
   return(list(df_dynamics = df_dyn,
               df_species = df_species,
               df_patch = df_patch,

@@ -20,8 +20,8 @@ mcsim(
   niche_optim = NULL,
   sd_niche_width = 1,
   niche_cost = 1,
-  optim_min = -1,
-  optim_max = 1,
+  min_optim = -1,
+  max_optim = 1,
   xy_coord = NULL,
   distance_matrix = NULL,
   landscape_size = 10,
@@ -65,9 +65,9 @@ mcsim(
 
 \item{niche_cost}{numeric value. Determine the cost of wide niche (smaller values imply greater costs of wider niche).}
 
-\item{optim_min}{numeric value. Minimum value of a uniform distribution that generates optimal environmental values of simulated species. Values are randomly assigned to species. Enabled if \code{niche_optim = NULL}.}
+\item{min_optim}{numeric value. Minimum value of a uniform distribution that generates optimal environmental values of simulated species. Values are randomly assigned to species. Enabled if \code{niche_optim = NULL}.}
 
-\item{optim_max}{numeric value. Maximum value of a uniform distribution that generates optimal environmental values of simulated species. Values are randomly assigned to species. Enabled if \code{niche_optim = NULL}.}
+\item{max_optim}{numeric value. Maximum value of a uniform distribution that generates optimal environmental values of simulated species. Values are randomly assigned to species. Enabled if \code{niche_optim = NULL}.}
 
 \item{xy_coord}{data frame. Each row should correspond to an individual patch, with x and y coordinates (columns). Defualt \code{NULL}.}
 
