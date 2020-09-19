@@ -63,6 +63,8 @@ mcsim(
 
 \item{sd_niche_width}{numeric value (length should be one or equal to \code{n_species}). Niche width of species. Higher values indicate greater niche width.}
 
+\item{niche_cost}{numeric value. Determine the cost of wide niche (smaller values imply greater costs of wider niche).}
+
 \item{optim_min}{numeric value. Minimum value of a uniform distribution that generates optimal environmental values of simulated species. Values are randomly assigned to species. Enabled if \code{niche_optim = NULL}.}
 
 \item{optim_max}{numeric value. Maximum value of a uniform distribution that generates optimal environmental values of simulated species. Values are randomly assigned to species. Enabled if \code{niche_optim = NULL}.}

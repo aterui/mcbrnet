@@ -14,6 +14,7 @@
 #' @param r0 numeric value (length should be one or equal to \code{n_species}). Maximum reproductive number of the Beverton-Holt model.
 #' @param niche_optim numeric value (length should be one or equal to \code{n_species}). Niche optimum of species (environmental value that maximizes the reproductive number). Default \code{NULL}.
 #' @param sd_niche_width numeric value (length should be one or equal to \code{n_species}). Niche width of species. Higher values indicate greater niche width.
+#' @param niche_cost numeric value. Determine the cost of wide niche (smaller values imply greater costs of wider niche).
 #' @param optim_min numeric value. Minimum value of a uniform distribution that generates optimal environmental values of simulated species. Values are randomly assigned to species. Enabled if \code{niche_optim = NULL}.
 #' @param optim_max numeric value. Maximum value of a uniform distribution that generates optimal environmental values of simulated species. Values are randomly assigned to species. Enabled if \code{niche_optim = NULL}.
 #' @param xy_coord data frame. Each row should correspond to an individual patch, with x and y coordinates (columns). Defualt \code{NULL}.
