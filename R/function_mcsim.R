@@ -61,6 +61,7 @@ mcsim <- function(n_species = 5,
                   r0 = 4,
                   niche_optim = NULL,
                   sd_niche_width = 1,
+                  niche_cost = 5,
                   optim_min = -1,
                   optim_max = 1,
                   xy_coord = NULL,
@@ -74,6 +75,12 @@ mcsim <- function(n_species = 5,
                   theta = 1,
                   plot = FALSE
 ) {
+
+  # define function ---------------------------------------------------------
+
+  fun_r <- function(r0, z, mu, sd, nu) {
+    r0 * exp(- ((sd^2)/(2 * nu^2))) * exp(- ((mu - z) / (sqrt(2) * sd))^2)
+  }
 
   # parameter setup ---------------------------------------------------------
 
@@ -221,7 +228,7 @@ mcsim <- function(n_species = 5,
     }
 
     m_z_xt <- matrix(rep(x = m_z[n, ], each = n_species), nrow = n_species, ncol = n_patch)
-    m_r_xt <- m_r0 * exp(- ((m_mu - m_z_xt) / (sqrt(2) * m_sd_niche_width))^2)
+    m_r_xt <- fun_r(r0 = m_r0, mu = m_mu, z = m_z_xt, sd = m_sd_niche_width, nu = niche_cost)
     m_n_hat <- (m_n * m_r_xt) / (1 + ((m_r0 - 1) / m_k) * (m_interaction %*% m_n))
 
     m_e_hat <- m_n_hat * v_p_dispersal
