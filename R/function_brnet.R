@@ -115,7 +115,8 @@ brnet <- function(n_patch,
     # start_id, end_id, and neighbor list for each branch
     v_end_id <- cumsum(v_n_patch_branch)
     v_start_id <- v_end_id - (v_n_patch_branch - 1)
-    list_neighbor_inbranch <- lapply(1:n_branch, function(i) fun_adj(n = v_n_patch_branch[i], start_id = v_start_id[i]))
+    list_neighbor_inbranch <- lapply(1:n_branch,
+                                     function(i) fun_adj(n = v_n_patch_branch[i], start_id = v_start_id[i]))
     m_neighbor_inbranch <- do.call(rbind, list_neighbor_inbranch)
 
     # combine parent and offspring branches at confluences
@@ -123,7 +124,8 @@ brnet <- function(n_patch,
       parent <- c(1, 1)
       offspg <- c(2, 3)
       m_po <- cbind(parent, offspg)
-      list_confluence <- lapply(seq_len(nrow(m_po)), function(x) cbind(v_end_id[m_po[x, 1]], v_start_id[m_po[x, 2]]))
+      list_confluence <- lapply(seq_len(nrow(m_po)),
+                                function(x) cbind(v_end_id[m_po[x, 1]], v_start_id[m_po[x, 2]]))
       m_confluence <- do.call(rbind, list_confluence)
       m_confluence <- rbind(m_confluence, m_confluence[, c(2, 1)])
     } else {
@@ -142,7 +144,8 @@ brnet <- function(n_patch,
       offspg <- c(m_offspg)
       m_po <- cbind(parent, offspg)
 
-      list_confluence <- lapply(seq_len(nrow(m_po)), function(x) cbind(v_end_id[m_po[x, 1]], v_start_id[m_po[x, 2]]))
+      list_confluence <- lapply(seq_len(nrow(m_po)),
+                                function(x) cbind(v_end_id[m_po[x, 1]], v_start_id[m_po[x, 2]]))
       m_confluence <- do.call(rbind, list_confluence)
       m_confluence <- rbind(m_confluence, m_confluence[, c(2, 1)])
     }
@@ -189,7 +192,8 @@ brnet <- function(n_patch,
 
   # environmental condition -------------------------------------------------
 
-  m_wa_prop <- t(apply(X = m_adj_up, MARGIN = 1, function(x) (x * v_wa) / ifelse(sum(x) == 0, 1, sum(x * v_wa))))
+  m_wa_prop <- t(apply(X = m_adj_up, MARGIN = 1,
+                       function(x) (x * v_wa) / ifelse(sum(x) == 0, 1, sum(x * v_wa))))
   n_source <- 0.5 * (n_branch + 1)
   source <- which(rowSums(m_adj_up) == 0)
   v_z_dummy <- v_z <- v_env <- rep(0, n_patch)
