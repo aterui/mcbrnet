@@ -2,7 +2,7 @@ mcbrnet: an R package for simulating metacommunity dynamics in a
 branching network
 ================
 Akira Terui
-September 16, 2020
+September 18, 2020
 
   - [Overview](#overview)
   - [Installation](#installation)
@@ -336,39 +336,39 @@ mc
 
     ## $df_dynamics
     ## # A tibble: 25,000 x 9
-    ##    timestep patch mean_env    env carrying_capaci~ species niche_optim  r_xt
-    ##       <dbl> <dbl>    <dbl>  <dbl>            <dbl>   <dbl>       <dbl> <dbl>
-    ##  1        1     1        0 0.0394              100       1     -0.298   3.78
-    ##  2        1     1        0 0.0394              100       2     -0.138   3.94
-    ##  3        1     1        0 0.0394              100       3     -0.764   2.90
-    ##  4        1     1        0 0.0394              100       4     -0.122   3.95
-    ##  5        1     1        0 0.0394              100       5     -0.0474  3.98
-    ##  6        1     2        0 0.0829              100       1     -0.298   3.72
-    ##  7        1     2        0 0.0829              100       2     -0.138   3.90
-    ##  8        1     2        0 0.0829              100       3     -0.764   2.80
-    ##  9        1     2        0 0.0829              100       4     -0.122   3.92
-    ## 10        1     2        0 0.0829              100       5     -0.0474  3.97
+    ##    timestep patch mean_env     env carrying_capaci~ species niche_optim  r_xt
+    ##       <dbl> <dbl>    <dbl>   <dbl>            <dbl>   <dbl>       <dbl> <dbl>
+    ##  1        1     1        0 -0.0825              100       1       0.181  2.34
+    ##  2        1     1        0 -0.0825              100       2       0.595  1.93
+    ##  3        1     1        0 -0.0825              100       3      -0.234  2.40
+    ##  4        1     1        0 -0.0825              100       4       0.554  1.98
+    ##  5        1     1        0 -0.0825              100       5      -0.943  1.68
+    ##  6        1     2        0  0.136               100       1       0.181  2.42
+    ##  7        1     2        0  0.136               100       2       0.595  2.18
+    ##  8        1     2        0  0.136               100       3      -0.234  2.27
+    ##  9        1     2        0  0.136               100       4       0.554  2.22
+    ## 10        1     2        0  0.136               100       5      -0.943  1.36
     ## # ... with 24,990 more rows, and 1 more variable: abundance <dbl>
     ## 
     ## $df_species
     ## # A tibble: 5 x 6
     ##   species mean_abundance    r0 niche_optim niche_width p_dispersal
     ##     <dbl>          <dbl> <dbl>       <dbl>       <dbl>       <dbl>
-    ## 1       1           93.1     4     -0.298            1         0.1
-    ## 2       2           97.6     4     -0.138            1         0.1
-    ## 3       3           65.3     4     -0.764            1         0.1
-    ## 4       4           97.8     4     -0.122            1         0.1
-    ## 5       5           98.3     4     -0.0474           1         0.1
+    ## 1       1           45.2     4       0.181           1         0.1
+    ## 2       2           33.0     4       0.595           1         0.1
+    ## 3       3           44.2     4      -0.234           1         0.1
+    ## 4       4           34.8     4       0.554           1         0.1
+    ## 5       5           17.3     4      -0.943           1         0.1
     ## 
     ## $df_patch
     ## # A tibble: 5 x 5
     ##   patch alpha_div mean_env carrying_capacity connectivity
     ##   <dbl>     <dbl>    <dbl>             <dbl>        <dbl>
-    ## 1     1         5        0               100       0.0185
-    ## 2     2         5        0               100       1.07  
-    ## 3     3         5        0               100       1.04  
-    ## 4     4         5        0               100       0.114 
-    ## 5     5         5        0               100       1.11  
+    ## 1     1         5        0               100        0.210
+    ## 2     2         5        0               100        0.488
+    ## 3     3         5        0               100        0.208
+    ## 4     4         5        0               100        0.488
+    ## 5     5         5        0               100        0.708
     ## 
     ## $df_diversity
     ## # A tibble: 1 x 3
@@ -380,19 +380,19 @@ mc
     ## # A tibble: 5 x 2
     ##   x_coord y_coord
     ##     <dbl>   <dbl>
-    ## 1   7.36     7.42
-    ## 2   2.85     4.39
-    ## 3   2.77     5.13
-    ## 4   0.688    2.39
-    ## 5   3.31     4.79
+    ## 1    1.14    3.68
+    ## 2    5.11    8.61
+    ## 3    1.87    2.28
+    ## 4    7.08    9.04
+    ## 5    6.15    8.58
     ## 
     ## $distance_matrix
-    ##          patch1    patch2    patch3   patch4    patch5
-    ## patch1 0.000000 5.4352670 5.1292848 8.353332 4.8294217
-    ## patch2 5.435267 0.0000000 0.7475175 2.940507 0.6112653
-    ## patch3 5.129285 0.7475175 0.0000000 3.438982 0.6388782
-    ## patch4 8.353332 2.9405067 3.4389818 0.000000 3.5515759
-    ## patch5 4.829422 0.6112653 0.6388782 3.551576 0.0000000
+    ##          patch1   patch2   patch3   patch4   patch5
+    ## patch1 0.000000 6.334809 1.576422 8.007445 7.014340
+    ## patch2 6.334809 0.000000 7.109973 2.018866 1.043117
+    ## patch3 1.576422 7.109973 0.000000 8.534898 7.616243
+    ## patch4 8.007445 2.018866 8.534898 0.000000 1.037589
+    ## patch5 7.014340 1.043117 7.616243 1.037589 0.000000
     ## 
     ## $interaction_matrix
     ##     sp1 sp2 sp3 sp4 sp5
@@ -404,10 +404,10 @@ mc
 
 ### Custom setting: combine `brnet()` and `mcsim()`
 
-Return values of `brnet()` may be used to simulate metacommunity
-dynamics in a branching network. For example, `df_patch$environment`,
-`df_patch$n_patch_upstream`, and `distance_matrix` may be used to inform
-parameters of `mcsim()`:
+Return values of `brnet()` are compatible with `mcsim()`. For example,
+`df_patch$environment`, `df_patch$n_patch_upstream`, and
+`df_patch$distance_matrix` may be used to inform parameters of
+`mcsim()`:
 
 ``` r
 patch <- 100
@@ -430,7 +430,7 @@ attributes, and (4) landscape structure.
 #### Species attributes
 
 Arguments: `r0`, `niche_optim` OR `optim_min` and `optim_max`,
-`sd_niche_width`, `p_dispersal`
+`sd_niche_width`, `niche_cost`, `p_dispersal`
 
 Species attributes are determined based on the maximum reproductive rate
 `r0`, optimal environmental value `niche_optim` (or `optim_min` and
@@ -448,7 +448,10 @@ argument `niche_optim` (scalar or vector). If `niche_optim` is a single
 value, the function assumes that the niche optimums are the same for all
 species. If `!is.null(niche_optim)`, then the function disables the
 random generation process of niche optimums, ignoring `optim_min` and
-`optim_max` arguments.
+`optim_max` arguments. `niche_cost` determines the cost of having wider
+niche (default: `niche_cost = 1`). Smaller values imply greater costs of
+wider niche (i.e., decreased maximum reproductive rate). To disable (no
+cost of wide niche), set `niche_cost = Inf`.
 
 For other parameters, users may specify species attributes by giving a
 scalar (assume identical among species) or a vector of values whose
@@ -572,14 +575,21 @@ competition is greater than interspecific competition if α<sub>ij</sub>
 reproductive rate r<sub>ix</sub>(t) is affected by environments and
 determined by a Gaussian function:
 
-<img src="https://latex.codecogs.com/gif.latex?r_%7Bix%7D%28t%29%20%3D%20r_%7B0%2Ci%7De%5E%7B-%5Cfrac%7B%28%5Cmu_%7Bi%7D-z_%7Bx%7D%28t%29%29%5E2%7D%7B2%5Csigma%5E2_%7Bniche%7D%7D%7D"/>
+<img src="https://latex.codecogs.com/gif.latex?r_%7Bix%7D%28t%29%3Dc%7Er_%7B0%2Ci%7D%7Ee%5E%5Cfrac%7B-%28%5Cmu_i%20-%20z_x%28t%29%29%5E2%7D%7B2%5Csigma%5E2_%7Bniche%7D%7D"/>
 
 where μ<sub>i</sub> is the optimal environmental value for species i
 (argument `niche_optim`), z<sub>x</sub>(t) the environmental value at
 patch x and time t, and σ<sub>niche</sub> the niche width of species i
-(argument `sd_niche_width`). Environmental may vary spatially and
-temporarily. The environmental value z<sub>x</sub>(t) is assumed to
-follow a multivariate normal distribution:
+(argument `sd_niche_width`). The cost of having wider niche is expressed
+by multiplying c (Chaianunporn and Hovestadt, 2015):
+
+<img src="https://latex.codecogs.com/gif.latex?c%20%3D%20e%5E%7B-%5Cfrac%7B%5Csigma%5E2_%7Bniche%7D%7D%7B2%5Cnu%5E2%7D%7D"/>
+
+Smaller values of ν (argument `niche_cost`) imply greater costs of wider
+niche (i.e., decreased maximum reproductive rate). There is no cost of
+wider niche if ν approaches infinity. The environmental value
+z<sub>x</sub>(t), which may vary spatially and temporarily, is assumed
+to follow a multivariate normal distribution:
 
 <img src="https://latex.codecogs.com/gif.latex?z_%7Bx%7D%28t%29%20%5Csim%20MVN%28%5Cboldsymbol%7B%5Cmu_%7Bz%7D%7D%2C%20%5Cboldsymbol%7B%5COmega_z%7D%29"/>
 
@@ -621,6 +631,9 @@ immigrants is calculated as:
 
 # References
 
+  - Chaianunporn T and Hovestadt T. (2015) Evolutionary responses to
+    climate change in parasitic systems. Global Change Biology 21:
+    2905-2916.
   - Csardi G, Nepusz T: The igraph software package for complex network
     research, InterJournal, Complex Systems 1695. 2006.
     <http://igraph.org>
