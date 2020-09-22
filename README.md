@@ -2,7 +2,7 @@ mcbrnet: an R package for simulating metacommunity dynamics in a
 branching network
 ================
 Akira Terui
-September 19, 2020
+September 21, 2020
 
   - [Overview](#overview)
   - [Installation](#installation)
@@ -129,13 +129,13 @@ net$adjacency_matrix[1:10, 1:10]
     ## patch1       0      0      0      0      0      0      0      0      0       0
     ## patch2       0      0      1      0      0      0      0      0      0       0
     ## patch3       0      1      0      0      0      0      0      0      0       0
-    ## patch4       0      0      0      0      1      0      0      0      0       0
-    ## patch5       0      0      0      1      0      0      0      0      0       0
-    ## patch6       0      0      0      0      0      0      1      0      0       0
-    ## patch7       0      0      0      0      0      1      0      1      0       0
-    ## patch8       0      0      0      0      0      0      1      0      1       0
-    ## patch9       0      0      0      0      0      0      0      1      0       1
-    ## patch10      0      0      0      0      0      0      0      0      1       0
+    ## patch4       0      0      0      0      0      0      0      0      0       0
+    ## patch5       0      0      0      0      0      1      0      0      1       0
+    ## patch6       0      0      0      0      1      0      1      0      0       0
+    ## patch7       0      0      0      0      0      1      0      0      0       0
+    ## patch8       0      0      0      0      0      0      0      0      1       0
+    ## patch9       0      0      0      0      1      0      0      1      0       0
+    ## patch10      0      0      0      0      0      0      0      0      0       0
 
 ``` r
 # distance matrix
@@ -144,16 +144,16 @@ net$distance_matrix[1:10, 1:10]
 ```
 
     ##         patch1 patch2 patch3 patch4 patch5 patch6 patch7 patch8 patch9 patch10
-    ## patch1       0     10     11      4      5      3      4      5      6       7
-    ## patch2      10      0      1     10     11      7      6      5      4       5
-    ## patch3      11      1      0     11     12      8      7      6      5       6
-    ## patch4       4     10     11      0      1      3      4      5      6       7
-    ## patch5       5     11     12      1      0      4      5      6      7       8
-    ## patch6       3      7      8      3      4      0      1      2      3       4
-    ## patch7       4      6      7      4      5      1      0      1      2       3
-    ## patch8       5      5      6      5      6      2      1      0      1       2
-    ## patch9       6      4      5      6      7      3      2      1      0       1
-    ## patch10      7      5      6      7      8      4      3      2      1       0
+    ## patch1       0      4      5      9      5      6      7      3      4       9
+    ## patch2       4      0      1      9      9     10     11      7      8       9
+    ## patch3       5      1      0     10     10     11     12      8      9      10
+    ## patch4       9      9     10      0     14     15     16     12     13       6
+    ## patch5       5      9     10     14      0      1      2      2      1      14
+    ## patch6       6     10     11     15      1      0      1      3      2      15
+    ## patch7       7     11     12     16      2      1      0      4      3      16
+    ## patch8       3      7      8     12      2      3      4      0      1      12
+    ## patch9       4      8      9     13      1      2      3      1      0      13
+    ## patch10      9      9     10      6     14     15     16     12     13       0
 
 The following script lets you view branch ID, environmental values, and
 the number of upstream contributing patches for each patch:
@@ -165,16 +165,16 @@ net$df_patch
     ## # A tibble: 50 x 4
     ##    patch_id branch_id environment n_patch_upstream
     ##       <int>     <dbl>       <dbl>            <dbl>
-    ##  1        1         1      -0.481               50
-    ##  2        2        12      -1.13                 2
-    ##  3        3        12      -0.974                1
-    ##  4        4        10       0.303                6
-    ##  5        5        10       0.370                5
-    ##  6        6         3      -0.431               26
-    ##  7        7         3      -0.345               25
-    ##  8        8         3      -0.595               24
-    ##  9        9         3      -0.594               23
-    ## 10       10        11      -0.180                6
+    ##  1        1         1      -1.33                50
+    ##  2        2        10      -1.13                 6
+    ##  3        3        10      -1.05                 5
+    ##  4        4         8      -0.693                9
+    ##  5        5        20      -2.01                 3
+    ##  6        6        20      -1.78                 2
+    ##  7        7        20      -1.72                 1
+    ##  8        8         6      -1.96                 6
+    ##  9        9         6      -1.93                 5
+    ## 10       10        18      -1.56                 2
     ## # ... with 40 more rows
 
 ### Custom setting: visualization
@@ -216,41 +216,44 @@ net <- brnet(n_patch = 50, p_branch = 0.5, patch_scaling = FALSE, patch_size = 8
 
 ### Custom setting: environment
 
-Arguments: `min_env`, `max_env`, `rho`, `sd_env`
+Arguments: `mean_env_source`, `sd_env_source`, `rho`, `sd_env_lon`
 
 Some flexibility exists to simulate environmental values, which are
 determined through an autoregressive process, as detailed below:
 
 1.  Environmental values for upstream terminal patches (i.e., patches
-    with no upstream patch) are drawn from a uniform distribution as
-    z<sub>1</sub> \~ Uniform(min<sub>env</sub>, max<sub>env</sub>).
+    with no upstream patch) are drawn from a normal distribution as
+    z<sub>1</sub> \~ Normal(μ<sub>source</sub>,
+    σ<sub>source</sub><sup>2</sup>) (arguments `mean_env_source` and
+    `sd_env_source`).
 
 2.  Downstream environmental values are determined by an autoregressive
     process as z<sub>x</sub> = ρz<sub>x-1</sub> + ε<sub>x</sub> (‘x-1’
     means one patch upstream), where ε<sub>x</sub> \~ Normal(0,
-    σ<sup>2</sup><sub>env</sub>). At bifurcation patches (or
-    confluence), the environmental value takes a weighted mean of the
-    two contributing patches given the size of these patches *s* (the
-    number of upstream contributing patches): z<sub>x</sub> =
-    ω(ρz<sub>1,x-1</sub> + ε<sub>1,x</sub>) + (1 -
+    σ<sup>2</sup><sub>env</sub>) (argument `sd_env_lon`). At
+    bifurcation patches (or confluence), the environmental value takes a
+    weighted mean of the two contributing patches given the size of
+    these patches *s* (the number of upstream contributing patches):
+    z<sub>x</sub> = ω(ρz<sub>1,x-1</sub> + ε<sub>1,x</sub>) + (1 -
     ω)(ρz<sub>2,x-1</sub> + ε<sub>2,x</sub>), where ω =
     s<sub>1</sub>/(s<sub>1</sub> + s<sub>2</sub>).
 
-Users may change the values of `min_env` (default: min<sub>env</sub> =
--1), `max_env` (max<sub>env</sub> = 1), `rho` (ρ = 1), and `sd_env`
-(σ<sub>env</sub> = 0.1). Increasing the range of `min_env` and
-`max_env` leads to greater variation in environmental values at upstream
-terminals. `rho` (0 ≤ ρ ≤ 1) determines the strength of longitudinal
-autocorrelation (the greater the stronger autocorrelation). `sd_env`
-(σ<sub>env</sub> \> 0) determines the strength of local environmental
-noise. The following script produces a network with greater
-environmental variation at upstream terminals (z<sub>1</sub> \~
-Uniform(-3, 3)), weaker longitudinal autocorrelation (ρ = 0.5), and
-stronger local noises (σ<sub>env</sub> = 0.5).
+Users may change the values of μ<sub>source</sub> (default:
+`mean_env_source = 0`), σ<sub>source</sub> (`max_env = 1`), ρ (`rho
+= 1`), and σ<sub>env</sub> (`sd_env_lon = 0.1`). Increasing the value of
+`mean_env_source` leads to greater variation in environmental values at
+upstream terminals. The argument `rho` (0 ≤ ρ ≤ 1) determines the
+strength of longitudinal autocorrelation (the greater the stronger
+autocorrelation). The argument `sd_env_lon` (σ<sub>env</sub> \> 0)
+determines the strength of longitudinal environmental noise. The
+following script produces a network with greater environmental variation
+at upstream terminals (z<sub>1</sub> \~ Normal(0, 3<sup>2</sup>)),
+weaker longitudinal autocorrelation (ρ = 0.5), and stronger local noises
+(σ<sub>env</sub> = 0.5).
 
 ``` r
 net <- brnet(n_patch = 50, p_branch = 0.5,
-             min_env = -3, max_env = 3, rho = 0.5, sd_env = 0.5)
+             sd_env_source = 3, rho = 0.5, sd_env_lon = 0.5)
 ```
 
 ![](README_files/figure-gfm/brnet_instruction_2-1.png)<!-- -->
@@ -337,63 +340,63 @@ mc
 
     ## $df_dynamics
     ## # A tibble: 25,000 x 9
-    ##    timestep patch mean_env    env carrying_capaci~ species niche_optim  r_xt
-    ##       <dbl> <dbl>    <dbl>  <dbl>            <dbl>   <dbl>       <dbl> <dbl>
-    ##  1        1     1        0 0.0394              100       1     -0.298   3.78
-    ##  2        1     1        0 0.0394              100       2     -0.138   3.94
-    ##  3        1     1        0 0.0394              100       3     -0.764   2.90
-    ##  4        1     1        0 0.0394              100       4     -0.122   3.95
-    ##  5        1     1        0 0.0394              100       5     -0.0474  3.98
-    ##  6        1     2        0 0.0829              100       1     -0.298   3.72
-    ##  7        1     2        0 0.0829              100       2     -0.138   3.90
-    ##  8        1     2        0 0.0829              100       3     -0.764   2.80
-    ##  9        1     2        0 0.0829              100       4     -0.122   3.92
-    ## 10        1     2        0 0.0829              100       5     -0.0474  3.97
+    ##    timestep patch mean_env     env carrying_capaci~ species niche_optim  r_xt
+    ##       <dbl> <dbl>    <dbl>   <dbl>            <dbl>   <dbl>       <dbl> <dbl>
+    ##  1        1     1        0  0.0948              100       1       0.590 2.41 
+    ##  2        1     1        0  0.0948              100       2       0.724 1.68 
+    ##  3        1     1        0  0.0948              100       3      -0.188 3.00 
+    ##  4        1     1        0  0.0948              100       4       0.650 1.70 
+    ##  5        1     1        0  0.0948              100       5       0.653 1.84 
+    ##  6        1     2        0 -0.155               100       1       0.590 1.64 
+    ##  7        1     2        0 -0.155               100       2       0.724 0.841
+    ##  8        1     2        0 -0.155               100       3      -0.188 3.35 
+    ##  9        1     2        0 -0.155               100       4       0.650 0.741
+    ## 10        1     2        0 -0.155               100       5       0.653 0.898
     ## # ... with 24,990 more rows, and 1 more variable: abundance <dbl>
     ## 
     ## $df_species
     ## # A tibble: 5 x 6
     ##   species mean_abundance    r0 niche_optim sd_niche_width p_dispersal
     ##     <dbl>          <dbl> <dbl>       <dbl>          <dbl>       <dbl>
-    ## 1       1           93.1     4     -0.298               1         0.1
-    ## 2       2           97.6     4     -0.138               1         0.1
-    ## 3       3           65.3     4     -0.764               1         0.1
-    ## 4       4           97.8     4     -0.122               1         0.1
-    ## 5       5           98.3     4     -0.0474              1         0.1
+    ## 1       1         35.7       4       0.590          0.633         0.1
+    ## 2       2          0.409     4       0.724          0.521         0.1
+    ## 3       3         71.4       4      -0.188          0.591         0.1
+    ## 4       4          0         4       0.650          0.452         0.1
+    ## 5       5          8.76      4       0.653          0.487         0.1
     ## 
     ## $df_patch
     ## # A tibble: 5 x 5
     ##   patch alpha_div mean_env carrying_capacity connectivity
     ##   <dbl>     <dbl>    <dbl>             <dbl>        <dbl>
-    ## 1     1         5        0               100       0.0185
-    ## 2     2         5        0               100       1.07  
-    ## 3     3         5        0               100       1.04  
-    ## 4     4         5        0               100       0.114 
-    ## 5     5         5        0               100       1.11  
+    ## 1     1      3.10        0               100       0.855 
+    ## 2     2      2.55        0               100       0.400 
+    ## 3     3      2.55        0               100       0.402 
+    ## 4     4      3.10        0               100       0.855 
+    ## 5     5      2.39        0               100       0.0147
     ## 
     ## $df_diversity
     ## # A tibble: 1 x 3
     ##   alpha_div beta_div gamma_div
     ##       <dbl>    <dbl>     <dbl>
-    ## 1         5        0         5
+    ## 1      2.74    0.372      3.11
     ## 
     ## $df_xy_coord
     ## # A tibble: 5 x 2
     ##   x_coord y_coord
     ##     <dbl>   <dbl>
-    ## 1   7.36     7.42
-    ## 2   2.85     4.39
-    ## 3   2.77     5.13
-    ## 4   0.688    2.39
-    ## 5   3.31     4.79
+    ## 1   6.91     9.81
+    ## 2   0.373    8.27
+    ## 3   0.658    9.15
+    ## 4   6.75     9.82
+    ## 5   9.40     5.61
     ## 
     ## $distance_matrix
-    ##          patch1    patch2    patch3   patch4    patch5
-    ## patch1 0.000000 5.4352670 5.1292848 8.353332 4.8294217
-    ## patch2 5.435267 0.0000000 0.7475175 2.940507 0.6112653
-    ## patch3 5.129285 0.7475175 0.0000000 3.438982 0.6388782
-    ## patch4 8.353332 2.9405067 3.4389818 0.000000 3.5515759
-    ## patch5 4.829422 0.6112653 0.6388782 3.551576 0.0000000
+    ##           patch1    patch2    patch3    patch4   patch5
+    ## patch1 0.0000000 6.7180098 6.2902391 0.1691436 4.874748
+    ## patch2 6.7180098 0.0000000 0.9228446 6.5584745 9.410762
+    ## patch3 6.2902391 0.9228446 0.0000000 6.1248623 9.430991
+    ## patch4 0.1691436 6.5584745 6.1248623 0.0000000 4.977537
+    ## patch5 4.8747481 9.4107625 9.4309907 4.9775372 0.000000
     ## 
     ## $interaction_matrix
     ##     sp1 sp2 sp3 sp4 sp5
@@ -430,29 +433,40 @@ attributes, and (4) landscape structure.
 
 #### Species attributes
 
-Arguments: `r0`, `niche_optim` OR `optim_min` and `optim_max`,
-`sd_niche_width`, `niche_cost`, `p_dispersal`
+Arguments: `r0`, `niche_optim` OR `min_optim` and `max_optim`,
+`sd_niche_width` OR `min_niche_width` and `max_niche_width`,
+`niche_cost`, `p_dispersal`
 
 Species attributes are determined based on the maximum reproductive rate
-`r0`, optimal environmental value `niche_optim` (or `optim_min` and
-`optim_max` for random generation of `niche_optim`), niche width or
-breadth `sd_nich_width` and dispersal probability `p_dispersal` (see
-**Model description** for details).
+`r0`, optimal environmental value `niche_optim` (or `min_optim` and
+`max_optim` for random generation of `niche_optim`), niche width
+`sd_niche_width` (or `min_niche_width` and `max_niche_width` for random
+generation of `sd_niche_width`) and dispersal probability `p_dispersal`
+(see **Model description** for details).
 
 For optimal environmental values (niche optimum), the function by
-default assigns values randomly to each species as: μ<sub>i</sub> \~
+default assigns random values to species as: μ<sub>i</sub> \~
 Uniform(min<sub>μ</sub>, max<sub>μ</sub>), where users can set values of
-min<sub>μ</sub> and max<sub>μ</sub> using `optim_min` and `optim_max`
-arguments (default: `optim_min = -1` and `optim_max = 1`).
+min<sub>μ</sub> and max<sub>μ</sub> using `min_optim` and `max_optim`
+arguments (default: `min_optim = -1` and `max_optim = 1`).
 Alternatively, users may specify species niche optimums using the
-argument `niche_optim` (scalar or vector). If `niche_optim` is a single
-value, the function assumes that the niche optimums are the same for all
-species. If `!is.null(niche_optim)`, then the function disables the
-random generation process of niche optimums, ignoring `optim_min` and
-`optim_max` arguments. `niche_cost` determines the cost of having wider
-niche. Smaller values imply greater costs of wider niche (i.e.,
-decreased maximum reproductive rate). To disable (no cost of wide
-niche), set `niche_cost = Inf` (default).
+argument `niche_optim` (scalar or vector). If a single value or a vector
+of `niche_optim` is provided, the function ignores `min_optim` and
+`max_optim` arguments.
+
+Similarly, the function by default assigns random values of
+σ<sub>niche</sub> to species as: σ<sub>niche,i</sub> \~
+Uniform(min<sub>σ</sub>, max<sub>σ</sub>), where users can set values of
+min<sub>σ</sub> and max<sub>σ</sub> using `min_niche_width` and
+`max_niche_width` arguments (default: `min_niche_width = 0.1` and
+`max_niche_width = 1`). If a single value or a vector of
+`sd_niche_width` is provided, the function ignores `min_niche_width` and
+`max_niche_width` arguments.
+
+The argument `niche_cost` determines the cost of having wider niche.
+Smaller values imply greater costs of wider niche (i.e., decreased
+maximum reproductive rate; default: `niche_cost = 1`). To disable (no
+cost of wide niche), set `niche_cost = Inf` (default).
 
 For other parameters, users may specify species attributes by giving a
 scalar (assume identical among species) or a vector of values whose
@@ -576,7 +590,7 @@ competition is greater than interspecific competition if α<sub>ij</sub>
 reproductive rate r<sub>ix</sub>(t) is affected by environments and
 determined by a Gaussian function:
 
-<img src="https://latex.codecogs.com/gif.latex?r_%7Bix%7D%28t%29%3Dc%7Er_%7B0%2Ci%7D%7Ee%5E%5Cfrac%7B-%28%5Cmu_i%20-%20z_x%28t%29%29%5E2%7D%7B2%5Csigma%5E2_%7Bniche%7D%7D"/>
+<img src="https://latex.codecogs.com/gif.latex?r_%7Bix%7D%28t%29%20%3D%20c%7Er_%7B0%2Ci%7D%7Ee%5E%7B-%5Cfrac%7B%28%5Cmu_i-z_x%28t%29%29%5E2%7D%7B2%5Csigma_%7Bniche%2Ci%7D%5E2%7D%7D"/>
 
 where μ<sub>i</sub> is the optimal environmental value for species i
 (argument `niche_optim`), z<sub>x</sub>(t) the environmental value at
@@ -606,9 +620,9 @@ considered by describing the off-diagonal elements as:
 
 where Ω<sub>xy</sub> denotes the temporal covariance of environmental
 conditions between patch x and y, which is assumed to decay
-exponentially with increasing distance between the patches. The
-parameter φ (argument `phi`) determines distance decay (larger values
-lead to sharper declines).
+exponentially with increasing distance between the patches
+d<sub>xy</sub>. The parameter φ (argument `phi`) determines distance
+decay (larger values lead to sharper declines).
 
 #### Dispersal
 
