@@ -189,8 +189,9 @@ mcsim <- function(n_species = 5,
       diag(m_dispersal) <- 0
     } else {
       if (!is.null(xy_coord)) message("both xy_coord and distance_matrix are given: argument xy_coord is ignored")
-      if (is.matrix(distance_matrix) == 0) stop("distance matrix should be provided as matrix")
+      if (!is.matrix(distance_matrix)) stop("distance matrix should be provided as matrix")
       if (nrow(distance_matrix) != n_patch) stop("invalid dimension: distance_matrix must have a dimension of n_patch * n_patch")
+      if (any(diag(distance_matrix) != 0)) stop("invalid distance matrix: diagonal elements must be zero")
       df_xy_coord <- NULL
       m_distance <- distance_matrix
       m_dispersal <- exp(-theta * m_distance)
@@ -251,9 +252,9 @@ mcsim <- function(n_species = 5,
     v_i_sum[v_i_sum == 0] <- 1
     m_i_prob <- m_i_raw / v_i_sum
     m_i_hat <- m_i_prob * v_e_sum
-    m_n_hat <- m_n_hat + m_i_hat - m_e_hat
+    m_n_prime <- m_n_hat + m_i_hat - m_e_hat
 
-    m_n <- matrix(rpois(n = n_species * n_patch, lambda = m_n_hat), nrow = n_species, ncol = n_patch)
+    m_n <- matrix(rpois(n = n_species * n_patch, lambda = m_n_prime), nrow = n_species, ncol = n_patch)
 
     if (n > n_discard) {
       row_id <- st_row[n - n_discard]:(st_row[n - n_discard] + n_species * n_patch - 1)
