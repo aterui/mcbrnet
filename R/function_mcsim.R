@@ -13,10 +13,12 @@
 #' @param max_alpha numeric value. Maximum value of a uniform distribution that generates species interaction strength. Enabled if \code{interaction_type = "random"}. Default \code{NULL}.
 #' @param r0 numeric value (length should be one or equal to \code{n_species}). Maximum reproductive number of the Beverton-Holt model.
 #' @param niche_optim numeric value (length should be one or equal to \code{n_species}). Niche optimum of species (environmental value that maximizes the reproductive number). Default \code{NULL}.
-#' @param sd_niche_width numeric value (length should be one or equal to \code{n_species}). Niche width of species. Higher values indicate greater niche width.
-#' @param niche_cost numeric value. Determine the cost of wide niche (smaller values imply greater costs of wider niche).
 #' @param min_optim numeric value. Minimum value of a uniform distribution that generates optimal environmental values of simulated species. Values are randomly assigned to species. Enabled if \code{niche_optim = NULL}.
 #' @param max_optim numeric value. Maximum value of a uniform distribution that generates optimal environmental values of simulated species. Values are randomly assigned to species. Enabled if \code{niche_optim = NULL}.
+#' @param sd_niche_width numeric value (length should be one or equal to \code{n_species}). Niche width of species. Higher values indicate greater niche width.
+#' @param min_niche_width numeric value. Minimum value of a uniform distribution that generates niche width values of simulated species. Values are randomly assigned to species. Enabled if \code{sd_niche_width = NULL}.
+#' @param max_niche_width numeric value. Maximum value of a uniform distribution that generates niche width values of simulated species. Values are randomly assigned to species. Enabled if \code{sd_niche_width = NULL}.
+#' @param niche_cost numeric value. Determine the cost of wide niche (smaller values imply greater costs of wider niche). Default \code{1}.
 #' @param xy_coord data frame. Each row should correspond to an individual patch, with x and y coordinates (columns). Defualt \code{NULL}.
 #' @param distance_matrix numeric value. Distance matrix indicating distance between habitat patches. If \code{NULL}, a square landscape with randomly distributed patches will be generated. Default \code{NULL}.
 #' @param landscape_size numeric value. Length of a landscape on a side. Enabled if \code{dispersal_matrix = NULL}.
@@ -61,10 +63,12 @@ mcsim <- function(n_species = 5,
                   max_alpha = NULL,
                   r0 = 4,
                   niche_optim = NULL,
-                  sd_niche_width = 1,
-                  niche_cost = Inf,
                   min_optim = -1,
                   max_optim = 1,
+                  sd_niche_width = NULL,
+                  min_niche_width = 0.1,
+                  max_niche_width = 1,
+                  niche_cost = 1,
                   xy_coord = NULL,
                   distance_matrix = NULL,
                   landscape_size = 10,
@@ -114,12 +118,20 @@ mcsim <- function(n_species = 5,
   }
 
   ## niche width
-  if (length(sd_niche_width) == 1) {
-    message("single value of sd_niche_width is given: assume niche width are the same for all species")
-    m_sd_niche_width <- matrix(sd_niche_width, nrow = n_species, ncol = n_patch)
+  if (is.null(sd_niche_width)) {
+    message("sd_niche_width is not given: generate species niche width randomly")
+    v_sd_niche_width <- runif(n = n_species, min = min_niche_width, max = max_niche_width)
+    m_sd_niche_width <- matrix(rep(x = v_sd_niche_width, times = n_patch), nrow = n_species, ncol = n_patch)
   } else {
-    if (length(sd_niche_width) != n_species) stop("sd_niche_width must have length of one or n_species")
-    m_sd_niche_width <- matrix(rep(x = sd_niche_width, times = n_patch), nrow = n_species, ncol = n_patch)
+    if (length(sd_niche_width) == 1) {
+      message("single value of sd_niche_width is given: assume niche width are the same for all species")
+      v_sd_niche_width <- rep(x = sd_niche_width, times = n_species)
+      m_sd_niche_width <- matrix(sd_niche_width, nrow = n_species, ncol = n_patch)
+    } else {
+      if (length(sd_niche_width) != n_species) stop("sd_niche_width must have length of one or n_species")
+      v_sd_niche_width <- sd_niche_width
+      m_sd_niche_width <- matrix(rep(x = sd_niche_width, times = n_patch), nrow = n_species, ncol = n_patch)
+    }
   }
 
   ## maximum reproductive number
@@ -221,7 +233,7 @@ mcsim <- function(n_species = 5,
   m_n <- matrix(rpois(n = n_species * n_patch, lambda = 0.5), nrow = n_species, ncol = n_patch)
 
   pb <- txtProgressBar(min = 0, max = n_sim, style = 3)
-  for (n in 1:n_sim) {
+  for (n in seq_len(n_sim)) {
     if (n_warmup > 0) {
       if (n %in% propagule) {
         m_n <- m_n + matrix(rpois(n = n_species * n_patch, lambda = 0.5), nrow = n_species, ncol = n_patch)
@@ -246,11 +258,11 @@ mcsim <- function(n_species = 5,
     if (n > n_discard) {
       row_id <- st_row[n - n_discard]:(st_row[n - n_discard] + n_species * n_patch - 1)
       m_dynamics[row_id, ] <- cbind(I(n - n_discard),
-                                    rep(x = 1:n_patch, each = n_species),
+                                    rep(x = seq_len(n_patch), each = n_species),
                                     rep(x = v_mu_z, each = n_species),
                                     c(m_z_xt),
                                     c(m_k),
-                                    rep(x = 1:n_species, times = n_patch),
+                                    rep(x = seq_len(n_species), times = n_patch),
                                     c(m_mu),
                                     c(m_r_xt),
                                     c(m_n))
@@ -263,8 +275,8 @@ mcsim <- function(n_species = 5,
   # visualization -----------------------------------------------------------
 
   if (plot == TRUE) {
-    sample_patch <- sample(1:n_patch, size = min(c(n_patch, 5)), replace = FALSE)
-    sample_species <- sample(1:n_species, size = min(c(n_species, 5)), replace = FALSE)
+    sample_patch <- sample(seq_len(n_patch), size = min(c(n_patch, 5)), replace = FALSE)
+    sample_species <- sample(seq_len(n_species), size = min(c(n_species, 5)), replace = FALSE)
 
     g <- dplyr::as_tibble(m_dynamics) %>%
            dplyr::filter(.data$patch %in% sample_patch, .data$species %in% sample_species) %>%
@@ -290,10 +302,10 @@ mcsim <- function(n_species = 5,
   df_species <- df_dyn %>%
                   dplyr::group_by(.data$species) %>%
                   dplyr::summarise(mean_abundance = mean(.data$abundance)) %>%
-                  dplyr::right_join(dplyr::tibble(species = 1:n_species,
+                  dplyr::right_join(dplyr::tibble(species = seq_len(n_species),
                                                   r0 = v_r0,
                                                   niche_optim = v_mu,
-                                                  sd_niche_width = sd_niche_width,
+                                                  sd_niche_width = v_sd_niche_width,
                                                   p_dispersal = v_p_dispersal),
                                     by = "species")
 

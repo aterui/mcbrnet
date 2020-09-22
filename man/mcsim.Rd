@@ -18,10 +18,12 @@ mcsim(
   max_alpha = NULL,
   r0 = 4,
   niche_optim = NULL,
-  sd_niche_width = 1,
-  niche_cost = Inf,
   min_optim = -1,
   max_optim = 1,
+  sd_niche_width = NULL,
+  min_niche_width = 0.1,
+  max_niche_width = 1,
+  niche_cost = 1,
   xy_coord = NULL,
   distance_matrix = NULL,
   landscape_size = 10,
@@ -61,13 +63,17 @@ mcsim(
 
 \item{niche_optim}{numeric value (length should be one or equal to \code{n_species}). Niche optimum of species (environmental value that maximizes the reproductive number). Default \code{NULL}.}
 
-\item{sd_niche_width}{numeric value (length should be one or equal to \code{n_species}). Niche width of species. Higher values indicate greater niche width.}
-
-\item{niche_cost}{numeric value. Determine the cost of wide niche (smaller values imply greater costs of wider niche).}
-
 \item{min_optim}{numeric value. Minimum value of a uniform distribution that generates optimal environmental values of simulated species. Values are randomly assigned to species. Enabled if \code{niche_optim = NULL}.}
 
 \item{max_optim}{numeric value. Maximum value of a uniform distribution that generates optimal environmental values of simulated species. Values are randomly assigned to species. Enabled if \code{niche_optim = NULL}.}
+
+\item{sd_niche_width}{numeric value (length should be one or equal to \code{n_species}). Niche width of species. Higher values indicate greater niche width.}
+
+\item{min_niche_width}{numeric value. Minimum value of a uniform distribution that generates niche width values of simulated species. Values are randomly assigned to species. Enabled if \code{sd_niche_width = NULL}.}
+
+\item{max_niche_width}{numeric value. Maximum value of a uniform distribution that generates niche width values of simulated species. Values are randomly assigned to species. Enabled if \code{sd_niche_width = NULL}.}
+
+\item{niche_cost}{numeric value. Determine the cost of wide niche (smaller values imply greater costs of wider niche). Default \code{1}.}
 
 \item{xy_coord}{data frame. Each row should correspond to an individual patch, with x and y coordinates (columns). Defualt \code{NULL}.}
 
