@@ -2,10 +2,10 @@
 #'
 #' @param n_patch numeric value indicating the number of patches in a network.
 #' @param p_branch numeric value indicating the branching probability (success probability of a geometric distribution).
-#' @param min_env numeric value indicating minimum value of environmental condition at upstream terminals (minimum of a uniform distribution).
-#' @param max_env numeric value indicating maximum value of environmental condition at upstream terminals (maximum of a uniform distribution).
+#' @param mean_env_source numeric value indicating the mean value of environmental condition at upstream terminals.
+#' @param sd_env_source numeric value indicating the SD of environmental condition at upstream terminals.
 #' @param rho numeric value indicating the strength of spatial autocorrelation in environmental condition. The environmental condition at patch x \eqn{z}\out{<sub>x</sub>} is determined as \eqn{z}\out{<sub>x</sub>}\eqn{ = \rho}z\out{<sub>x-1</sub>}\eqn{ + \epsilon}\out{<sub>x</sub>}, where \eqn{\epsilon}\out{<sub>x</sub>} is the random variable drawn from a normal distribution with mean 0 and SD \eqn{\sigma}\out{<sub>env</sub>}. See \href{https://github.com/aterui/mcbrnet}{github page} for further details.
-#' @param sd_env numeric value indicating the SD of spatial environmental noise (\eqn{\sigma}\out{<sub>env</sub>}).
+#' @param sd_env_lon numeric value indicating the SD of longitudinal environmental noise (\eqn{\sigma}\out{<sub>env</sub>}).
 #' @param randomize_patch logical indicating whether randomize patches or not. If \code{FALSE}, the function may generate a biased network with ordered patches. Default \code{TRUE}.
 #' @param plot logical indicating if a plot should be shown or not. If \code{FALSE}, a plot of the generated network will not be shown. Default \code{TRUE}.
 #' @param patch_label character string indicating a type of patch (vertex) label (either \code{"patch", "branch", "n_upstream"}). \code{"patch"} shows patch ID, \code{"branch"} branch ID, and \code{"n_upstream"} the number of upstream contributing patches. If \code{NULL}, no label will be shown on patches in the plot. Default \code{NULL}.
@@ -33,10 +33,10 @@
 #'
 brnet <- function(n_patch,
                   p_branch,
-                  min_env = -1,
-                  max_env = 1,
+                  mean_env_source = 0,
+                  sd_env_source = 1,
                   rho = 1,
-                  sd_env = 0.1,
+                  sd_env_lon = 0.1,
                   randomize_patch = TRUE,
                   plot = TRUE,
                   patch_label = NULL,
@@ -197,13 +197,13 @@ brnet <- function(n_patch,
   n_source <- 0.5 * (n_branch + 1)
   source <- which(rowSums(m_adj_up) == 0)
   v_z_dummy <- v_z <- v_env <- rep(0, n_patch)
-  v_z[source] <- v_env[source] <- runif(n_source, min = min_env, max = max_env)
+  v_z[source] <- v_env[source] <- rnorm(n = n_source, mean = mean_env_source, sd = sd_env_source)
   v_z_dummy[source] <- 1
 
   if (!(rho <= 1 & rho >= 0)) stop("rho must be between 0 and 1")
   for (i in 1:max(m_distance[1, ])) {
     v_eps <- rep(0, n_patch)
-    v_eps[v_z_dummy != 0] <- rnorm(n = length(v_eps[v_z_dummy != 0]), mean = 0, sd = sd_env)
+    v_eps[v_z_dummy != 0] <- rnorm(n = length(v_eps[v_z_dummy != 0]), mean = 0, sd = sd_env_lon)
     v_z <- m_wa_prop %*% ((rho * v_z) + v_eps)
     v_z_dummy <- m_wa_prop %*% v_z_dummy
     v_env <- v_z + v_env
