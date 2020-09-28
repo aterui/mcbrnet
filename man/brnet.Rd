@@ -33,7 +33,7 @@ brnet(
 
 \item{sd_env_lon}{numeric value indicating the SD of longitudinal environmental noise (\eqn{\sigma}\out{<sub>env</sub>}).}
 
-\item{asymmetry_factor}{numeric value scaling upstream distance. If \code{asymmetry_factor > 1}, upstream distance becomes longer than downstream distance by the factor \code{asymmetry_factor}. Default \code{asymmetry_factor = 1} (no asymmetry).}
+\item{asymmetry_factor}{numeric value rescaling upstream distance. If \code{asymmetry_factor > 1}, upstream distance would be rescaled to make it longer than downstream distance by the factor \code{asymmetry_factor}. Default \code{asymmetry_factor = 1} (no asymmetry).}
 
 \item{randomize_patch}{logical indicating whether randomize patches or not. If \code{FALSE}, the function may generate a biased network with ordered patches. Default \code{TRUE}.}
 

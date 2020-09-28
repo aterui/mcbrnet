@@ -6,7 +6,7 @@
 #' @param sd_env_source numeric value indicating the SD of environmental condition at upstream terminals.
 #' @param rho numeric value indicating the strength of spatial autocorrelation in environmental condition. The environmental condition at patch x \eqn{z}\out{<sub>x</sub>} is determined as \eqn{z}\out{<sub>x</sub>}\eqn{ = \rho}z\out{<sub>x-1</sub>}\eqn{ + \epsilon}\out{<sub>x</sub>}, where \eqn{\epsilon}\out{<sub>x</sub>} is the random variable drawn from a normal distribution with mean 0 and SD \eqn{\sigma}\out{<sub>env</sub>}. See \href{https://github.com/aterui/mcbrnet}{github page} for further details.
 #' @param sd_env_lon numeric value indicating the SD of longitudinal environmental noise (\eqn{\sigma}\out{<sub>env</sub>}).
-#' @param asymmetry_factor numeric value scaling upstream distance. If \code{asymmetry_factor > 1}, upstream distance becomes longer than downstream distance by the factor \code{asymmetry_factor}. Default \code{asymmetry_factor = 1} (no asymmetry).
+#' @param asymmetry_factor numeric value rescaling upstream distance. If \code{asymmetry_factor > 1}, upstream distance would be rescaled to make it longer than downstream distance by the factor \code{asymmetry_factor}. Default \code{asymmetry_factor = 1} (no asymmetry).
 #' @param randomize_patch logical indicating whether randomize patches or not. If \code{FALSE}, the function may generate a biased network with ordered patches. Default \code{TRUE}.
 #' @param plot logical indicating if a plot should be shown or not. If \code{FALSE}, a plot of the generated network will not be shown. Default \code{TRUE}.
 #' @param patch_label character string indicating a type of patch (vertex) label (either \code{"patch", "branch", "n_upstream"}). \code{"patch"} shows patch ID, \code{"branch"} branch ID, and \code{"n_upstream"} the number of upstream contributing patches. If \code{NULL}, no label will be shown on patches in the plot. Default \code{NULL}.
@@ -94,7 +94,7 @@ brnet <- function(n_patch,
   if (p_branch == 0 | n_branch == 1) {
     v_n_patch_branch <- n_patch
     m_adj <- matrix(0, nrow = n_patch, ncol = n_patch)
-    x <- 1:(n_patch - 1)
+    x <- seq_len(n_patch - 1)
     y <- 2:n_patch
     m_adj[cbind(x, y)] <- 1
     m_adj[cbind(y, x)] <- 1
@@ -117,7 +117,7 @@ brnet <- function(n_patch,
     # start_id, end_id, and neighbor list for each branch
     v_end_id <- cumsum(v_n_patch_branch)
     v_start_id <- v_end_id - (v_n_patch_branch - 1)
-    list_neighbor_inbranch <- lapply(1:n_branch,
+    list_neighbor_inbranch <- lapply(seq_len(n_branch),
                                      function(i) fun_adj(n = v_n_patch_branch[i], start_id = v_start_id[i]))
     m_neighbor_inbranch <- do.call(rbind, list_neighbor_inbranch)
 
@@ -132,7 +132,7 @@ brnet <- function(n_patch,
       m_confluence <- rbind(m_confluence, m_confluence[, c(2, 1)])
     } else {
       n_confluence <- 0.5 * (n_branch - 1)
-      v_parent_branch <- 1:n_confluence
+      v_parent_branch <- seq_len(n_confluence)
       v_offspg_branch <- 2:n_branch
 
       m_offspg <- matrix(NA, nrow = 2, ncol = n_confluence)
@@ -165,7 +165,7 @@ brnet <- function(n_patch,
   m_distance <- matrix(0, ncol = n_patch, nrow = n_patch)
   m_identity <- diag(x = 1, nrow = n_patch, ncol = n_patch)
 
-  for (i in 1:n_patch) {
+  for (i in seq_len(n_patch)) {
     m_identity <- m_identity %*% m_adj
     m_distance[m_identity != 0 & m_distance == 0] <- i
     if (length(which(m_distance == 0)) == 0) break
@@ -182,7 +182,7 @@ brnet <- function(n_patch,
   m_wa <- matrix(0, ncol = n_patch, nrow = n_patch)
   m_identity <- diag(1, nrow = n_patch, ncol = n_patch)
 
-  for (i in 1:n_patch) {
+  for (i in seq_len(n_patch)) {
     m_identity <- m_identity %*% m_adj_up
     m_wa[m_identity != 0 & m_wa == 0] <- 1
     if (length(which(m_wa[upper.tri(m_wa)] == 0)) == 0) break
@@ -203,7 +203,7 @@ brnet <- function(n_patch,
   v_z_dummy[source] <- 1
 
   if (!(rho <= 1 & rho >= 0)) stop("rho must be between 0 and 1")
-  for (i in 1:max(m_distance[1, ])) {
+  for (i in seq_len(max(m_distance[1, ]))) {
     v_eps <- rep(0, n_patch)
     v_eps[v_z_dummy != 0] <- rnorm(n = length(v_eps[v_z_dummy != 0]), mean = 0, sd = sd_env_lon)
     v_z <- m_wa_prop %*% ((rho * v_z) + v_eps)
@@ -214,8 +214,8 @@ brnet <- function(n_patch,
 
   # randomize nodes ---------------------------------------------------------
 
-  branch <- unlist(lapply(1:n_branch, function(x) rep(x, each = v_n_patch_branch[x])))
-  patch <- 1:n_patch
+  branch <- unlist(lapply(seq_len(n_branch), function(x) rep(x, each = v_n_patch_branch[x])))
+  patch <- seq_len(n_patch)
   m_distance[upper.tri(m_distance)] <- asymmetry_factor * m_distance[upper.tri(m_distance)]
 
   if (randomize_patch == TRUE) {
@@ -227,7 +227,7 @@ brnet <- function(n_patch,
       m_adj <- m_adj[df_id$patch, df_id$patch]
       m_distance <- m_distance[df_id$patch, df_id$patch]
     } else {
-      df_id <- data.frame(branch = 1, patch = 1:n_patch)
+      df_id <- data.frame(branch = 1, patch = seq_len(n_patch))
     }
   } else {
     df_id <- data.frame(branch = branch, patch = patch)
@@ -244,7 +244,7 @@ brnet <- function(n_patch,
     if (is.null(patch_label)) {
       vertex_label <- NA
     } else {
-      if (patch_label == "patch") vertex_label <- 1:n_patch
+      if (patch_label == "patch") vertex_label <- seq_len(n_patch)
       if (patch_label == "branch") vertex_label <- df_id$branch
       if (patch_label == "n_upstream") vertex_label <- v_wa
       if (!(patch_label %in% c("patch", "branch", "n_upstream"))) stop("patch_label must be either patch, branch, or n_upstrem")
@@ -282,7 +282,7 @@ brnet <- function(n_patch,
 
   return(list(adjacency_matrix = m_adj,
               distance_matrix = m_distance,
-              df_patch = dplyr::tibble(patch_id = 1:n_patch,
+              df_patch = dplyr::tibble(patch_id = seq_len(n_patch),
                                        branch_id = as.numeric(df_id$branch),
                                        environment = c(v_env),
                                        n_patch_upstream = c(v_wa))))
