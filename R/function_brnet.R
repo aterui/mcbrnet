@@ -6,6 +6,7 @@
 #' @param sd_env_source numeric value indicating the SD of environmental condition at upstream terminals.
 #' @param rho numeric value indicating the strength of spatial autocorrelation in environmental condition. The environmental condition at patch x \eqn{z}\out{<sub>x</sub>} is determined as \eqn{z}\out{<sub>x</sub>}\eqn{ = \rho}z\out{<sub>x-1</sub>}\eqn{ + \epsilon}\out{<sub>x</sub>}, where \eqn{\epsilon}\out{<sub>x</sub>} is the random variable drawn from a normal distribution with mean 0 and SD \eqn{\sigma}\out{<sub>env</sub>}. See \href{https://github.com/aterui/mcbrnet}{github page} for further details.
 #' @param sd_env_lon numeric value indicating the SD of longitudinal environmental noise (\eqn{\sigma}\out{<sub>env</sub>}).
+#' @param asymmetry_factor numeric value scaling upstream distance. If \code{asymmetry_factor > 1}, upstream distance becomes longer than downstream distance by the factor \code{asymmetry_factor}. Default \code{asymmetry_factor = 1} (no asymmetry).
 #' @param randomize_patch logical indicating whether randomize patches or not. If \code{FALSE}, the function may generate a biased network with ordered patches. Default \code{TRUE}.
 #' @param plot logical indicating if a plot should be shown or not. If \code{FALSE}, a plot of the generated network will not be shown. Default \code{TRUE}.
 #' @param patch_label character string indicating a type of patch (vertex) label (either \code{"patch", "branch", "n_upstream"}). \code{"patch"} shows patch ID, \code{"branch"} branch ID, and \code{"n_upstream"} the number of upstream contributing patches. If \code{NULL}, no label will be shown on patches in the plot. Default \code{NULL}.
@@ -37,6 +38,7 @@ brnet <- function(n_patch,
                   sd_env_source = 1,
                   rho = 1,
                   sd_env_lon = 0.1,
+                  asymmetry_factor = 1,
                   randomize_patch = TRUE,
                   plot = TRUE,
                   patch_label = NULL,
@@ -214,6 +216,7 @@ brnet <- function(n_patch,
 
   branch <- unlist(lapply(1:n_branch, function(x) rep(x, each = v_n_patch_branch[x])))
   patch <- 1:n_patch
+  m_distance[upper.tri(m_distance)] <- asymmetry_factor * m_distance[upper.tri(m_distance)]
 
   if (randomize_patch == TRUE) {
     if (n_branch > 1) {

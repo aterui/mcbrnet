@@ -11,6 +11,7 @@ brnet(
   sd_env_source = 1,
   rho = 1,
   sd_env_lon = 0.1,
+  asymmetry_factor = 1,
   randomize_patch = TRUE,
   plot = TRUE,
   patch_label = NULL,
@@ -31,6 +32,8 @@ brnet(
 \item{rho}{numeric value indicating the strength of spatial autocorrelation in environmental condition. The environmental condition at patch x \eqn{z}\out{<sub>x</sub>} is determined as \eqn{z}\out{<sub>x</sub>}\eqn{ = \rho}z\out{<sub>x-1</sub>}\eqn{ + \epsilon}\out{<sub>x</sub>}, where \eqn{\epsilon}\out{<sub>x</sub>} is the random variable drawn from a normal distribution with mean 0 and SD \eqn{\sigma}\out{<sub>env</sub>}. See \href{https://github.com/aterui/mcbrnet}{github page} for further details.}
 
 \item{sd_env_lon}{numeric value indicating the SD of longitudinal environmental noise (\eqn{\sigma}\out{<sub>env</sub>}).}
+
+\item{asymmetry_factor}{numeric value scaling upstream distance. If \code{asymmetry_factor > 1}, upstream distance becomes longer than downstream distance by the factor \code{asymmetry_factor}. Default \code{asymmetry_factor = 1} (no asymmetry).}
 
 \item{randomize_patch}{logical indicating whether randomize patches or not. If \code{FALSE}, the function may generate a biased network with ordered patches. Default \code{TRUE}.}
 
