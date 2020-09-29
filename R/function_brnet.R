@@ -6,7 +6,7 @@
 #' @param sd_env_source numeric value indicating the SD of environmental condition at upstream terminals.
 #' @param rho numeric value indicating the strength of spatial autocorrelation in environmental condition. The environmental condition at patch x \eqn{z}\out{<sub>x</sub>} is determined as \eqn{z}\out{<sub>x</sub>}\eqn{ = \rho}z\out{<sub>x-1</sub>}\eqn{ + \epsilon}\out{<sub>x</sub>}, where \eqn{\epsilon}\out{<sub>x</sub>} is the random variable drawn from a normal distribution with mean 0 and SD \eqn{\sigma}\out{<sub>env</sub>}. See \href{https://github.com/aterui/mcbrnet}{github page} for further details.
 #' @param sd_env_lon numeric value indicating the SD of longitudinal environmental noise (\eqn{\sigma}\out{<sub>env</sub>}).
-#' @param asymmetry_factor numeric value rescaling upstream distance. If \code{asymmetry_factor > 1}, upstream distance would be rescaled to make it longer than downstream distance by the factor \code{asymmetry_factor}. Default \code{asymmetry_factor = 1} (no asymmetry).
+#' @param asymmetry_factor numeric value rescaling upstream distance. If \code{asymmetry_factor = 1}, distance from a downstream patch x to another upstream patch y would be multiplied by the factor of \code{asymmetry_factor}. This argument does not affect separation distance from an upstream patch to another downstream patch. Default \code{asymmetry_factor = 1} (no asymmetry).
 #' @param randomize_patch logical indicating whether randomize patches or not. If \code{FALSE}, the function may generate a biased network with ordered patches. Default \code{TRUE}.
 #' @param plot logical indicating if a plot should be shown or not. If \code{FALSE}, a plot of the generated network will not be shown. Default \code{TRUE}.
 #' @param patch_label character string indicating a type of patch (vertex) label (either \code{"patch", "branch", "n_upstream"}). \code{"patch"} shows patch ID, \code{"branch"} branch ID, and \code{"n_upstream"} the number of upstream contributing patches. If \code{NULL}, no label will be shown on patches in the plot. Default \code{NULL}.
@@ -16,6 +16,7 @@
 #'
 #' @return \code{adjacency_matrix} adjacency matrix for the generated network.
 #' @return \code{distance_matrix} distance matrix for the generated network.
+#' @return \code{weighted_distance_matrix} weighted distance matrix for the generated network.
 #' @return \code{df_patch} a data frame containing patch attributes.
 #'
 #' @importFrom dplyr %>%
@@ -212,11 +213,26 @@ brnet <- function(n_patch,
   }
 
 
+  # asymmetry ---------------------------------------------------------------
+
+  v_distance_to_root <- m_distance[1, ]
+
+  df_asymmetry <- expand.grid(patch1 = seq_len(n_patch), patch2 = seq_len(n_patch)) %>%
+                    dplyr::mutate(d1 = v_distance_to_root[.data$patch1],
+                                  d2 = v_distance_to_root[.data$patch2]) %>%
+                    dplyr::mutate(delta = .data$d2 - .data$d1,
+                                  distance = m_distance[cbind(.data$patch1, .data$patch2)]) %>%
+                    dplyr::mutate(x = 0.5 * (.data$distance - .data$delta)) %>%
+                    dplyr::mutate(weighted_distance = (1 + asymmetry_factor) * .data$x + asymmetry_factor * .data$delta) %>%
+                    dplyr::filter(.data$patch1 != .data$patch2)
+
+  m_weighted_distance <- m_distance
+  m_weighted_distance[cbind(df_asymmetry$patch1, df_asymmetry$patch2)] <- df_asymmetry$weighted_distance
+
   # randomize nodes ---------------------------------------------------------
 
   branch <- unlist(lapply(seq_len(n_branch), function(x) rep(x, each = v_n_patch_branch[x])))
   patch <- seq_len(n_patch)
-  m_distance[upper.tri(m_distance)] <- asymmetry_factor * m_distance[upper.tri(m_distance)]
 
   if (randomize_patch == TRUE) {
     if (n_branch > 1) {
@@ -226,6 +242,7 @@ brnet <- function(n_patch,
       v_env <- v_env[df_id$patch]
       m_adj <- m_adj[df_id$patch, df_id$patch]
       m_distance <- m_distance[df_id$patch, df_id$patch]
+      m_weighted_distance <- m_weighted_distance[df_id$patch, df_id$patch]
     } else {
       df_id <- data.frame(branch = 1, patch = seq_len(n_patch))
     }
@@ -279,9 +296,11 @@ brnet <- function(n_patch,
 
   rownames(m_adj) <- colnames(m_adj) <- sapply(seq_len(n_patch), function(x) paste0("patch", x))
   rownames(m_distance) <- colnames(m_distance) <- sapply(seq_len(n_patch), function(x) paste0("patch", x))
+  rownames(m_weighted_distance) <- colnames(m_weighted_distance) <- sapply(seq_len(n_patch), function(x) paste0("patch", x))
 
   return(list(adjacency_matrix = m_adj,
               distance_matrix = m_distance,
+              weighted_distance_matrix = m_weighted_distance,
               df_patch = dplyr::tibble(patch_id = seq_len(n_patch),
                                        branch_id = as.numeric(df_id$branch),
                                        environment = c(v_env),
