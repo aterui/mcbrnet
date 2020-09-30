@@ -2,7 +2,7 @@ mcbrnet: an R package for simulating metacommunity dynamics in a
 branching network
 ================
 Akira Terui
-September 29, 2020
+September 30, 2020
 
   - [Overview](#overview)
   - [Installation](#installation)
@@ -491,7 +491,7 @@ min<sub>σ</sub> and max<sub>σ</sub> using `min_niche_width` and
 The argument `niche_cost` determines the cost of having wider niche.
 Smaller values imply greater costs of wider niche (i.e., decreased
 maximum reproductive rate; default: `niche_cost = 1`). To disable (no
-cost of wide niche), set `niche_cost = Inf` (default).
+cost of wide niche), set `niche_cost = Inf`.
 
 For other parameters, users may specify species attributes by giving a
 scalar (assume identical among species) or a vector of values whose
