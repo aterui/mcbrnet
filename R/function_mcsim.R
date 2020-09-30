@@ -20,7 +20,8 @@
 #' @param max_niche_width numeric value. Maximum value of a uniform distribution that generates niche width values of simulated species. Values are randomly assigned to species. Enabled if \code{sd_niche_width = NULL}.
 #' @param niche_cost numeric value. Determine the cost of wide niche (smaller values imply greater costs of wider niche). Default \code{1}.
 #' @param xy_coord data frame. Each row should correspond to an individual patch, with x and y coordinates (columns). Defualt \code{NULL}.
-#' @param distance_matrix numeric value. Distance matrix indicating distance between habitat patches. If \code{NULL}, a square landscape with randomly distributed patches will be generated. Default \code{NULL}.
+#' @param distance_matrix numeric value. Distance matrix indicating distance between habitat patches. If provided, the distance matrix will be used to generate dispersal matrix and to calculate distance decay of environmental correlations. Default \code{NULL}.
+#' @param weighted_distance_matrix numeric value. Distance matrix indicating weighted distance between habitat patches. Enabled only if both distance_matrix and weighted_distance_matrix are given. The weighted distance matrix will be used to generate dispersal matrix. Default \code{NULL}.
 #' @param landscape_size numeric value. Length of a landscape on a side. Enabled if \code{dispersal_matrix = NULL}.
 #' @param mean_env numeric value (length should be one or equal to \code{n_patch}). Mean environmental values of patches.
 #' @param sd_env numeric value. Standard deviation of temporal environmental variation at each patch.
@@ -71,6 +72,7 @@ mcsim <- function(n_species = 5,
                   niche_cost = 1,
                   xy_coord = NULL,
                   distance_matrix = NULL,
+                  weighted_distance_matrix = NULL,
                   landscape_size = 10,
                   mean_env = 0,
                   sd_env = 0.1,
@@ -188,13 +190,21 @@ mcsim <- function(n_species = 5,
       m_dispersal <- data.matrix(exp(-theta * m_distance))
       diag(m_dispersal) <- 0
     } else {
-      if (!is.null(xy_coord)) message("both xy_coord and distance_matrix are given: argument xy_coord is ignored")
+      if (!is.null(xy_coord)) message("both xy_coord and distance matrix are given: argument xy_coord is ignored")
       if (!is.matrix(distance_matrix)) stop("distance matrix should be provided as matrix")
-      if (nrow(distance_matrix) != n_patch) stop("invalid dimension: distance_matrix must have a dimension of n_patch * n_patch")
+      if (nrow(distance_matrix) != n_patch) stop("invalid dimension: distance matrix must have a dimension of n_patch * n_patch")
       if (any(diag(distance_matrix) != 0)) stop("invalid distance matrix: diagonal elements must be zero")
       df_xy_coord <- NULL
       m_distance <- distance_matrix
-      m_dispersal <- exp(-theta * m_distance)
+      if (!is.null(weighted_distance_matrix)) {
+        message("weighted_distance_matrix is provided: weighted_distance_matrix is used to calculate dispersal matrix")
+        if (!is.matrix(weighted_distance_matrix)) stop("distance matrix should be provided as matrix")
+        if (nrow(weighted_distance_matrix) != n_patch) stop("invalid dimension: distance matrix must have a dimension of n_patch * n_patch")
+        if (any(diag(weighted_distance_matrix) != 0)) stop("invalid distance matrix: diagonal elements must be zero")
+        m_dispersal <- data.matrix(exp(-theta * weighted_distance_matrix))
+      } else {
+        m_dispersal <- data.matrix(exp(-theta * m_distance))
+      }
       diag(m_dispersal) <- 0
     }
   }
@@ -340,5 +350,6 @@ mcsim <- function(n_species = 5,
               df_diversity = dplyr::tibble(alpha_div, beta_div, gamma_div),
               df_xy_coord = df_xy_coord,
               distance_matrix = m_distance,
+              weighted_distance_matrix = weighted_distance_matrix,
               interaction_matrix = m_interaction))
 }
