@@ -26,6 +26,7 @@ mcsim(
   niche_cost = 1,
   xy_coord = NULL,
   distance_matrix = NULL,
+  weighted_distance_matrix = NULL,
   landscape_size = 10,
   mean_env = 0,
   sd_env = 0.1,
@@ -77,7 +78,9 @@ mcsim(
 
 \item{xy_coord}{data frame. Each row should correspond to an individual patch, with x and y coordinates (columns). Defualt \code{NULL}.}
 
-\item{distance_matrix}{numeric value. Distance matrix indicating distance between habitat patches. If \code{NULL}, a square landscape with randomly distributed patches will be generated. Default \code{NULL}.}
+\item{distance_matrix}{numeric value. Distance matrix indicating distance between habitat patches. If provided, the distance matrix will be used to generate dispersal matrix and to calculate distance decay of environmental correlations. Default \code{NULL}.}
+
+\item{weighted_distance_matrix}{numeric value. Distance matrix indicating weighted distance between habitat patches. Enabled only if both distance_matrix and weighted_distance_matrix are given. The weighted distance matrix will be used to generate dispersal matrix. Default \code{NULL}.}
 
 \item{landscape_size}{numeric value. Length of a landscape on a side. Enabled if \code{dispersal_matrix = NULL}.}
 
