@@ -13,6 +13,8 @@ September 29, 2020
           - [Custom setting:
             visualization](#custom-setting-visualization)
           - [Custom setting: environment](#custom-setting-environment)
+          - [Custom setting: asymmetric distance
+            matrix](#custom-setting-asymmetric-distance-matrix)
       - [`mcsim()`](#mcsim)
           - [Basic usage](#basic-usage-1)
           - [Quick start](#quick-start-1)
@@ -258,6 +260,24 @@ net <- brnet(n_patch = 50, p_branch = 0.5,
 
 ![](README_files/figure-gfm/brnet_instruction_2-1.png)<!-- -->
 
+### Custom setting: asymmetric distance matrix
+
+Arguments: `asymmetry_factor`
+
+Distance between patches is calculated as the number of steps from the
+origin to the target patch. Specifically, distance from patch x to y,
+d<sub>xy</sub>, is calculated as:
+
+d<sub>xy</sub> = step<sub>d</sub> + δstep<sub>u</sub>
+
+where step<sub>d</sub> the number of downstream steps, step<sub>u</sub>
+the number of upstream steps, and δ the asymmetry scaling factor
+(`asymmetry_factor`). Users may change δ to control the weight of
+upstream steps. (1) δ = 1, upstream and dowstream steps have no
+difference (default), (2) δ \> 1, upstream steps have greater costs, (3)
+δ \< 1, downstream steps have greater costs. Changes to
+`asymmetry_factor` will be reflected in `weighted_distance_matrix`.
+
 ## `mcsim()`
 
 ### Basic usage
@@ -397,6 +417,9 @@ mc
     ## patch3 6.2902391 0.9228446 0.0000000 6.1248623 9.430991
     ## patch4 0.1691436 6.5584745 6.1248623 0.0000000 4.977537
     ## patch5 4.8747481 9.4107625 9.4309907 4.9775372 0.000000
+    ## 
+    ## $weighted_distance_matrix
+    ## NULL
     ## 
     ## $interaction_matrix
     ##     sp1 sp2 sp3 sp4 sp5
