@@ -2,7 +2,7 @@ mcbrnet: an R package for simulating metacommunity dynamics in a
 branching network
 ================
 Akira Terui
-September 21, 2020
+September 29, 2020
 
   - [Overview](#overview)
   - [Installation](#installation)
@@ -516,7 +516,8 @@ spatial autocorrelation (see **Model description**).
 
 #### Landscape structure
 
-Arguments: `xy_coord` OR `distance_matrix`, `landscape_size`, `theta`
+Arguments: `xy_coord` OR `distance_matrix` (+
+`weighted_distance_matrix`), `landscape_size`, `theta`
 
 These arguments define landscape structure. By default, the function
 produces a square-shaped landscape (`landscape_size = 10` on a side) in
@@ -533,6 +534,18 @@ function calculates the distance between patches based on coordinates.
 Alternatively, users may provide `distance_matrix` (the object must be
 `matrix`), which describes the distance between habitat patches. The
 argument `distance_matrix` overrides `xy_coord`.
+
+`weighted_distance_matrix` is the supplemental argument to account for
+asymmetry in dispersal. For example, users may set an asymmetric
+distance matrix (distance between patches differs by direction, e.g.,
+upstream to downstream v.s. downstream to upstream). This argument is
+enabled only if both weighted (`weighted_distance_matrix`) and
+unweighted distance matrix (`distance_matrix`) are given. If both
+arguments are given, `weighted_distance_matrix` will be used to
+calculate dispersal matrix while `distance_matrix` being used to
+calculate the spatial autocorrelation in temporal environmental
+variation (see **Dispersal** and **Local community dynamics** in **Model
+description**).
 
 #### Others
 
@@ -621,7 +634,8 @@ considered by describing the off-diagonal elements as:
 where Ω<sub>xy</sub> denotes the temporal covariance of environmental
 conditions between patch x and y, which is assumed to decay
 exponentially with increasing distance between the patches
-d<sub>xy</sub>. The parameter φ (argument `phi`) determines distance
+d<sub>xy</sub> (randomly generated or specified by argument
+`distance_matrix`). The parameter φ (argument `phi`) determines distance
 decay (larger values lead to sharper declines).
 
 #### Dispersal
@@ -636,11 +650,12 @@ habitat patches:
 
 <img src="https://latex.codecogs.com/gif.latex?%5Cxi_%7Bix%7D%20%28t%29%20%3D%20%5Cfrac%7B%5Csum_%7By%2C%20y%20%5Cneq%20x%7D%20E_%7Biy%7D%28t%29e%5E%7B-%5Ctheta%20d_%7Bxy%7D%7D%7D%7B%5Csum_x%20%5Csum_%7By%2C%20y%20%5Cneq%20x%7D%20E_%7Biy%7D%28t%29e%5E%7B-%5Ctheta%20d_%7Bxy%7D%7D%7D"/>
 
-where d<sub>xy</sub> is the separation distance between patch x and y.
-The parameter θ (argument `theta`) dictates the dispersal distance of
-species (θ<sup>-1</sup> corresponds to the expected dispersal distance)
-and is assumed to be constant across species. The expected number of
-immigrants is calculated as:
+where d<sub>xy</sub> is the separation distance between patch x and y
+(randomly generated or specified by argument `distance_matrix` or
+`weighted_distance_matrix`). The parameter θ (argument `theta`) dictates
+the dispersal distance of species (θ<sup>-1</sup> corresponds to the
+expected dispersal distance) and is assumed to be constant across
+species. The expected number of immigrants is calculated as:
 
 <img src="https://latex.codecogs.com/gif.latex?I_%7Bix%7D%28t%29%20%3D%20%5Cxi_%7Bix%7D%28t%29%5Csum_x%20E_%7Bix%7D"/>
 
