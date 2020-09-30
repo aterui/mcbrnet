@@ -92,8 +92,10 @@ The function returns:
 
   - `adjacency_matrix`: adjacency matrix.
   - `distance_matrix`: distance matrix. Distance between patches is
-    measured as the number of patches required to reach from the focal
+    measured as the number of steps required to reach from the focal
     patch to the target patch through the network.
+  - `weighted_distance_matrix`: weighted distance matrix. Upstream steps
+    may be weighted (see **Custom setting**).
   - `df_patch`: a data frame (`dplyr::tibble`) containing patch
     attributes.
       - *patch\_id*: patch ID.
