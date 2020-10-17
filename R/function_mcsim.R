@@ -290,13 +290,13 @@ mcsim <- function(n_species = 5,
     sample_species <- sample(seq_len(n_species), size = min(c(n_species, 5)), replace = FALSE)
 
     g <- dplyr::as_tibble(m_dynamics) %>%
-           dplyr::filter(.data$patch %in% sample_patch, .data$species %in% sample_species) %>%
-           ggplot() +
-           facet_grid(rows = vars(.data$species), cols = vars(.data$patch),
-                      labeller = labeller(.rows = label_both, .cols = label_both)) +
-           geom_line(mapping = aes(x = .data$timestep, y = .data$abundance, color = abs(.data$niche_optim - .data$env))) +
-           scale_color_viridis_c(alpha = 0.8) +
-           labs(color = "Deviation \nfrom niche optimum")
+      dplyr::filter(.data$patch %in% sample_patch, .data$species %in% sample_species) %>%
+      ggplot() +
+      facet_grid(rows = vars(.data$species), cols = vars(.data$patch),
+                labeller = labeller(.rows = label_both, .cols = label_both)) +
+      geom_line(mapping = aes(x = .data$timestep, y = .data$abundance, color = abs(.data$niche_optim - .data$env))) +
+      scale_color_viridis_c(alpha = 0.8) +
+      labs(color = "Deviation \nfrom niche optimum")
     print(g)
   }
 
@@ -311,35 +311,33 @@ mcsim <- function(n_species = 5,
 
   # species attributes
   df_species <- df_dyn %>%
-                  dplyr::group_by(.data$species) %>%
-                  dplyr::summarise(mean_abundance = mean(.data$abundance)) %>%
-                  dplyr::right_join(dplyr::tibble(species = seq_len(n_species),
-                                                  r0 = v_r0,
-                                                  niche_optim = v_mu,
-                                                  sd_niche_width = v_sd_niche_width,
-                                                  p_dispersal = v_p_dispersal),
-                                    by = "species")
+    dplyr::group_by(.data$species) %>%
+    dplyr::summarise(mean_abundance = mean(.data$abundance)) %>%
+    dplyr::right_join(dplyr::tibble(species = seq_len(n_species),
+                                    r0 = v_r0,
+                                    niche_optim = v_mu,
+                                    sd_niche_width = v_sd_niche_width,
+                                    p_dispersal = v_p_dispersal),
+                      by = "species")
 
   # patch attributes
   df_patch <- df_dyn %>%
-                dplyr::group_by(.data$patch) %>%
-                dplyr::summarise(alpha_div = sum(.data$abundance > 0) / n_timestep) %>%
-                dplyr::left_join(dplyr::tibble(patch = seq_len(n_patch),
-                                               mean_env = mean_env,
-                                               carrying_capacity = carrying_capacity,
-                                               connectivity = rowSums(m_dispersal)),
-                                 by = "patch")
+    dplyr::group_by(.data$patch) %>%
+    dplyr::summarise(alpha_div = sum(.data$abundance > 0) / n_timestep) %>%
+    dplyr::left_join(dplyr::tibble(patch = seq_len(n_patch),
+                                   mean_env = mean_env,
+                                   carrying_capacity = carrying_capacity,
+                                   connectivity = rowSums(m_dispersal)),
+                     by = "patch")
 
   # diversity metrics
   alpha_div <- sum(df_dyn$abundance > 0) / (n_timestep * n_patch)
 
-  if (sum(df_dyn$abundance) == 0) {
-    gamma_div <- 0
-  } else {
-    gamma_div <- mean(tapply(X = df_dyn$species[df_dyn$abundance > 0],
-                             INDEX = df_dyn$timestep[df_dyn$abundance > 0],
-                             FUN = dplyr::n_distinct))
-  }
+  gamma_div <- df_dyn %>%
+    dplyr::group_by(.data$timestep) %>%
+    dplyr::summarise(gamma_t = n_distinct(.data$species[.data$abundance > 0])) %>%
+    dplyr::pull(gamma_t) %>%
+    mean()
 
   beta_div <- gamma_div - alpha_div
 
