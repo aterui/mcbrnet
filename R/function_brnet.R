@@ -218,13 +218,13 @@ brnet <- function(n_patch,
   v_distance_to_root <- m_distance[1, ]
 
   df_asymmetry <- expand.grid(patch1 = seq_len(n_patch), patch2 = seq_len(n_patch)) %>%
-                    dplyr::mutate(d1 = v_distance_to_root[.data$patch1],
-                                  d2 = v_distance_to_root[.data$patch2]) %>%
-                    dplyr::mutate(delta = .data$d2 - .data$d1,
-                                  distance = m_distance[cbind(.data$patch1, .data$patch2)]) %>%
-                    dplyr::mutate(x = 0.5 * (.data$distance - .data$delta)) %>%
-                    dplyr::mutate(weighted_distance = (1 + asymmetry_factor) * .data$x + asymmetry_factor * .data$delta) %>%
-                    dplyr::filter(.data$patch1 != .data$patch2)
+    dplyr::mutate(d1 = v_distance_to_root[.data$patch1],
+                  d2 = v_distance_to_root[.data$patch2]) %>%
+    dplyr::mutate(delta = .data$d2 - .data$d1,
+                  distance = m_distance[cbind(.data$patch1, .data$patch2)]) %>%
+    dplyr::mutate(x = 0.5 * (.data$distance - .data$delta)) %>%
+    dplyr::mutate(weighted_distance = (1 + asymmetry_factor) * .data$x + asymmetry_factor * .data$delta) %>%
+    dplyr::filter(.data$patch1 != .data$patch2)
 
   m_weighted_distance <- m_distance
   m_weighted_distance[cbind(df_asymmetry$patch1, df_asymmetry$patch2)] <- df_asymmetry$weighted_distance
