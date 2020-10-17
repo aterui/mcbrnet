@@ -335,8 +335,8 @@ mcsim <- function(n_species = 5,
 
   gamma_div <- df_dyn %>%
     dplyr::group_by(.data$timestep) %>%
-    dplyr::summarise(gamma_t = n_distinct(.data$species[.data$abundance > 0])) %>%
-    dplyr::pull(gamma_t) %>%
+    dplyr::summarise(gamma_t = dplyr::n_distinct(.data$species[.data$abundance > 0])) %>%
+    dplyr::pull(.data$gamma_t) %>%
     mean()
 
   beta_div <- gamma_div - alpha_div
