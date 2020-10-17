@@ -2,7 +2,7 @@ mcbrnet: an R package for simulating metacommunity dynamics in a
 branching network
 ================
 Akira Terui
-September 30, 2020
+October 16, 2020
 
   - [Overview](#overview)
   - [Installation](#installation)
@@ -243,11 +243,11 @@ determined through an autoregressive process, as detailed below:
     s<sub>1</sub>/(s<sub>1</sub> + s<sub>2</sub>).
 
 Users may change the values of μ<sub>source</sub> (default:
-`mean_env_source = 0`), σ<sub>source</sub> (`max_env = 1`), ρ (`rho
-= 1`), and σ<sub>env</sub> (`sd_env_lon = 0.1`). Increasing the value of
-`mean_env_source` leads to greater variation in environmental values at
-upstream terminals. The argument `rho` (0 ≤ ρ ≤ 1) determines the
-strength of longitudinal autocorrelation (the greater the stronger
+`mean_env_source = 0`), σ<sub>source</sub> (`sd_env_source = 1`), ρ
+(`rho = 1`), and σ<sub>env</sub> (`sd_env_lon = 0.1`). Increasing the
+value of `sd_env_source` leads to greater variation in environmental
+values at upstream terminals. The argument `rho` (0 ≤ ρ ≤ 1) determines
+the strength of longitudinal autocorrelation (the greater the stronger
 autocorrelation). The argument `sd_env_lon` (σ<sub>env</sub> \> 0)
 determines the strength of longitudinal environmental noise. The
 following script produces a network with greater environmental variation
