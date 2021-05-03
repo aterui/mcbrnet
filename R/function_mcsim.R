@@ -406,6 +406,7 @@ mcsim <- function(n_species = 5,
 
 
   # return ------------------------------------------------------------------
+
   colnames(m_distance) <- sapply(X = seq_len(n_patch),
                                  function(x) paste0("patch", x))
   rownames(m_distance) <- sapply(X = seq_len(n_patch),
