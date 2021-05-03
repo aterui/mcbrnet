@@ -15,7 +15,7 @@
 
 # test --------------------------------------------------------------------
 
-  test_that("check environmental/niche parameters", {
+  test_that("check brnet output", {
     expect_error(brnet(n_patch = 100, p_branch = 1))
 
     expect_equal(net$df_patch$n_patch_upstream[1], n_patch)
