@@ -23,6 +23,8 @@ May 03, 2021
         -   [Custom setting: detailed
             parameters](#custom-setting-detailed-parameters)
         -   [Model description](#model-description)
+    -   [`adjtodist`](#adjtodist)
+        -   [Basic usage](#basic-usage-2)
 -   [References](#references)
 
 # Overview
@@ -72,13 +74,12 @@ following steps:
     defined as a series of connected patches from one confluence (or
     outlet) to the next confluence upstream (or upstream terminal). The
     number of branches in a network BR is drawn from a binomial
-    distribution as BR \~ Binomial(N, P<sub>br</sub>), where N is the
-    number of patches and P<sub>br</sub> is the branching probability.
+    distribution as BR \~ Binomial(N, P\~br\~), where N is the number of
+    patches and P\~br\~ is the branching probability.
 
 2.  Draw the number of patches in each branch. The number of patches in
-    each branch N<sub>br</sub> is drawn from a geometric distribution as
-    N<sub>br</sub> \~ Ge(P<sub>br</sub>) but conditional on
-    ΣN<sub>br</sub> = N.
+    each branch N\~br\~ is drawn from a geometric distribution as
+    N\~br\~ \~ Ge(P\~br\~) but conditional on ΣN\~br\~ = N.
 
 3.  Organize branches into a bifurcating branching network.
 
@@ -91,13 +92,17 @@ net <- brnet(n_patch = 50, p_branch = 0.5)
 The function returns:
 
 -   `adjacency_matrix`: adjacency matrix.
+
 -   `distance_matrix`: distance matrix. Distance between patches is
     measured as the number of steps required to reach from the focal
     patch to the target patch through the network.
+
 -   `weighted_distance_matrix`: weighted distance matrix. Upstream steps
     may be weighted (see **Custom setting**).
+
 -   `df_patch`: a data frame (`dplyr::tibble`) containing patch
     attributes.
+
     -   *patch\_id*: patch ID.
     -   *branch\_id*: branch ID.
     -   *environment*: environmental value for each patch (see below for
@@ -227,33 +232,29 @@ determined through an autoregressive process, as detailed below:
 
 1.  Environmental values for upstream terminal patches (i.e., patches
     with no upstream patch) are drawn from a normal distribution as
-    z<sub>1</sub> \~ Normal(μ<sub>source</sub>,
-    σ<sub>source</sub><sup>2</sup>) (arguments `mean_env_source` and
-    `sd_env_source`).
+    z\~1\~ \~ Normal(μ\~source\~, σ\~source\~<sup>2</sup>) (arguments
+    `mean_env_source` and `sd_env_source`).
 
 2.  Downstream environmental values are determined by an autoregressive
-    process as z<sub>x</sub> = ρz<sub>x-1</sub> + ε<sub>x</sub> (‘x-1’
-    means one patch upstream), where ε<sub>x</sub> \~ Normal(0,
-    σ<sup>2</sup><sub>env</sub>) (argument `sd_env_lon`). At bifurcation
-    patches (or confluence), the environmental value takes a weighted
-    mean of the two contributing patches given the size of these patches
-    *s* (the number of upstream contributing patches): z<sub>x</sub> =
-    ω(ρz<sub>1,x-1</sub> + ε<sub>1,x</sub>) + (1 -
-    ω)(ρz<sub>2,x-1</sub> + ε<sub>2,x</sub>), where ω =
-    s<sub>1</sub>/(s<sub>1</sub> + s<sub>2</sub>).
+    process as z\~x\~ = ρz\~x-1\~ + ε\~x\~ (‘x-1’ means one patch
+    upstream), where ε\~x\~ \~ Normal(0, σ<sup>2</sup>\~env\~) (argument
+    `sd_env_lon`). At bifurcation patches (or confluence), the
+    environmental value takes a weighted mean of the two contributing
+    patches given the size of these patches *s* (the number of upstream
+    contributing patches): z\~x\~ = ω(ρz\~1,x-1\~ + ε\~1,x\~) + (1 -
+    ω)(ρz\~2,x-1\~ + ε\~2,x\~), where ω = s\~1\~/(s\~1\~ + s\~2\~).
 
-Users may change the values of μ<sub>source</sub> (default:
-`mean_env_source = 0`), σ<sub>source</sub> (`sd_env_source = 1`), ρ
-(`rho = 1`), and σ<sub>env</sub> (`sd_env_lon = 0.1`). Increasing the
-value of `sd_env_source` leads to greater variation in environmental
-values at upstream terminals. The argument `rho` (0 ≤ ρ ≤ 1) determines
-the strength of longitudinal autocorrelation (the greater the stronger
-autocorrelation). The argument `sd_env_lon` (σ<sub>env</sub> &gt; 0)
-determines the strength of longitudinal environmental noise. The
-following script produces a network with greater environmental variation
-at upstream terminals (z<sub>1</sub> \~ Normal(0, 3<sup>2</sup>)),
-weaker longitudinal autocorrelation (ρ = 0.5), and stronger local noises
-(σ<sub>env</sub> = 0.5).
+Users may change the values of μ\~source\~ (default:
+`mean_env_source = 0`), σ\~source\~ (`sd_env_source = 1`), ρ
+(`rho = 1`), and σ\~env\~ (`sd_env_lon = 0.1`). Increasing the value of
+`sd_env_source` leads to greater variation in environmental values at
+upstream terminals. The argument `rho` (0 ≤ ρ ≤ 1) determines the
+strength of longitudinal autocorrelation (the greater the stronger
+autocorrelation). The argument `sd_env_lon` (σ\~env\~ &gt; 0) determines
+the strength of longitudinal environmental noise. The following script
+produces a network with greater environmental variation at upstream
+terminals (z\~1\~ \~ Normal(0, 3<sup>2</sup>)), weaker longitudinal
+autocorrelation (ρ = 0.5), and stronger local noises (σ\~env\~ = 0.5).
 
 ``` r
 net <- brnet(n_patch = 50, p_branch = 0.5,
@@ -268,17 +269,17 @@ Arguments: `asymmetry_factor`
 
 Distance between patches is calculated as the number of steps from the
 origin to the target patch. Specifically, distance from patch x to y,
-d<sub>xy</sub>, is calculated as:
+d\~xy\~, is calculated as:
 
-d<sub>xy</sub> = step<sub>d</sub> + δstep<sub>u</sub>
+d\~xy\~ = step\~d\~ + δstep\~u\~
 
-where step<sub>d</sub> the number of downstream steps, step<sub>u</sub>
-the number of upstream steps, and δ the asymmetry scaling factor
-(`asymmetry_factor`). Users may change δ to control the weight of
-upstream steps. (1) δ = 1, upstream and dowstream steps have no
-difference (default), (2) δ &gt; 1, upstream steps have greater costs,
-(3) δ &lt; 1, downstream steps have greater costs. Changes to
-`asymmetry_factor` will be reflected in `weighted_distance_matrix`.
+where step\~d\~ the number of downstream steps, step\~u\~ the number of
+upstream steps, and δ the asymmetry scaling factor (`asymmetry_factor`).
+Users may change δ to control the weight of upstream steps. (1) δ = 1,
+upstream and dowstream steps have no difference (default), (2) δ &gt; 1,
+upstream steps have greater costs, (3) δ &lt; 1, downstream steps have
+greater costs. Changes to `asymmetry_factor` will be reflected in
+`weighted_distance_matrix`.
 
 ## `mcsim()`
 
@@ -299,6 +300,7 @@ The function returns:
 
 -   `df_dynamics` a data frame containing simulated metacommunity
     dynamics\*.
+
     -   *timestep*: time-step.
     -   *patch\_id*: patch ID.
     -   *mean\_env*: mean environmental condition at each patch.
@@ -309,7 +311,9 @@ The function returns:
     -   *r\_xt*: reproductive number of species i at patch x and
         time-step t.
     -   *abundance*: abundance of species i at patch x.
+
 -   `df_species` a data frame containing species attributes.
+
     -   *species*: species ID.
     -   *mean\_abundance*: mean abundance (arithmetic) of species i
         across sites and time-steps.
@@ -317,16 +321,21 @@ The function returns:
     -   *niche\_optim*: optimal environmental value for species i.
     -   *sd\_niche\_width*: niche width for species i.
     -   *p\_dispersal*: dispersal probability of species i.
+
 -   `df_patch` a data frame containing patch attributes.
+
     -   *patch*: patch ID.
     -   *alpha\_div*: alpha diversity averaged across time-steps.
     -   *mean\_env*: mean environmental condition at each patch.
     -   *carrying\_capacity*: carrying capacity at each patch.
     -   *connectivity*: structural connectivity at each patch. See below
         for details.
+
 -   `df_diversity` a data frame containing diversity metrics (α, β, and
     γ).
+
 -   `distance_matrix` a distance matrix used in the simulation.
+
 -   `interaction_matrix` a species interaction matrix, in which species
     X (column) influences species Y (row).
 
@@ -470,19 +479,17 @@ generation of `sd_niche_width`) and dispersal probability `p_dispersal`
 (see **Model description** for details).
 
 For optimal environmental values (niche optimum), the function by
-default assigns random values to species as: μ<sub>i</sub> \~
-Uniform(min<sub>μ</sub>, max<sub>μ</sub>), where users can set values of
-min<sub>μ</sub> and max<sub>μ</sub> using `min_optim` and `max_optim`
-arguments (default: `min_optim = -1` and `max_optim = 1`).
-Alternatively, users may specify species niche optimums using the
-argument `niche_optim` (scalar or vector). If a single value or a vector
-of `niche_optim` is provided, the function ignores `min_optim` and
-`max_optim` arguments.
+default assigns random values to species as: μ\~i\~ \~ Uniform(min\~μ\~,
+max\~μ\~), where users can set values of min\~μ\~ and max\~μ\~ using
+`min_optim` and `max_optim` arguments (default: `min_optim = -1` and
+`max_optim = 1`). Alternatively, users may specify species niche
+optimums using the argument `niche_optim` (scalar or vector). If a
+single value or a vector of `niche_optim` is provided, the function
+ignores `min_optim` and `max_optim` arguments.
 
-Similarly, the function by default assigns random values of
-σ<sub>niche</sub> to species as: σ<sub>niche,i</sub> \~
-Uniform(min<sub>σ</sub>, max<sub>σ</sub>), where users can set values of
-min<sub>σ</sub> and max<sub>σ</sub> using `min_niche_width` and
+Similarly, the function by default assigns random values of σ\~niche\~
+to species as: σ\~niche,i\~ \~ Uniform(min\~σ\~, max\~σ\~), where users
+can set values of min\~σ\~ and max\~σ\~ using `min_niche_width` and
 `max_niche_width` arguments (default: `min_niche_width = 0.1` and
 `max_niche_width = 1`). If a single value or a vector of
 `sd_niche_width` is provided, the function ignores `min_niche_width` and
@@ -505,17 +512,16 @@ Arguments: `interaction_type`, `alpha` OR `min_alpha` and `max_alpha`
 The argument `interaction_type` determines whether interaction
 coefficient `alpha` is a constant or random variable. If
 `interaction_type = "constant"`, then the interaction coefficients
-α<sub>ij</sub> (i != j) for any pairs of species will be set as a
-constant `alpha` (i.e., off-diagonal elements of the interaction
-matrix). If `interaction_type = "random"`, α<sub>ij</sub> will be drawn
-from a uniform distribution as α<sub>ij</sub> \~
-Uniform(min<sub>α</sub>, max<sub>α</sub>), where users can specify
-min<sub>α</sub> and max<sub>α</sub> using arguments `min_alpha` and
+α\~ij\~ (i != j) for any pairs of species will be set as a constant
+`alpha` (i.e., off-diagonal elements of the interaction matrix). If
+`interaction_type = "random"`, α\~ij\~ will be drawn from a uniform
+distribution as α\~ij\~ \~ Uniform(min\~α\~, max\~α\~), where users can
+specify min\~α\~ and max\~α\~ using arguments `min_alpha` and
 `max_alpha`. The argument `alpha` is ignored under the scenario of
 random interaction strength (i.e., `interaction_type = "random"`). Note
-that the diagonal elements of the interaction matrix (α<sub>ii</sub>)
-are always 1.0 regardless of `interaction_type`, as `alpha` is the
-strength of interspecific competition relative to that of intraspecific
+that the diagonal elements of the interaction matrix (α\~ii\~) are
+always 1.0 regardless of `interaction_type`, as `alpha` is the strength
+of interspecific competition relative to that of intraspecific
 competition (see **Model description**). By default,
 `interaction_type = "constant"` and `alpha = 0`.
 
@@ -601,89 +607,136 @@ derived statistics (e.g., diversity metrics in `df_diversity` and
 
 The metacommunity dynamics are described as a function of local
 community dynamics and dispersal (Thompson et al. 2020). Specifically,
-the realized number of individuals N<sub>ix</sub>(t + 1) (species i at
-patch x and time t + 1) is given as:
+the realized number of individuals N\~ix\~(t + 1) (species i at patch x
+and time t + 1) is given as:
 
-<img src="https://latex.codecogs.com/gif.latex?N_%7Bix%7D%28t&plus;1%29%20%3D%20Poisson%28n_%7Bix%7D%28t%29%20&plus;%20I_%7Bix%7D%28t%29%20-%20E_%7Bix%7D%28t%29%29"/>
+<img src="https://latex.codecogs.com/gif.latex?N_%7Bix%7D%28t+1%29%20%3D%20Poisson%28n_%7Bix%7D%28t%29%20+%20I_%7Bix%7D%28t%29%20-%20E_%7Bix%7D%28t%29%29"/>
 
-where n<sub>ix</sub>(t) is the expected number of individuals given the
-local community dynamics at time t, I<sub>ix</sub>(t) the expected
-number of immigrants to patch x, and E<sub>ix</sub>(t) the expected
-number of emigrants from patch x.
+where n\~ix\~(t) is the expected number of individuals given the local
+community dynamics at time t, I\~ix\~(t) the expected number of
+immigrants to patch x, and E\~ix\~(t) the expected number of emigrants
+from patch x.
 
 #### Local community dynamics
 
 Local community dynamics are simulated based on the Beverton-Holt model:
 
-<img src="https://latex.codecogs.com/gif.latex?n_%7Bix%7D%28t%29%3D%20%5Cfrac%7BN_%7Bix%7D%28t%29r_%7Bix%7D%28t%29%7D%7B1%20&plus;%20%5Cfrac%7B%28r_0_%7Bi%7D%20-%201%29%7D%7BK_x%7D%5Csum_j%20%5Calpha_%7Bij%7D%20N_%7Bjx%7D%28t%29%7D"/>
+<img src="https://latex.codecogs.com/gif.latex?n_%7Bix%7D%28t%29%3D%20%5Cfrac%7BN_%7Bix%7D%28t%29r_%7Bix%7D%28t%29%7D%7B1%20+%20%5Cfrac%7B%28r_0_%7Bi%7D%20-%201%29%7D%7BK_x%7D%5Csum_j%20%5Calpha_%7Bij%7D%20N_%7Bjx%7D%28t%29%7D"/>
 
-where r<sub>ix</sub>(t) is the reproductive rate of species i given the
-environmental condition at patch x and time t, r<sub>0,i</sub> the
-maximum reproductive rate of species i (argument `r0`), K<sub>x</sub>
-the carrying capacity at patch x (argument `carrying_capacity`), and
-α<sub>ij</sub> the interaction coefficient with species j (argument
-`alpha`). Note that α<sub>ij</sub> is the strength of interspecific
-competition relative to that of intraspecific competition (intraspecific
-competition is greater than interspecific competition if α<sub>ij</sub>
-&lt; 1; α<sub>ii</sub> is set to be 1.0). The density-independent
-reproductive rate r<sub>ix</sub>(t) is affected by environments and
-determined by a Gaussian function:
+where r\~ix\~(t) is the reproductive rate of species i given the
+environmental condition at patch x and time t, r\~0,i\~ the maximum
+reproductive rate of species i (argument `r0`), K\~x\~ the carrying
+capacity at patch x (argument `carrying_capacity`), and α\~ij\~ the
+interaction coefficient with species j (argument `alpha`). Note that
+α\~ij\~ is the strength of interspecific competition relative to that of
+intraspecific competition (intraspecific competition is greater than
+interspecific competition if α\~ij\~ &lt; 1; α\~ii\~ is set to be 1.0).
+The density-independent reproductive rate r\~ix\~(t) is affected by
+environments and determined by a Gaussian function:
 
 <img src="https://latex.codecogs.com/gif.latex?r_%7Bix%7D%28t%29%20%3D%20c%7Er_%7B0%2Ci%7D%7Ee%5E%7B-%5Cfrac%7B%28%5Cmu_i-z_x%28t%29%29%5E2%7D%7B2%5Csigma_%7Bniche%2Ci%7D%5E2%7D%7D"/>
 
-where μ<sub>i</sub> is the optimal environmental value for species i
-(argument `niche_optim`), z<sub>x</sub>(t) the environmental value at
-patch x and time t, and σ<sub>niche</sub> the niche width of species i
-(argument `sd_niche_width`). The cost of having wider niche is expressed
-by multiplying c (Chaianunporn and Hovestadt, 2015):
+where μ\~i\~ is the optimal environmental value for species i (argument
+`niche_optim`), z\~x\~(t) the environmental value at patch x and time t,
+and σ\~niche\~ the niche width of species i (argument `sd_niche_width`).
+The cost of having wider niche is expressed by multiplying c
+(Chaianunporn and Hovestadt, 2015):
 
 <img src="https://latex.codecogs.com/gif.latex?c%20%3D%20e%5E%7B-%5Cfrac%7B%5Csigma%5E2_%7Bniche%7D%7D%7B2%5Cnu%5E2%7D%7D"/>
 
 Smaller values of ν (argument `niche_cost`) imply greater costs of wider
 niche (i.e., decreased maximum reproductive rate). There is no cost of
-wider niche if ν approaches infinity. The environmental value
-z<sub>x</sub>(t), which may vary spatially and temporarily, is assumed
-to follow a multivariate normal distribution:
+wider niche if ν approaches infinity. The environmental value z\~x\~(t),
+which may vary spatially and temporarily, is assumed to follow a
+multivariate normal distribution:
 
 <img src="https://latex.codecogs.com/gif.latex?z_%7Bx%7D%28t%29%20%5Csim%20MVN%28%5Cboldsymbol%7B%5Cmu_%7Bz%7D%7D%2C%20%5Cboldsymbol%7B%5COmega_z%7D%29"/>
 
-**μ<sub>z</sub>** is the vector of mean environmental conditions of
-patches (argument `mean_env`) and Ω<sub>z</sub> is the
-variance-covariance matrix. If `spatial_auto_cor = FALSE`, the
-off-diagonal elements of the matrix are set to be zero while diagonal
-elements are σ<sub>z</sub><sup>2</sup> (σ<sub>z</sub>; argument
-`sd_env`). If `spatial_auto_cor = TRUE`, spatial autocorrelation is
-considered by describing the off-diagonal elements as:
+**μ\~z\~** is the vector of mean environmental conditions of patches
+(argument `mean_env`) and Ω\~z\~ is the variance-covariance matrix. If
+`spatial_auto_cor = FALSE`, the off-diagonal elements of the matrix are
+set to be zero while diagonal elements are σ\~z\~<sup>2</sup> (σ\~z\~;
+argument `sd_env`). If `spatial_auto_cor = TRUE`, spatial
+autocorrelation is considered by describing the off-diagonal elements
+as:
 
 <img src="https://latex.codecogs.com/gif.latex?%5COmega_%7Bxy%7D%20%3D%20%5Csigma_%7Bz%7D%5E2%20e%5E%7B-%5Cphi%20d_%7Bxy%7D%7D"/>
 
-where Ω<sub>xy</sub> denotes the temporal covariance of environmental
+where Ω\~xy\~ denotes the temporal covariance of environmental
 conditions between patch x and y, which is assumed to decay
-exponentially with increasing distance between the patches
-d<sub>xy</sub> (randomly generated or specified by argument
-`distance_matrix`). The parameter φ (argument `phi`) determines distance
-decay (larger values lead to sharper declines).
+exponentially with increasing distance between the patches d\~xy\~
+(randomly generated or specified by argument `distance_matrix`). The
+parameter φ (argument `phi`) determines distance decay (larger values
+lead to sharper declines).
 
 #### Dispersal
 
-The expected number of emigrants at time t E<sub>ix</sub>(t) is the
-product of dispersal probability P<sub>dispersal</sub> (argument
-`p_dispersal`) and n<sub>ix</sub>(t). The immigration probability at
-patch x, ξ<sub>ix</sub>, is calculated given the structural connectivity
-of patch x, in which the model assumes the exponential decay of
-successful immigration with the increasing separation distance between
-habitat patches:
+The expected number of emigrants at time t E\~ix\~(t) is the product of
+dispersal probability P\~dispersal\~ (argument `p_dispersal`) and
+n\~ix\~(t). The immigration probability at patch x, ξ\~ix\~, is
+calculated given the structural connectivity of patch x, in which the
+model assumes the exponential decay of successful immigration with the
+increasing separation distance between habitat patches:
 
 <img src="https://latex.codecogs.com/gif.latex?%5Cxi_%7Bix%7D%20%28t%29%20%3D%20%5Cfrac%7B%5Csum_%7By%2C%20y%20%5Cneq%20x%7D%20E_%7Biy%7D%28t%29e%5E%7B-%5Ctheta%20d_%7Bxy%7D%7D%7D%7B%5Csum_x%20%5Csum_%7By%2C%20y%20%5Cneq%20x%7D%20E_%7Biy%7D%28t%29e%5E%7B-%5Ctheta%20d_%7Bxy%7D%7D%7D"/>
 
-where d<sub>xy</sub> is the separation distance between patch x and y
-(randomly generated or specified by argument `distance_matrix` or
+where d\~xy\~ is the separation distance between patch x and y (randomly
+generated or specified by argument `distance_matrix` or
 `weighted_distance_matrix`). The parameter θ (argument `theta`) dictates
 the dispersal distance of species (θ<sup>-1</sup> corresponds to the
 expected dispersal distance) and is assumed to be constant across
 species. The expected number of immigrants is calculated as:
 
 <img src="https://latex.codecogs.com/gif.latex?I_%7Bix%7D%28t%29%20%3D%20%5Cxi_%7Bix%7D%28t%29%5Csum_x%20E_%7Bix%7D"/>
+
+## `adjtodist`
+
+### Basic usage
+
+This function converts an adjacency matrix into a distance matrix.
+Sample script:
+
+``` r
+net <- brnet(n_patch = 10, p_branch = 0) # linear network
+```
+
+![](README_files/figure-gfm/unnamed-chunk-22-1.png)<!-- -->
+
+``` r
+x <- net$adjacency_matrix
+
+# adjacency matrix
+print(x)
+```
+
+    ##         patch1 patch2 patch3 patch4 patch5 patch6 patch7 patch8 patch9 patch10
+    ## patch1       0      1      0      0      0      0      0      0      0       0
+    ## patch2       1      0      1      0      0      0      0      0      0       0
+    ## patch3       0      1      0      1      0      0      0      0      0       0
+    ## patch4       0      0      1      0      1      0      0      0      0       0
+    ## patch5       0      0      0      1      0      1      0      0      0       0
+    ## patch6       0      0      0      0      1      0      1      0      0       0
+    ## patch7       0      0      0      0      0      1      0      1      0       0
+    ## patch8       0      0      0      0      0      0      1      0      1       0
+    ## patch9       0      0      0      0      0      0      0      1      0       1
+    ## patch10      0      0      0      0      0      0      0      0      1       0
+
+``` r
+# covert an adjacency matrix into a distance matrix
+adjtodist(x)
+```
+
+    ##       [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10]
+    ##  [1,]    0    1    2    3    4    5    6    7    8     9
+    ##  [2,]    1    0    1    2    3    4    5    6    7     8
+    ##  [3,]    2    1    0    1    2    3    4    5    6     7
+    ##  [4,]    3    2    1    0    1    2    3    4    5     6
+    ##  [5,]    4    3    2    1    0    1    2    3    4     5
+    ##  [6,]    5    4    3    2    1    0    1    2    3     4
+    ##  [7,]    6    5    4    3    2    1    0    1    2     3
+    ##  [8,]    7    6    5    4    3    2    1    0    1     2
+    ##  [9,]    8    7    6    5    4    3    2    1    0     1
+    ## [10,]    9    8    7    6    5    4    3    2    1     0
 
 # References
 
