@@ -425,7 +425,7 @@ mcsim <- function(n_species = 5,
         m_n <- m_n + matrix(rpois(n = n_species * n_patch,
                                   lambda = 0.5),
                             nrow = n_species,
-                            col = n_patch)
+                            ncol = n_patch)
       }
 
     }
