@@ -2,35 +2,35 @@ mcbrnet: an R package for simulating metacommunity dynamics in a
 branching network
 ================
 Akira Terui
-October 16, 2020
+May 03, 2021
 
-  - [Overview](#overview)
-  - [Installation](#installation)
-  - [Instruction](#instruction)
-      - [`brnet()`](#brnet)
-          - [Basic usage](#basic-usage)
-          - [Quick start](#quick-start)
-          - [Custom setting:
+-   [Overview](#overview)
+-   [Installation](#installation)
+-   [Instruction](#instruction)
+    -   [`brnet()`](#brnet)
+        -   [Basic usage](#basic-usage)
+        -   [Quick start](#quick-start)
+        -   [Custom setting:
             visualization](#custom-setting-visualization)
-          - [Custom setting: environment](#custom-setting-environment)
-          - [Custom setting: asymmetric distance
+        -   [Custom setting: environment](#custom-setting-environment)
+        -   [Custom setting: asymmetric distance
             matrix](#custom-setting-asymmetric-distance-matrix)
-      - [`mcsim()`](#mcsim)
-          - [Basic usage](#basic-usage-1)
-          - [Quick start](#quick-start-1)
-          - [Custom setting: combine `brnet()` and
+    -   [`mcsim()`](#mcsim)
+        -   [Basic usage](#basic-usage-1)
+        -   [Quick start](#quick-start-1)
+        -   [Custom setting: combine `brnet()` and
             `mcsim()`](#custom-setting-combine-brnet-and-mcsim)
-          - [Custom setting: detailed
+        -   [Custom setting: detailed
             parameters](#custom-setting-detailed-parameters)
-          - [Model description](#model-description)
-  - [References](#references)
+        -   [Model description](#model-description)
+-   [References](#references)
 
 # Overview
 
 The package `mcbrnet` is composed of two functions: `brnet()` and
 `mcsim()`.
 
-  - `brnet`: Function `brnet()` generates a random branching network
+-   `brnet`: Function `brnet()` generates a random branching network
     with the specified number of patches and probability of branching.
     The function returns adjacency and distance matrices, hypothetical
     environmental values at each patch, and the number of patches
@@ -38,7 +38,7 @@ The package `mcbrnet` is composed of two functions: `brnet()` and
     may be used in function `mcsim()` to simulate metacommunity dynamics
     in a branching network.
 
-  - `mcsim`: Function `mcsim()` simulates metacommunity dynamics. By
+-   `mcsim`: Function `mcsim()` simulates metacommunity dynamics. By
     default, it produces a square-shaped landscape with randomly
     distributed habitat patches (x- and y-coordinates are drawn from a
     uniform distribution). If a distance matrix is given, the function
@@ -90,19 +90,19 @@ net <- brnet(n_patch = 50, p_branch = 0.5)
 
 The function returns:
 
-  - `adjacency_matrix`: adjacency matrix.
-  - `distance_matrix`: distance matrix. Distance between patches is
+-   `adjacency_matrix`: adjacency matrix.
+-   `distance_matrix`: distance matrix. Distance between patches is
     measured as the number of steps required to reach from the focal
     patch to the target patch through the network.
-  - `weighted_distance_matrix`: weighted distance matrix. Upstream steps
+-   `weighted_distance_matrix`: weighted distance matrix. Upstream steps
     may be weighted (see **Custom setting**).
-  - `df_patch`: a data frame (`dplyr::tibble`) containing patch
+-   `df_patch`: a data frame (`dplyr::tibble`) containing patch
     attributes.
-      - *patch\_id*: patch ID.
-      - *branch\_id*: branch ID.
-      - *environment*: environmental value for each patch (see below for
+    -   *patch\_id*: patch ID.
+    -   *branch\_id*: branch ID.
+    -   *environment*: environmental value for each patch (see below for
         details)
-      - *n\_patch\_upstream*: the number of upstream contributing
+    -   *n\_patch\_upstream*: the number of upstream contributing
         patches (including the focal patch itself; akin to the watershed
         area in river networks).
 
@@ -234,11 +234,11 @@ determined through an autoregressive process, as detailed below:
 2.  Downstream environmental values are determined by an autoregressive
     process as z<sub>x</sub> = ρz<sub>x-1</sub> + ε<sub>x</sub> (‘x-1’
     means one patch upstream), where ε<sub>x</sub> \~ Normal(0,
-    σ<sup>2</sup><sub>env</sub>) (argument `sd_env_lon`). At
-    bifurcation patches (or confluence), the environmental value takes a
-    weighted mean of the two contributing patches given the size of
-    these patches *s* (the number of upstream contributing patches):
-    z<sub>x</sub> = ω(ρz<sub>1,x-1</sub> + ε<sub>1,x</sub>) + (1 -
+    σ<sup>2</sup><sub>env</sub>) (argument `sd_env_lon`). At bifurcation
+    patches (or confluence), the environmental value takes a weighted
+    mean of the two contributing patches given the size of these patches
+    *s* (the number of upstream contributing patches): z<sub>x</sub> =
+    ω(ρz<sub>1,x-1</sub> + ε<sub>1,x</sub>) + (1 -
     ω)(ρz<sub>2,x-1</sub> + ε<sub>2,x</sub>), where ω =
     s<sub>1</sub>/(s<sub>1</sub> + s<sub>2</sub>).
 
@@ -248,7 +248,7 @@ Users may change the values of μ<sub>source</sub> (default:
 value of `sd_env_source` leads to greater variation in environmental
 values at upstream terminals. The argument `rho` (0 ≤ ρ ≤ 1) determines
 the strength of longitudinal autocorrelation (the greater the stronger
-autocorrelation). The argument `sd_env_lon` (σ<sub>env</sub> \> 0)
+autocorrelation). The argument `sd_env_lon` (σ<sub>env</sub> &gt; 0)
 determines the strength of longitudinal environmental noise. The
 following script produces a network with greater environmental variation
 at upstream terminals (z<sub>1</sub> \~ Normal(0, 3<sup>2</sup>)),
@@ -276,8 +276,8 @@ where step<sub>d</sub> the number of downstream steps, step<sub>u</sub>
 the number of upstream steps, and δ the asymmetry scaling factor
 (`asymmetry_factor`). Users may change δ to control the weight of
 upstream steps. (1) δ = 1, upstream and dowstream steps have no
-difference (default), (2) δ \> 1, upstream steps have greater costs, (3)
-δ \< 1, downstream steps have greater costs. Changes to
+difference (default), (2) δ &gt; 1, upstream steps have greater costs,
+(3) δ &lt; 1, downstream steps have greater costs. Changes to
 `asymmetry_factor` will be reflected in `weighted_distance_matrix`.
 
 ## `mcsim()`
@@ -297,37 +297,37 @@ mc <- mcsim(n_patch = 5, n_species = 5)
 
 The function returns:
 
-  - `df_dynamics` a data frame containing simulated metacommunity
+-   `df_dynamics` a data frame containing simulated metacommunity
     dynamics\*.
-      - *timestep*: time-step.
-      - *patch*: patch ID.
-      - *mean\_env*: mean environmental condition at each patch.
-      - *env*: environmental condition at patch x and time-step t.
-      - *carrying\_capacity*: carrying capacity at each patch.
-      - *species*: species ID.
-      - *niche\_optim*: optimal environmental value for species i.
-      - *r\_xt*: reproductive number of species i at patch x and
+    -   *timestep*: time-step.
+    -   *patch\_id*: patch ID.
+    -   *mean\_env*: mean environmental condition at each patch.
+    -   *env*: environmental condition at patch x and time-step t.
+    -   *carrying\_capacity*: carrying capacity at each patch.
+    -   *species*: species ID.
+    -   *niche\_optim*: optimal environmental value for species i.
+    -   *r\_xt*: reproductive number of species i at patch x and
         time-step t.
-      - *abundance*: abundance of species i at patch x.
-  - `df_species` a data frame containing species attributes.
-      - *species*: species ID.
-      - *mean\_abundance*: mean abundance (arithmetic) of species i
+    -   *abundance*: abundance of species i at patch x.
+-   `df_species` a data frame containing species attributes.
+    -   *species*: species ID.
+    -   *mean\_abundance*: mean abundance (arithmetic) of species i
         across sites and time-steps.
-      - *r0*: maximum reproductive number of species i.
-      - *niche\_optim*: optimal environmental value for species i.
-      - *sd\_niche\_width*: niche width for species i.
-      - *p\_dispersal*: dispersal probability of species i.
-  - `df_patch` a data frame containing patch attributes.
-      - *patch*: patch ID.
-      - *alpha\_div*: alpha diversity averaged across time-steps.
-      - *mean\_env*: mean environmental condition at each patch.
-      - *carrying\_capacity*: carrying capacity at each patch.
-      - *connectivity*: structural connectivity at each patch. See below
+    -   *r0*: maximum reproductive number of species i.
+    -   *niche\_optim*: optimal environmental value for species i.
+    -   *sd\_niche\_width*: niche width for species i.
+    -   *p\_dispersal*: dispersal probability of species i.
+-   `df_patch` a data frame containing patch attributes.
+    -   *patch*: patch ID.
+    -   *alpha\_div*: alpha diversity averaged across time-steps.
+    -   *mean\_env*: mean environmental condition at each patch.
+    -   *carrying\_capacity*: carrying capacity at each patch.
+    -   *connectivity*: structural connectivity at each patch. See below
         for details.
-  - `df_diversity` a data frame containing diversity metrics (α, β, and
+-   `df_diversity` a data frame containing diversity metrics (α, β, and
     γ).
-  - `distance_matrix` a distance matrix used in the simulation.
-  - `interaction_matrix` a species interaction matrix, in which species
+-   `distance_matrix` a distance matrix used in the simulation.
+-   `interaction_matrix` a species interaction matrix, in which species
     X (column) influences species Y (row).
 
 \*NOTE: The warm-up and burn-in periods will not be included in return
@@ -362,18 +362,18 @@ mc
 
     ## $df_dynamics
     ## # A tibble: 25,000 x 9
-    ##    timestep patch mean_env     env carrying_capaci~ species niche_optim  r_xt
-    ##       <dbl> <dbl>    <dbl>   <dbl>            <dbl>   <dbl>       <dbl> <dbl>
-    ##  1        1     1        0  0.0948              100       1       0.590 2.41 
-    ##  2        1     1        0  0.0948              100       2       0.724 1.68 
-    ##  3        1     1        0  0.0948              100       3      -0.188 3.00 
-    ##  4        1     1        0  0.0948              100       4       0.650 1.70 
-    ##  5        1     1        0  0.0948              100       5       0.653 1.84 
-    ##  6        1     2        0 -0.155               100       1       0.590 1.64 
-    ##  7        1     2        0 -0.155               100       2       0.724 0.841
-    ##  8        1     2        0 -0.155               100       3      -0.188 3.35 
-    ##  9        1     2        0 -0.155               100       4       0.650 0.741
-    ## 10        1     2        0 -0.155               100       5       0.653 0.898
+    ##    timestep patch_id mean_env     env carrying_capaci~ species niche_optim  r_xt
+    ##       <dbl>    <dbl>    <dbl>   <dbl>            <dbl>   <dbl>       <dbl> <dbl>
+    ##  1        1        1        0  0.0948              100       1       0.590 2.41 
+    ##  2        1        1        0  0.0948              100       2       0.724 1.68 
+    ##  3        1        1        0  0.0948              100       3      -0.188 3.00 
+    ##  4        1        1        0  0.0948              100       4       0.650 1.70 
+    ##  5        1        1        0  0.0948              100       5       0.653 1.84 
+    ##  6        1        2        0 -0.155               100       1       0.590 1.64 
+    ##  7        1        2        0 -0.155               100       2       0.724 0.841
+    ##  8        1        2        0 -0.155               100       3      -0.188 3.35 
+    ##  9        1        2        0 -0.155               100       4       0.650 0.741
+    ## 10        1        2        0 -0.155               100       5       0.653 0.898
     ## # ... with 24,990 more rows, and 1 more variable: abundance <dbl>
     ## 
     ## $df_species
@@ -388,19 +388,19 @@ mc
     ## 
     ## $df_patch
     ## # A tibble: 5 x 5
-    ##   patch alpha_div mean_env carrying_capacity connectivity
-    ##   <dbl>     <dbl>    <dbl>             <dbl>        <dbl>
-    ## 1     1      3.10        0               100       0.855 
-    ## 2     2      2.55        0               100       0.400 
-    ## 3     3      2.55        0               100       0.402 
-    ## 4     4      3.10        0               100       0.855 
-    ## 5     5      2.39        0               100       0.0147
+    ##   patch_id alpha_div mean_env carrying_capacity connectivity
+    ##      <dbl>     <dbl>    <dbl>             <dbl>        <dbl>
+    ## 1        1      3.10        0               100       0.855 
+    ## 2        2      2.55        0               100       0.400 
+    ## 3        3      2.55        0               100       0.402 
+    ## 4        4      3.10        0               100       0.855 
+    ## 5        5      2.39        0               100       0.0147
     ## 
     ## $df_diversity
     ## # A tibble: 1 x 3
     ##   alpha_div beta_div gamma_div
     ##       <dbl>    <dbl>     <dbl>
-    ## 1      2.74    0.372      3.11
+    ## 1      2.74     1.14      3.11
     ## 
     ## $df_xy_coord
     ## # A tibble: 5 x 2
@@ -505,7 +505,7 @@ Arguments: `interaction_type`, `alpha` OR `min_alpha` and `max_alpha`
 The argument `interaction_type` determines whether interaction
 coefficient `alpha` is a constant or random variable. If
 `interaction_type = "constant"`, then the interaction coefficients
-α<sub>ij</sub> (i \!= j) for any pairs of species will be set as a
+α<sub>ij</sub> (i != j) for any pairs of species will be set as a
 constant `alpha` (i.e., off-diagonal elements of the interaction
 matrix). If `interaction_type = "random"`, α<sub>ij</sub> will be drawn
 from a uniform distribution as α<sub>ij</sub> \~
@@ -516,8 +516,8 @@ random interaction strength (i.e., `interaction_type = "random"`). Note
 that the diagonal elements of the interaction matrix (α<sub>ii</sub>)
 are always 1.0 regardless of `interaction_type`, as `alpha` is the
 strength of interspecific competition relative to that of intraspecific
-competition (see **Model description**). By default, `interaction_type =
-"constant"` and `alpha = 0`.
+competition (see **Model description**). By default,
+`interaction_type = "constant"` and `alpha = 0`.
 
 #### Patch attributes
 
@@ -585,8 +585,9 @@ determines the timestep interval of the random introductions (default:
 `propagule_interval = ceiling(n_warmup / 10)`).
 
 The argument `n_burnin` is the period that will be discarded as
-*burn-in* to remove the influence of initial values (default: `n_burnin
-= 200`). During the burn-in period, species introductions do not occur.
+*burn-in* to remove the influence of initial values (default:
+`n_burnin = 200`). During the burn-in period, species introductions do
+not occur.
 
 The argument `n_timestep` is the simulation peiord that is recorded in
 the return `df_dynamics` (default: `n_timestep = 1000`). As a result,
@@ -624,7 +625,7 @@ the carrying capacity at patch x (argument `carrying_capacity`), and
 `alpha`). Note that α<sub>ij</sub> is the strength of interspecific
 competition relative to that of intraspecific competition (intraspecific
 competition is greater than interspecific competition if α<sub>ij</sub>
-\< 1; α<sub>ii</sub> is set to be 1.0). The density-independent
+&lt; 1; α<sub>ii</sub> is set to be 1.0). The density-independent
 reproductive rate r<sub>ix</sub>(t) is affected by environments and
 determined by a Gaussian function:
 
@@ -686,16 +687,16 @@ species. The expected number of immigrants is calculated as:
 
 # References
 
-  - Chaianunporn T and Hovestadt T. (2015) Evolutionary responses to
+-   Chaianunporn T and Hovestadt T. (2015) Evolutionary responses to
     climate change in parasitic systems. Global Change Biology 21:
     2905-2916.
-  - Csardi G, Nepusz T: The igraph software package for complex network
+-   Csardi G, Nepusz T: The igraph software package for complex network
     research, InterJournal, Complex Systems 1695. 2006.
     <http://igraph.org>
-  - Jacolien van Rij (2020). plotfunctions: Various Functions to
+-   Jacolien van Rij (2020). plotfunctions: Various Functions to
     Facilitate Visualization of Data and Analysis. R package version
     1.4. <https://CRAN.R-project.org/package=plotfunctions>
-  - Thompson, P.L., Guzman, L.M., De Meester, L., Horváth, Z., Ptacnik,
+-   Thompson, P.L., Guzman, L.M., De Meester, L., Horváth, Z., Ptacnik,
     R., Vanschoenwinkel, B., Viana, D.S. and Chase, J.M. (2020), A
     process‐based metacommunity framework linking local and regional
     scale community ecology. Ecol Lett, 23: 1314-1329.
