@@ -119,7 +119,11 @@ brnet <- function(n_patch,
     v_end_id <- cumsum(v_n_patch_branch)
     v_start_id <- v_end_id - (v_n_patch_branch - 1)
     list_neighbor_inbranch <- lapply(seq_len(n_branch),
-                                     function(i) fun_adj(n = v_n_patch_branch[i], start_id = v_start_id[i]))
+                                     function(i) {
+                                       fun_adj(n = v_n_patch_branch[i],
+                                               start_id = v_start_id[i])
+                                       }
+                                     )
     m_neighbor_inbranch <- do.call(rbind, list_neighbor_inbranch)
 
     # combine parent and offspring branches at confluences
@@ -128,7 +132,8 @@ brnet <- function(n_patch,
       offspg <- c(2, 3)
       m_po <- cbind(parent, offspg)
       list_confluence <- lapply(seq_len(nrow(m_po)),
-                                function(x) cbind(v_end_id[m_po[x, 1]], v_start_id[m_po[x, 2]]))
+                                function(x) cbind(v_end_id[m_po[x, 1]],
+                                                  v_start_id[m_po[x, 2]]))
       m_confluence <- do.call(rbind, list_confluence)
       m_confluence <- rbind(m_confluence, m_confluence[, c(2, 1)])
     } else {
@@ -138,22 +143,28 @@ brnet <- function(n_patch,
 
       m_offspg <- matrix(NA, nrow = 2, ncol = n_confluence)
       for (i in n_confluence:1) {
-        v_y <- resample(v_offspg_branch[v_offspg_branch > v_parent_branch[i]], size = 2)
-        v_offspg_branch <- setdiff(v_offspg_branch, v_y)
+        v_y <- resample(v_offspg_branch[v_offspg_branch > v_parent_branch[i]],
+                        size = 2)
+        v_offspg_branch <- setdiff(v_offspg_branch,
+                                   v_y)
         m_offspg[, i] <- v_y
       }
 
-      parent <- rep(v_parent_branch, each = 2)
+      parent <- rep(v_parent_branch,
+                    each = 2)
       offspg <- c(m_offspg)
-      m_po <- cbind(parent, offspg)
+      m_po <- cbind(parent,
+                    offspg)
 
       list_confluence <- lapply(seq_len(nrow(m_po)),
-                                function(x) cbind(v_end_id[m_po[x, 1]], v_start_id[m_po[x, 2]]))
+                                function(x) cbind(v_end_id[m_po[x, 1]],
+                                                  v_start_id[m_po[x, 2]]))
       m_confluence <- do.call(rbind, list_confluence)
       m_confluence <- rbind(m_confluence, m_confluence[, c(2, 1)])
     }
 
-    m_neighbor_patch <- rbind(m_neighbor_inbranch, m_confluence)
+    m_neighbor_patch <- rbind(m_neighbor_inbranch,
+                              m_confluence)
     m_neighbor_patch <- m_neighbor_patch[complete.cases(m_neighbor_patch), ]
 
     m_adj <- matrix(0, nrow = n_patch, ncol = n_patch)
@@ -163,8 +174,12 @@ brnet <- function(n_patch,
 
   # distance matrix ---------------------------------------------------------
 
-  m_distance <- matrix(0, ncol = n_patch, nrow = n_patch)
-  m_identity <- diag(x = 1, nrow = n_patch, ncol = n_patch)
+  m_distance <- matrix(0,
+                       ncol = n_patch,
+                       nrow = n_patch)
+  m_identity <- diag(x = 1,
+                     nrow = n_patch,
+                     ncol = n_patch)
 
   for (i in seq_len(n_patch)) {
     m_identity <- m_identity %*% m_adj
@@ -180,8 +195,12 @@ brnet <- function(n_patch,
 
   m_adj_up <- m_adj
   m_adj_up[lower.tri(m_adj_up)] <- 0
-  m_wa <- matrix(0, ncol = n_patch, nrow = n_patch)
-  m_identity <- diag(1, nrow = n_patch, ncol = n_patch)
+  m_wa <- matrix(0,
+                 ncol = n_patch,
+                 nrow = n_patch)
+  m_identity <- diag(1,
+                     nrow = n_patch,
+                     ncol = n_patch)
 
   for (i in seq_len(n_patch)) {
     m_identity <- m_identity %*% m_adj_up
@@ -196,17 +215,23 @@ brnet <- function(n_patch,
   # environmental condition -------------------------------------------------
 
   m_wa_prop <- t(apply(X = m_adj_up, MARGIN = 1,
-                       function(x) (x * v_wa) / ifelse(sum(x) == 0, 1, sum(x * v_wa))))
+                       function(x) (x * v_wa) / ifelse(sum(x) == 0,
+                                                       1,
+                                                       sum(x * v_wa))))
   n_source <- 0.5 * (n_branch + 1)
   source <- which(rowSums(m_adj_up) == 0)
   v_z_dummy <- v_z <- v_env <- rep(0, n_patch)
-  v_z[source] <- v_env[source] <- rnorm(n = n_source, mean = mean_env_source, sd = sd_env_source)
+  v_z[source] <- v_env[source] <- rnorm(n = n_source,
+                                        mean = mean_env_source,
+                                        sd = sd_env_source)
   v_z_dummy[source] <- 1
 
   if (!(rho <= 1 & rho >= 0)) stop("rho must be between 0 and 1")
   for (i in seq_len(max(m_distance[1, ]))) {
     v_eps <- rep(0, n_patch)
-    v_eps[v_z_dummy != 0] <- rnorm(n = length(v_eps[v_z_dummy != 0]), mean = 0, sd = sd_env_lon)
+    v_eps[v_z_dummy != 0] <- rnorm(n = length(v_eps[v_z_dummy != 0]),
+                                   mean = 0,
+                                   sd = sd_env_lon)
     v_z <- m_wa_prop %*% ((rho * v_z) + v_eps)
     v_z_dummy <- m_wa_prop %*% v_z_dummy
     v_env <- v_z + v_env
@@ -217,13 +242,15 @@ brnet <- function(n_patch,
 
   v_distance_to_root <- m_distance[1, ]
 
-  df_asymmetry <- expand.grid(patch1 = seq_len(n_patch), patch2 = seq_len(n_patch)) %>%
+  df_asymmetry <- expand.grid(patch1 = seq_len(n_patch),
+                              patch2 = seq_len(n_patch)) %>%
     dplyr::mutate(d1 = v_distance_to_root[.data$patch1],
                   d2 = v_distance_to_root[.data$patch2]) %>%
     dplyr::mutate(delta = .data$d2 - .data$d1,
                   distance = m_distance[cbind(.data$patch1, .data$patch2)]) %>%
     dplyr::mutate(x = 0.5 * (.data$distance - .data$delta)) %>%
-    dplyr::mutate(weighted_distance = (1 + asymmetry_factor) * .data$x + asymmetry_factor * .data$delta) %>%
+    dplyr::mutate(weighted_distance = (1 + asymmetry_factor) * .data$x +
+                                       asymmetry_factor * .data$delta) %>%
     dplyr::filter(.data$patch1 != .data$patch2)
 
   m_weighted_distance <- m_distance
@@ -231,32 +258,41 @@ brnet <- function(n_patch,
 
   # randomize nodes ---------------------------------------------------------
 
-  branch <- unlist(lapply(seq_len(n_branch), function(x) rep(x, each = v_n_patch_branch[x])))
+  branch <- unlist(lapply(seq_len(n_branch),
+                          function(x) rep(x, each = v_n_patch_branch[x])))
   patch <- seq_len(n_patch)
 
   if (randomize_patch == TRUE) {
     if (n_branch > 1) {
       df_id <- dplyr::tibble(branch = as.character(c(1, resample(2:n_branch)))) %>%
-        dplyr::left_join(data.frame(patch, branch = as.character(branch)), by = "branch")
+        dplyr::left_join(data.frame(patch,
+                                    branch = as.character(branch)),
+                         by = "branch")
       v_wa <- v_wa[df_id$patch]
       v_env <- v_env[df_id$patch]
       m_adj <- m_adj[df_id$patch, df_id$patch]
       m_distance <- m_distance[df_id$patch, df_id$patch]
       m_weighted_distance <- m_weighted_distance[df_id$patch, df_id$patch]
     } else {
-      df_id <- data.frame(branch = 1, patch = seq_len(n_patch))
+      df_id <- data.frame(branch = 1,
+                          patch = seq_len(n_patch))
     }
   } else {
-    df_id <- data.frame(branch = branch, patch = patch)
+    df_id <- data.frame(branch = branch,
+                        patch = patch)
   }
 
 
   # visualization -----------------------------------------------------------
 
   if (plot == TRUE) {
-    adj <- igraph::graph.adjacency(adjmatrix = m_adj, mode = "undirected")
-    colvalue <- data.frame(color = viridis::viridis(n_patch, alpha = 0.6), value = sort(v_env))
-    layout_tree <- igraph::layout_as_tree(adj, root = 1, flip.y = F)
+    adj <- igraph::graph.adjacency(adjmatrix = m_adj,
+                                   mode = "undirected")
+    colvalue <- data.frame(color = viridis::viridis(n_patch, alpha = 0.6),
+                           value = sort(v_env))
+    layout_tree <- igraph::layout_as_tree(adj,
+                                          root = 1,
+                                          flip.y = F)
 
     if (is.null(patch_label)) {
       vertex_label <- NA
@@ -264,11 +300,15 @@ brnet <- function(n_patch,
       if (patch_label == "patch") vertex_label <- seq_len(n_patch)
       if (patch_label == "branch") vertex_label <- df_id$branch
       if (patch_label == "n_upstream") vertex_label <- v_wa
-      if (!(patch_label %in% c("patch", "branch", "n_upstream"))) stop("patch_label must be either patch, branch, or n_upstrem")
+      if (!(patch_label %in% c("patch", "branch", "n_upstream"))) {
+        stop("patch_label must be either patch, branch, or n_upstrem")
+      }
     }
 
     if (patch_scaling == TRUE) {
-      vertex_size <- I(scale(v_wa, center = min(v_wa), scale = max(v_wa) - min(v_wa)) + 0.3) * scale_factor
+      vertex_size <- I(scale(v_wa,
+                             center = min(v_wa),
+                             scale = max(v_wa) - min(v_wa)) + 0.3) * scale_factor
     } else {
       vertex_size <- patch_size
     }
@@ -285,18 +325,36 @@ brnet <- function(n_patch,
                         vertex.color = colvalue$color[match(v_env, colvalue$value)],
                         edge.width = 1.8,
                         edge.color = "steelblue")
-    plotfunctions::gradientLegend(valRange = range(v_env), color = viridis::viridis(n_patch),
-                                  pos = 0.8, side = 2, dec = 2)
-    pc <- c(plotfunctions::getCoords(0, side = 1), plotfunctions::getCoords(1, side = 2))
-    text(x = pc[1], y = pc[2], labels = "Environmental value", adj = 1)
+    plotfunctions::gradientLegend(valRange = range(v_env),
+                                  color = viridis::viridis(n_patch),
+                                  pos = 0.8,
+                                  side = 2,
+                                  dec = 2)
+    pc <- c(plotfunctions::getCoords(0, side = 1),
+            plotfunctions::getCoords(1, side = 2))
+    text(x = pc[1],
+         y = pc[2],
+         labels = "Environmental value",
+         adj = 1)
   }
 
 
   # return ------------------------------------------------------------------
 
-  rownames(m_adj) <- colnames(m_adj) <- sapply(seq_len(n_patch), function(x) paste0("patch", x))
-  rownames(m_distance) <- colnames(m_distance) <- sapply(seq_len(n_patch), function(x) paste0("patch", x))
-  rownames(m_weighted_distance) <- colnames(m_weighted_distance) <- sapply(seq_len(n_patch), function(x) paste0("patch", x))
+  rownames(m_adj) <- sapply(seq_len(n_patch),
+                            function(x) paste0("patch", x))
+  colnames(m_adj) <- sapply(seq_len(n_patch),
+                            function(x) paste0("patch", x))
+
+  rownames(m_distance) <- sapply(seq_len(n_patch),
+                                 function(x) paste0("patch", x))
+  colnames(m_distance) <- sapply(seq_len(n_patch),
+                                 function(x) paste0("patch", x))
+
+  rownames(m_weighted_distance) <- sapply(seq_len(n_patch),
+                                          function(x) paste0("patch", x))
+  colnames(m_weighted_distance) <- sapply(seq_len(n_patch),
+                                          function(x) paste0("patch", x))
 
   return(list(adjacency_matrix = m_adj,
               distance_matrix = m_distance,
