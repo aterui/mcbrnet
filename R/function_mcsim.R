@@ -94,10 +94,15 @@ mcsim <- function(n_species = 5,
   # carrying capacity
   if (length(carrying_capacity) == 1) {
     message("single value of carrying_capacity is given: assume carrying capacities are the same at all habitat patches")
-    m_k <- matrix(carrying_capacity, nrow = n_species, ncol = n_patch)
+    m_k <- matrix(carrying_capacity,
+                  nrow = n_species,
+                  ncol = n_patch)
   } else {
     if (length(carrying_capacity) != n_patch) stop("carrying_capacity must have length of one or n_patch")
-    m_k <- matrix(rep(x = carrying_capacity, each = n_species), nrow = n_species, ncol = n_patch)
+    m_k <- matrix(rep(x = carrying_capacity,
+                      each = n_species),
+                  nrow = n_species,
+                  ncol = n_patch)
   }
 
   # species niche
@@ -105,52 +110,82 @@ mcsim <- function(n_species = 5,
   ## niche optimum
   if (is.null(niche_optim)) {
     message("niche_optim is not given: generate species niche optimum randomly")
-    v_mu <- runif(n = n_species, min = min_optim, max = max_optim)
-    m_mu <- matrix(rep(x = v_mu, times = n_patch), nrow = n_species, ncol = n_patch)
+    v_mu <- runif(n = n_species,
+                  min = min_optim,
+                  max = max_optim)
+    m_mu <- matrix(rep(x = v_mu,
+                       times = n_patch),
+                   nrow = n_species,
+                   ncol = n_patch)
   } else {
     if (length(niche_optim) == 1) {
       message("single value of niche_optim is given: assume niche optimum are the same for all species")
-      v_mu <- rep(x = niche_optim, times = n_species)
-      m_mu <- matrix(niche_optim, nrow = n_species, ncol = n_patch)
+      v_mu <- rep(x = niche_optim,
+                  times = n_species)
+      m_mu <- matrix(niche_optim,
+                     nrow = n_species,
+                     ncol = n_patch)
     } else {
       if (length(niche_optim) != n_species) stop("niche_optim must have length of one or n_species")
       v_mu <- niche_optim
-      m_mu <- matrix(rep(x = niche_optim, times = n_patch), nrow = n_species, ncol = n_patch)
+      m_mu <- matrix(rep(x = niche_optim,
+                         times = n_patch),
+                     nrow = n_species,
+                     ncol = n_patch)
     }
   }
 
   ## niche width
   if (is.null(sd_niche_width)) {
     message("sd_niche_width is not given: generate species niche width randomly")
-    v_sd_niche_width <- runif(n = n_species, min = min_niche_width, max = max_niche_width)
-    m_sd_niche_width <- matrix(rep(x = v_sd_niche_width, times = n_patch), nrow = n_species, ncol = n_patch)
+    v_sd_niche_width <- runif(n = n_species,
+                              min = min_niche_width,
+                              max = max_niche_width)
+    m_sd_niche_width <- matrix(rep(x = v_sd_niche_width,
+                                   times = n_patch),
+                               nrow = n_species,
+                               ncol = n_patch)
   } else {
     if (length(sd_niche_width) == 1) {
       message("single value of sd_niche_width is given: assume niche width are the same for all species")
-      v_sd_niche_width <- rep(x = sd_niche_width, times = n_species)
-      m_sd_niche_width <- matrix(sd_niche_width, nrow = n_species, ncol = n_patch)
+      v_sd_niche_width <- rep(x = sd_niche_width,
+                              times = n_species)
+      m_sd_niche_width <- matrix(sd_niche_width,
+                                 nrow = n_species,
+                                 ncol = n_patch)
     } else {
       if (length(sd_niche_width) != n_species) stop("sd_niche_width must have length of one or n_species")
       v_sd_niche_width <- sd_niche_width
-      m_sd_niche_width <- matrix(rep(x = sd_niche_width, times = n_patch), nrow = n_species, ncol = n_patch)
+      m_sd_niche_width <- matrix(rep(x = sd_niche_width,
+                                     times = n_patch),
+                                 nrow = n_species,
+                                 ncol = n_patch)
     }
   }
 
   ## maximum reproductive number
   if (any(r0 < 1)) stop("r0 must be greater than or equal to one")
   if (length(r0) == 1) {
-    v_r0 <- rep(x = r0, times = n_species)
-    m_r0 <- matrix(rep(x = r0, times = n_species * n_patch), nrow = n_species, ncol = n_patch)
+    v_r0 <- rep(x = r0,
+                times = n_species)
+    m_r0 <- matrix(rep(x = r0,
+                       times = n_species * n_patch),
+                   nrow = n_species,
+                   ncol = n_patch)
   } else {
     if (length(r0) != n_species) stop("r0 must have length of one or n_species")
     v_r0 <- r0
-    m_r0 <- matrix(rep(x = v_r0, times = n_patch), nrow = n_species, ncol = n_patch)
+    m_r0 <- matrix(rep(x = v_r0,
+                       times = n_patch),
+                   nrow = n_species,
+                   ncol = n_patch)
   }
 
   # environmental variation among patches
   if (length(mean_env) == 1) {
     message("single value of mean_env is given: assume environmental conditions are the same at all habitat patches")
-    v_mu_z <- rep(x = mean_env, times = n_patch)
+    v_mu_z <- rep(x = mean_env,
+                  times = n_patch)
   } else {
     if (length(mean_env) != n_patch) stop("mean_env must have length of one or n_patch")
     v_mu_z <- mean_env
@@ -159,25 +194,38 @@ mcsim <- function(n_species = 5,
   # interaction matrix
   if (interaction_type == "constant") {
     if (alpha < 0 | length(alpha) != 1) stop("invalid value of alpha - the value must be a positive scalar")
-    m_interaction <- matrix(alpha, nrow = n_species, ncol = n_species)
+    m_interaction <- matrix(alpha,
+                            nrow = n_species,
+                            ncol = n_species)
     diag(m_interaction) <- 1
   } else {
     if (interaction_type != "random") stop("invalid interaction_type")
     if (is.null(min_alpha) | is.null(max_alpha)) stop("provide min_alpha and max_alpha")
     if (min_alpha < 0 | max_alpha < 0) stop("invalid values of min_alpha and/or max_alpha - values must be positive values")
     if (min_alpha > max_alpha) stop("max_alpha must exceed min_alpha")
-    alpha <- runif(n = n_species * n_species, min = min_alpha, max = max_alpha)
-    m_interaction <- matrix(alpha, nrow = n_species, ncol = n_species)
+    alpha <- runif(n = n_species * n_species,
+                   min = min_alpha,
+                   max = max_alpha)
+    m_interaction <- matrix(alpha,
+                            nrow = n_species,
+                            ncol = n_species)
     diag(m_interaction) <- 1
   }
 
   # dispersal matrix
   if (is.null(xy_coord) & is.null(distance_matrix)) {
     message("neither xy_coord nor distance_matrix is given: generate a square landscape with landscape_size (default: 10) on a side")
-    v_x_coord <- runif(n = n_patch, min = 0, max = landscape_size)
-    v_y_coord <- runif(n = n_patch, min = 0, max = landscape_size)
-    df_xy_coord <- dplyr::tibble(x_coord = v_x_coord, y_coord = v_y_coord)
-    m_distance <- data.matrix(dist(df_xy_coord, diag = TRUE, upper = TRUE))
+    v_x_coord <- runif(n = n_patch,
+                       min = 0,
+                       max = landscape_size)
+    v_y_coord <- runif(n = n_patch,
+                       min = 0,
+                       max = landscape_size)
+    df_xy_coord <- dplyr::tibble(x_coord = v_x_coord,
+                                 y_coord = v_y_coord)
+    m_distance <- data.matrix(dist(df_xy_coord,
+                                   diag = TRUE,
+                                   upper = TRUE))
     m_dispersal <- data.matrix(exp(-theta * m_distance))
     diag(m_dispersal) <- 0
   } else {
@@ -186,7 +234,9 @@ mcsim <- function(n_species = 5,
       if (ncol(xy_coord) != 2) stop("the number of columns must be two, describing x- and y-cooridnates")
       colnames(xy_coord) <- c("x_coord", "y_coord")
       df_xy_coord <- dplyr::as_tibble(xy_coord)
-      m_distance <- data.matrix(dist(df_xy_coord, diag = TRUE, upper = TRUE))
+      m_distance <- data.matrix(dist(df_xy_coord,
+                                     diag = TRUE,
+                                     upper = TRUE))
       m_dispersal <- data.matrix(exp(-theta * m_distance))
       diag(m_dispersal) <- 0
     } else {
@@ -211,7 +261,8 @@ mcsim <- function(n_species = 5,
 
   if (length(p_dispersal) == 1) {
     message("single value of dispersal probability is given: assume dispersal probability is the same for all species")
-    v_p_dispersal <- rep(x = p_dispersal, times = n_species)
+    v_p_dispersal <- rep(x = p_dispersal,
+                         times = n_species)
   } else {
     if (length(p_dispersal) != n_species) stop("p_dispersal must have length of one or n_species")
     v_p_dispersal <- p_dispersal
@@ -229,30 +280,68 @@ mcsim <- function(n_species = 5,
   }else{
     m_sigma <- var_env * diag(x = 1, nrow = n_patch, ncol = n_patch)
   }
-  m_z <- mvtnorm::rmvnorm(n_sim, mean = v_mu_z, sigma = m_sigma)
+
+  m_z <- mvtnorm::rmvnorm(n = n_sim,
+                          mean = v_mu_z,
+                          sigma = m_sigma)
 
   # community
-  colname <- c("timestep", "patch", "mean_env", "env", "carrying_capacity",
-               "species", "niche_optim", "r_xt", "abundance")
-  m_dynamics <- matrix(NA, nrow = n_species * n_patch * n_timestep, ncol = length(colname))
+  colname <- c("timestep",
+               "patch",
+               "mean_env",
+               "env",
+               "carrying_capacity",
+               "species",
+               "niche_optim",
+               "r_xt",
+               "abundance")
+
+  m_dynamics <- matrix(NA,
+                       nrow = n_species * n_patch * n_timestep,
+                       ncol = length(colname))
+
   colnames(m_dynamics) <- colname
-  st_row <- seq(from = 1, to = nrow(m_dynamics), by = n_species * n_patch)
 
-  if (is.null(propagule_interval)) propagule_interval <- ceiling(n_warmup / 10)
-  propagule <- seq(from = propagule_interval, to = max(c(1, n_warmup)), by = propagule_interval)
+  st_row <- seq(from = 1,
+                to = nrow(m_dynamics),
+                by = n_species * n_patch)
 
-  m_n <- matrix(rpois(n = n_species * n_patch, lambda = 0.5), nrow = n_species, ncol = n_patch)
+  if (is.null(propagule_interval)) {
+    propagule_interval <- ceiling(n_warmup / 10)
+  }
+
+  propagule <- seq(from = propagule_interval,
+                   to = max(c(1, n_warmup)),
+                   by = propagule_interval)
+
+  m_n <- matrix(rpois(n = n_species * n_patch,
+                      lambda = 0.5),
+                nrow = n_species,
+                ncol = n_patch)
 
   pb <- txtProgressBar(min = 0, max = n_sim, style = 3)
+
   for (n in seq_len(n_sim)) {
     if (n_warmup > 0) {
       if (n %in% propagule) {
-        m_n <- m_n + matrix(rpois(n = n_species * n_patch, lambda = 0.5), nrow = n_species, ncol = n_patch)
+        m_n <- m_n + matrix(rpois(n = n_species * n_patch,
+                                  lambda = 0.5),
+                            nrow = n_species,
+                            col = n_patch)
       }
     }
 
-    m_z_xt <- matrix(rep(x = m_z[n, ], each = n_species), nrow = n_species, ncol = n_patch)
-    m_r_xt <- fun_r(r0 = m_r0, mu = m_mu, z = m_z_xt, sd = m_sd_niche_width, nu = niche_cost)
+    m_z_xt <- matrix(rep(x = m_z[n, ],
+                         each = n_species),
+                     nrow = n_species,
+                     ncol = n_patch)
+
+    m_r_xt <- fun_r(r0 = m_r0,
+                    mu = m_mu,
+                    z = m_z_xt,
+                    sd = m_sd_niche_width,
+                    nu = niche_cost)
+
     m_n_hat <- (m_n * m_r_xt) / (1 + ((m_r0 - 1) / m_k) * (m_interaction %*% m_n))
 
     m_e_hat <- m_n_hat * v_p_dispersal
@@ -264,16 +353,22 @@ mcsim <- function(n_species = 5,
     m_i_hat <- m_i_prob * v_e_sum
     m_n_prime <- m_n_hat + m_i_hat - m_e_hat
 
-    m_n <- matrix(rpois(n = n_species * n_patch, lambda = m_n_prime), nrow = n_species, ncol = n_patch)
+    m_n <- matrix(rpois(n = n_species * n_patch,
+                        lambda = m_n_prime),
+                  nrow = n_species,
+                  ncol = n_patch)
 
     if (n > n_discard) {
       row_id <- st_row[n - n_discard]:(st_row[n - n_discard] + n_species * n_patch - 1)
       m_dynamics[row_id, ] <- cbind(I(n - n_discard),
-                                    rep(x = seq_len(n_patch), each = n_species),
-                                    rep(x = v_mu_z, each = n_species),
+                                    rep(x = seq_len(n_patch),
+                                        each = n_species),
+                                    rep(x = v_mu_z,
+                                        each = n_species),
                                     c(m_z_xt),
                                     c(m_k),
-                                    rep(x = seq_len(n_species), times = n_patch),
+                                    rep(x = seq_len(n_species),
+                                        times = n_patch),
                                     c(m_mu),
                                     c(m_r_xt),
                                     c(m_n))
@@ -286,15 +381,24 @@ mcsim <- function(n_species = 5,
   # visualization -----------------------------------------------------------
 
   if (plot == TRUE) {
-    sample_patch <- sample(seq_len(n_patch), size = min(c(n_patch, 5)), replace = FALSE)
-    sample_species <- sample(seq_len(n_species), size = min(c(n_species, 5)), replace = FALSE)
+    sample_patch <- sample(seq_len(n_patch),
+                           size = min(c(n_patch, 5)),
+                           replace = FALSE)
+    sample_species <- sample(seq_len(n_species),
+                             size = min(c(n_species, 5)),
+                             replace = FALSE)
 
     g <- dplyr::as_tibble(m_dynamics) %>%
-      dplyr::filter(.data$patch %in% sample_patch, .data$species %in% sample_species) %>%
+      dplyr::filter(.data$patch %in% sample_patch,
+                    .data$species %in% sample_species) %>%
       ggplot() +
-      facet_grid(rows = vars(.data$species), cols = vars(.data$patch),
-                labeller = labeller(.rows = label_both, .cols = label_both)) +
-      geom_line(mapping = aes(x = .data$timestep, y = .data$abundance, color = abs(.data$niche_optim - .data$env))) +
+      facet_grid(rows = vars(.data$species),
+                 cols = vars(.data$patch),
+                 labeller = labeller(.rows = label_both,
+                                     .cols = label_both)) +
+      geom_line(mapping = aes(x = .data$timestep,
+                              y = .data$abundance,
+                              color = abs(.data$niche_optim - .data$env))) +
       scale_color_viridis_c(alpha = 0.8) +
       labs(color = "Deviation \nfrom niche optimum")
     print(g)
@@ -302,9 +406,15 @@ mcsim <- function(n_species = 5,
 
 
   # return ------------------------------------------------------------------
+  colnames(m_distance) <- sapply(X = seq_len(n_patch),
+                                 function(x) paste0("patch", x))
+  rownames(m_distance) <- sapply(X = seq_len(n_patch),
+                                 function(x) paste0("patch", x))
 
-  colnames(m_distance) <- rownames(m_distance) <- sapply(X = seq_len(n_patch), function(x) paste0("patch", x))
-  colnames(m_interaction) <- rownames(m_interaction) <- sapply(X = seq_len(n_species), function(x) paste0("sp", x))
+  colnames(m_interaction) <- sapply(X = seq_len(n_species),
+                                    function(x) paste0("sp", x))
+  rownames(m_interaction) <- sapply(X = seq_len(n_species),
+                                    function(x) paste0("sp", x))
 
   # dynamics
   df_dyn <- dplyr::as_tibble(m_dynamics)
