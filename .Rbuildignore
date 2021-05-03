@@ -5,3 +5,4 @@
 ^README\.Rmd$
 ^README\.md$
 ^README_files$
+^codecov\.yml$
