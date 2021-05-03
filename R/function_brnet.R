@@ -267,10 +267,14 @@ brnet <- function(n_patch,
 
   # environmental condition -------------------------------------------------
 
-  m_wa_prop <- t(apply(X = m_adj_up, MARGIN = 1,
-                       function(x) (x * v_wa) / ifelse(sum(x) == 0,
-                                                       1,
-                                                       sum(x * v_wa))))
+  m_wa_prop <- t(apply(X = m_adj_up,
+                       MARGIN = 1,
+                       function(x) {
+                         (x * v_wa) / ifelse(sum(x) == 0,
+                                             yes = 1,
+                                             no = sum(x * v_wa))
+                         }
+                       ))
 
   n_source <- 0.5 * (n_branch + 1)
   source <- which(rowSums(m_adj_up) == 0)
