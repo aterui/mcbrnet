@@ -546,7 +546,7 @@ mcsim <- function(n_species = 5,
   df_patch <- df_dyn %>%
     dplyr::group_by(.data$patch) %>%
     dplyr::summarise(alpha_div = sum(.data$abundance > 0) / n_timestep) %>%
-    dplyr::left_join(dplyr::tibble(patch_id = seq_len(n_patch),
+    dplyr::left_join(dplyr::tibble(patch = seq_len(n_patch),
                                    mean_env = mean_env,
                                    carrying_capacity = carrying_capacity,
                                    connectivity = rowSums(m_dispersal)),
