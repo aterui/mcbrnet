@@ -31,10 +31,10 @@
 #' @param theta numeric value. Dispersal parameter describing dispersal capability of species.
 #' @param plot logical. If \code{TRUE}, five sample patches and species of \code{df_dynamics} are plotted.
 #'
-#' @return \code{df_dynamics} a data frame containing simulated metacommunity dynamics.
-#' @return \code{df_species} a data frame containing species attributes.
-#' @return \code{df_patch} a data frame containing patch attributes.
-#' @return \code{df_diversity} a data frame containing diversity metrics.
+#' @return \code{df_dynamics} data frame containing simulated metacommunity dynamics.
+#' @return \code{df_species} data frame containing species attributes.
+#' @return \code{df_patch} data frame containing patch attributes.
+#' @return \code{df_diversity} data frame containing diversity metrics. alpha and gamma diversities were averaged over the simulation time steps (\code{n_timestep}). beta diversity is calculated as gamma / alpha.
 #'
 #' @importFrom dplyr %>% filter
 #' @importFrom ggplot2 ggplot vars labeller geom_line aes scale_color_viridis_c labs facet_grid label_both

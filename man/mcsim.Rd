@@ -99,13 +99,13 @@ mcsim(
 \item{plot}{logical. If \code{TRUE}, five sample patches and species of \code{df_dynamics} are plotted.}
 }
 \value{
-\code{df_dynamics} a data frame containing simulated metacommunity dynamics.
+\code{df_dynamics} data frame containing simulated metacommunity dynamics.
 
-\code{df_species} a data frame containing species attributes.
+\code{df_species} data frame containing species attributes.
 
-\code{df_patch} a data frame containing patch attributes.
+\code{df_patch} data frame containing patch attributes.
 
-\code{df_diversity} a data frame containing diversity metrics.
+\code{df_diversity} data frame containing diversity metrics. alpha and gamma diversities were averaged over the simulation time steps (\code{n_timestep}). beta diversity is calculated as gamma / alpha.
 }
 \description{
 Simulate metacommunity dynamics

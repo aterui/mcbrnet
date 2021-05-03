@@ -54,7 +54,7 @@ brnet(
 
 \code{weighted_distance_matrix} weighted distance matrix for the generated network.
 
-\code{df_patch} a data frame containing patch attributes.
+\code{df_patch} data frame containing patch attributes.
 }
 \description{
 Generate a random branching network
