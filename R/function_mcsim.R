@@ -498,11 +498,11 @@ mcsim <- function(n_species = 5,
                              replace = FALSE)
 
     g <- dplyr::as_tibble(m_dynamics) %>%
-      dplyr::filter(.data$patch %in% sample_patch,
+      dplyr::filter(.data$patch_id %in% sample_patch,
                     .data$species %in% sample_species) %>%
       ggplot() +
       facet_grid(rows = vars(.data$species),
-                 cols = vars(.data$patch),
+                 cols = vars(.data$patch_id),
                  labeller = labeller(.rows = label_both,
                                      .cols = label_both)) +
       geom_line(mapping = aes(x = .data$timestep,
