@@ -359,7 +359,9 @@ mcsim <- function(n_species = 5,
                   ncol = n_patch)
 
     if (n > n_discard) {
-      row_id <- st_row[n - n_discard]:(st_row[n - n_discard] + n_species * n_patch - 1)
+      row_id <- seq(from = st_row[n - n_discard],
+                    to = st_row[n - n_discard] + n_species * n_patch - 1,
+                    by = 1)
       m_dynamics[row_id, ] <- cbind(I(n - n_discard),
                                     rep(x = seq_len(n_patch),
                                         each = n_species),
