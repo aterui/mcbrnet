@@ -561,7 +561,7 @@ mcsim <- function(n_species = 5,
     dplyr::pull(.data$gamma_t) %>%
     mean()
 
-  if(gamma_div == 0 | alpha_div == 0) {
+  if (gamma_div == 0 | alpha_div == 0) {
     beta_div <- NA
   } else {
     beta_div <- gamma_div / alpha_div
