@@ -6,6 +6,8 @@
 #' @param sd_env_source numeric value indicating the SD of environmental condition at upstream terminals.
 #' @param rho numeric value indicating the strength of spatial autocorrelation in environmental condition. The environmental condition at patch x \eqn{z}\out{<sub>x</sub>} is determined as \eqn{z}\out{<sub>x</sub>}\eqn{ = \rho}z\out{<sub>x-1</sub>}\eqn{ + \epsilon}\out{<sub>x</sub>}, where \eqn{\epsilon}\out{<sub>x</sub>} is the random variable drawn from a normal distribution with mean 0 and SD \eqn{\sigma}\out{<sub>env</sub>}. See \href{https://github.com/aterui/mcbrnet}{github page} for further details.
 #' @param sd_env_lon numeric value indicating the SD of longitudinal environmental noise (\eqn{\sigma}\out{<sub>env</sub>}).
+#' @param mean_disturb_source numeric value indicating the mean of disturbance strength at headwaters. The value is assumed to represent the proportional mortality (0 - 1.0) at the patch level.
+#' @param sd_disturb_source numeric value indicating the SD of disturbance strength at headwaters. The SD is defined in a logit scale with a normal distribution.
 #' @param asymmetry_factor numeric value rescaling upstream distance. If \code{asymmetry_factor = 1}, distance from a downstream patch x to another upstream patch y would be multiplied by the factor of \code{asymmetry_factor}. This argument does not affect separation distance from an upstream patch to another downstream patch. Default \code{asymmetry_factor = 1} (no asymmetry).
 #' @param randomize_patch logical indicating whether randomize patches or not. If \code{FALSE}, the function may generate a biased network with ordered patches. Default \code{TRUE}.
 #' @param plot logical indicating if a plot should be shown or not. If \code{FALSE}, a plot of the generated network will not be shown. Default \code{TRUE}.
@@ -39,6 +41,8 @@ brnet <- function(n_patch,
                   sd_env_source = 1,
                   rho = 1,
                   sd_env_lon = 0.1,
+                  mean_disturb_source = 0.9,
+                  sd_disturb_source = 0.1,
                   asymmetry_factor = 1,
                   randomize_patch = TRUE,
                   plot = TRUE,
@@ -193,8 +197,7 @@ brnet <- function(n_patch,
 
       offspg <- c(m_offspg)
 
-      m_po <- cbind(parent,
-                    offspg)
+      m_po <- cbind(parent, offspg)
 
       list_confluence <- lapply(seq_len(nrow(m_po)),
                                 function(x) cbind(v_end_id[m_po[x, 1]],
@@ -278,12 +281,11 @@ brnet <- function(n_patch,
 
   n_source <- 0.5 * (n_branch + 1)
   source <- which(rowSums(m_adj_up) == 0)
-  v_z_dummy <- v_z <- v_env <- rep(0, n_patch)
 
+  v_z_dummy <- v_z <- v_env <- rep(0, n_patch)
   v_z[source] <- v_env[source] <- rnorm(n = n_source,
                                         mean = mean_env_source,
                                         sd = sd_env_source)
-
   v_z_dummy[source] <- 1
 
   if (!(rho <= 1 & rho >= 0)) stop("rho must be between 0 and 1")
@@ -298,6 +300,27 @@ brnet <- function(n_patch,
     v_z <- m_wa_prop %*% ((rho * v_z) + v_eps)
     v_z_dummy <- m_wa_prop %*% v_z_dummy
     v_env <- v_z + v_env
+
+  }
+
+
+  # disturbance -------------------------------------------------------------
+
+  if (!(mean_disturb_source <= 1 & mean_disturb_source >= 0)) {
+
+    stop("mean_disturb_source must be between 0 and 1")
+
+  }
+
+  v_s <- v_disturb <- rep(0, n_patch)
+  v_s[source] <- v_disturb[source] <- rnorm(n = n_source,
+                                            mean = boot::logit(mean_disturb_source),
+                                            sd = sd_disturb_source)
+
+  for (i in seq_len(max(m_distance[1, ]))) {
+
+    v_s <- m_wa_prop %*% v_s
+    v_disturb <- v_s + v_disturb
 
   }
 
@@ -337,6 +360,7 @@ brnet <- function(n_patch,
                          by = "branch")
       v_wa <- v_wa[df_id$patch]
       v_env <- v_env[df_id$patch]
+      v_disturb <- v_disturb[df_id$patch]
       m_adj <- m_adj[df_id$patch, df_id$patch]
       m_distance <- m_distance[df_id$patch, df_id$patch]
       m_weighted_distance <- m_weighted_distance[df_id$patch, df_id$patch]
@@ -452,5 +476,6 @@ brnet <- function(n_patch,
               df_patch = dplyr::tibble(patch_id = seq_len(n_patch),
                                        branch_id = as.numeric(df_id$branch),
                                        environment = c(v_env),
+                                       disturbance = c(boot::inv.logit(v_disturb)),
                                        n_patch_upstream = c(v_wa))))
 }
