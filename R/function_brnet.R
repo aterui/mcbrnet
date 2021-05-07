@@ -184,19 +184,13 @@ brnet <- function(n_patch,
 
         v_y <- resample(v_offspg_branch[v_offspg_branch > v_parent_branch[i]],
                         size = 2)
-
-        v_offspg_branch <- setdiff(v_offspg_branch,
-                                   v_y)
-
+        v_offspg_branch <- setdiff(v_offspg_branch, v_y)
         m_offspg[, i] <- v_y
 
       }
 
-      parent <- rep(v_parent_branch,
-                    each = 2)
-
+      parent <- rep(v_parent_branch, each = 2)
       offspg <- c(m_offspg)
-
       m_po <- cbind(parent, offspg)
 
       list_confluence <- lapply(seq_len(nrow(m_po)),
@@ -208,9 +202,7 @@ brnet <- function(n_patch,
 
     }
 
-    m_neighbor_patch <- rbind(m_neighbor_inbranch,
-                              m_confluence)
-
+    m_neighbor_patch <- rbind(m_neighbor_inbranch, m_confluence)
     m_neighbor_patch <- m_neighbor_patch[complete.cases(m_neighbor_patch), ]
 
     m_adj <- matrix(0, nrow = n_patch, ncol = n_patch)
