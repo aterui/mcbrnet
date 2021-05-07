@@ -2,7 +2,7 @@ mcbrnet: an R package for simulating metacommunity dynamics in a
 branching network
 ================
 Akira Terui
-May 03, 2021
+May 07, 2021
 
 -   [Overview](#overview)
 -   [Installation](#installation)
@@ -13,6 +13,7 @@ May 03, 2021
         -   [Custom setting:
             visualization](#custom-setting-visualization)
         -   [Custom setting: environment](#custom-setting-environment)
+        -   [Custom setting: disturbance](#custom-setting-disturbance)
         -   [Custom setting: asymmetric distance
             matrix](#custom-setting-asymmetric-distance-matrix)
     -   [`mcsim()`](#mcsim)
@@ -106,8 +107,10 @@ The function returns:
 
     -   *patch\_id*: patch ID.
     -   *branch\_id*: branch ID.
-    -   *environment*: environmental value for each patch (see below for
+    -   *environment*: environmental value at each patch (see below for
         details)
+    -   *disturbance*: disturbance level (i.e., proportional mortality)
+        at each patch (see below for details)
     -   *n\_patch\_upstream*: the number of upstream contributing
         patches (including the focal patch itself; akin to the watershed
         area in river networks).
@@ -137,15 +140,15 @@ net$adjacency_matrix[1:10, 1:10]
 
     ##         patch1 patch2 patch3 patch4 patch5 patch6 patch7 patch8 patch9 patch10
     ## patch1       0      0      0      0      0      0      0      0      0       0
-    ## patch2       0      0      1      0      0      0      0      0      0       0
-    ## patch3       0      1      0      0      0      0      0      0      0       0
-    ## patch4       0      0      0      0      0      0      0      0      0       0
-    ## patch5       0      0      0      0      0      1      0      0      1       0
-    ## patch6       0      0      0      0      1      0      1      0      0       0
+    ## patch2       0      0      0      0      0      0      0      0      0       0
+    ## patch3       0      0      0      1      0      0      0      0      0       0
+    ## patch4       0      0      1      0      0      0      0      0      0       0
+    ## patch5       0      0      0      0      0      0      0      0      0       0
+    ## patch6       0      0      0      0      0      0      1      0      0       0
     ## patch7       0      0      0      0      0      1      0      0      0       0
     ## patch8       0      0      0      0      0      0      0      0      1       0
-    ## patch9       0      0      0      0      1      0      0      1      0       0
-    ## patch10      0      0      0      0      0      0      0      0      0       0
+    ## patch9       0      0      0      0      0      0      0      1      0       1
+    ## patch10      0      0      0      0      0      0      0      0      1       0
 
 ``` r
 # distance matrix
@@ -154,16 +157,16 @@ net$distance_matrix[1:10, 1:10]
 ```
 
     ##         patch1 patch2 patch3 patch4 patch5 patch6 patch7 patch8 patch9 patch10
-    ## patch1       0      4      5      9      5      6      7      3      4       9
-    ## patch2       4      0      1      9      9     10     11      7      8       9
-    ## patch3       5      1      0     10     10     11     12      8      9      10
-    ## patch4       9      9     10      0     14     15     16     12     13       6
-    ## patch5       5      9     10     14      0      1      2      2      1      14
-    ## patch6       6     10     11     15      1      0      1      3      2      15
-    ## patch7       7     11     12     16      2      1      0      4      3      16
-    ## patch8       3      7      8     12      2      3      4      0      1      12
-    ## patch9       4      8      9     13      1      2      3      1      0      13
-    ## patch10      9      9     10      6     14     15     16     12     13       0
+    ## patch1       0      9      3      4      3     12     13      9     10      11
+    ## patch2       9      0     12     13     12      3      4      2      3       4
+    ## patch3       3     12      0      1      2     15     16     12     13      14
+    ## patch4       4     13      1      0      3     16     17     13     14      15
+    ## patch5       3     12      2      3      0     15     16     12     13      14
+    ## patch6      12      3     15     16     15      0      1      5      6       7
+    ## patch7      13      4     16     17     16      1      0      6      7       8
+    ## patch8       9      2     12     13     12      5      6      0      1       2
+    ## patch9      10      3     13     14     13      6      7      1      0       1
+    ## patch10     11      4     14     15     14      7      8      2      1       0
 
 The following script lets you view branch ID, environmental values, and
 the number of upstream contributing patches for each patch:
@@ -172,19 +175,19 @@ the number of upstream contributing patches for each patch:
 net$df_patch
 ```
 
-    ## # A tibble: 50 x 4
-    ##    patch_id branch_id environment n_patch_upstream
-    ##       <int>     <dbl>       <dbl>            <dbl>
-    ##  1        1         1      -1.33                50
-    ##  2        2        10      -1.13                 6
-    ##  3        3        10      -1.05                 5
-    ##  4        4         8      -0.693                9
-    ##  5        5        20      -2.01                 3
-    ##  6        6        20      -1.78                 2
-    ##  7        7        20      -1.72                 1
-    ##  8        8         6      -1.96                 6
-    ##  9        9         6      -1.93                 5
-    ## 10       10        18      -1.56                 2
+    ## # A tibble: 50 x 5
+    ##    patch_id branch_id environment disturbance n_patch_upstream
+    ##       <int>     <dbl>       <dbl>       <dbl>            <dbl>
+    ##  1        1         1      -1.33        0.899               50
+    ##  2        2         8      -0.693       0.899                9
+    ##  3        3         6      -1.96        0.895                6
+    ##  4        4         6      -1.93        0.895                5
+    ##  5        5        23      -0.145       0.898                1
+    ##  6        6        21       0.872       0.889                2
+    ##  7        7        21       0.804       0.889                1
+    ##  8        8        13      -0.890       0.889                5
+    ##  9        9        13      -0.938       0.889                4
+    ## 10       10        13      -0.967       0.889                3
     ## # ... with 40 more rows
 
 ### Custom setting: visualization
@@ -267,6 +270,37 @@ net <- brnet(n_patch = 50, p_branch = 0.5,
 ```
 
 ![](README_files/figure-gfm/brnet_instruction_2-1.png)<!-- -->
+
+### Custom setting: disturbance
+
+Arguments: `mean_disturb_source`, `sd_disturb_source`
+
+Some flexibility exists to simulate disturbance levels, as detailed
+below:
+
+1.  Disturbance levels for upstream terminal patches (i.e., patches with
+    no upstream patch) are drawn from a normal distribution as
+    m<sub>1</sub> \~ Normal(μ<sub>m</sub>, σ<sub>m</sub><sup>2</sup>).
+    The argument `mean_disturb_source` controls the proportional mean of
+    the disturbance level, which will be converted to a logit-scale
+    value in the function (i.e., μ<sub>m</sub> =
+    logit(`mean_disturb_source`)). The argument `sd_disturb_source`
+    controls the variation in disturbance level among headwaters in a
+    logit scale (i.e., σ<sub>m</sub> = `sd_disturb_source`)
+
+2.  Downstream disturbance levels are identical to the adjacent upstream
+    patch except at confluences. At bifurcation patches (or confluence),
+    the disturbance value takes a weighted mean of the two contributing
+    patches given the size of these patches *s* (the number of upstream
+    contributing patches): m<sub>x</sub> = ωm<sub>1,x-1</sub> + (1 -
+    ω)m<sub>2,x-1</sub>, where ω = s<sub>1</sub>/(s<sub>1</sub> +
+    s<sub>2</sub>).
+
+3.  The logit-scale values will be back-transformed to the proportional
+    values (return value = inv.logit(m))
+
+Users may change the values of μ<sub>m</sub> (default:
+`mean_disturb_source = 0.9`) and σ<sub>m</sub> (`sd_env_source = 0.1`).
 
 ### Custom setting: asymmetric distance matrix
 
@@ -378,61 +412,61 @@ mc
     ## # A tibble: 25,000 x 9
     ##    timestep patch_id mean_env     env carrying_capaci~ species niche_optim  r_xt
     ##       <dbl>    <dbl>    <dbl>   <dbl>            <dbl>   <dbl>       <dbl> <dbl>
-    ##  1        1        1        0  0.0948              100       1       0.590 2.41 
-    ##  2        1        1        0  0.0948              100       2       0.724 1.68 
-    ##  3        1        1        0  0.0948              100       3      -0.188 3.00 
-    ##  4        1        1        0  0.0948              100       4       0.650 1.70 
-    ##  5        1        1        0  0.0948              100       5       0.653 1.84 
-    ##  6        1        2        0 -0.155               100       1       0.590 1.64 
-    ##  7        1        2        0 -0.155               100       2       0.724 0.841
-    ##  8        1        2        0 -0.155               100       3      -0.188 3.35 
-    ##  9        1        2        0 -0.155               100       4       0.650 0.741
-    ## 10        1        2        0 -0.155               100       5       0.653 0.898
+    ##  1        1        1        0 -0.0494              100       1      -0.968  1.43
+    ##  2        1        1        0 -0.0494              100       2       0.291  2.79
+    ##  3        1        1        0 -0.0494              100       3      -0.562  1.29
+    ##  4        1        1        0 -0.0494              100       4      -0.311  3.07
+    ##  5        1        1        0 -0.0494              100       5       0.108  2.83
+    ##  6        1        2        0 -0.0142              100       1      -0.968  1.35
+    ##  7        1        2        0 -0.0142              100       2       0.291  2.85
+    ##  8        1        2        0 -0.0142              100       3      -0.562  1.11
+    ##  9        1        2        0 -0.0142              100       4      -0.311  2.97
+    ## 10        1        2        0 -0.0142              100       5       0.108  2.86
     ## # ... with 24,990 more rows, and 1 more variable: abundance <dbl>
     ## 
     ## $df_species
     ## # A tibble: 5 x 6
     ##   species mean_abundance    r0 niche_optim sd_niche_width p_dispersal
     ##     <dbl>          <dbl> <dbl>       <dbl>          <dbl>       <dbl>
-    ## 1       1         35.7       4       0.590          0.633         0.1
-    ## 2       2          0.409     4       0.724          0.521         0.1
-    ## 3       3         71.4       4      -0.188          0.591         0.1
-    ## 4       4          0         4       0.650          0.452         0.1
-    ## 5       5          8.76      4       0.653          0.487         0.1
+    ## 1       1           5.44     4      -0.968          0.752         0.1
+    ## 2       2          61.0      4       0.291          0.696         0.1
+    ## 3       3           0        4      -0.562          0.351         0.1
+    ## 4       4          62.3      4      -0.311          0.536         0.1
+    ## 5       5          60.6      4       0.108          0.807         0.1
     ## 
     ## $df_patch
     ## # A tibble: 5 x 5
     ##   patch_id alpha_div mean_env carrying_capacity connectivity
     ##      <dbl>     <dbl>    <dbl>             <dbl>        <dbl>
-    ## 1        1      3.10        0               100       0.855 
-    ## 2        2      2.55        0               100       0.400 
-    ## 3        3      2.55        0               100       0.402 
-    ## 4        4      3.10        0               100       0.855 
-    ## 5        5      2.39        0               100       0.0147
+    ## 1        1      3.80        0               100       0.307 
+    ## 2        2      3.57        0               100       0.0674
+    ## 3        3      3.68        0               100       0.0971
+    ## 4        4      3.5         0               100       0.0388
+    ## 5        5      3.81        0               100       0.281 
     ## 
     ## $df_diversity
     ## # A tibble: 1 x 3
     ##   alpha_div beta_div gamma_div
     ##       <dbl>    <dbl>     <dbl>
-    ## 1      2.74     1.14      3.11
+    ## 1      3.67     1.04      3.81
     ## 
     ## $df_xy_coord
     ## # A tibble: 5 x 2
     ##   x_coord y_coord
     ##     <dbl>   <dbl>
-    ## 1   6.91     9.81
-    ## 2   0.373    8.27
-    ## 3   0.658    9.15
-    ## 4   6.75     9.82
-    ## 5   9.40     5.61
+    ## 1    5.10   4.46 
+    ## 2    5.69   0.185
+    ## 3    3.59   6.52 
+    ## 4    9.60   1.11 
+    ## 5    6.30   3.48 
     ## 
     ## $distance_matrix
-    ##           patch1    patch2    patch3    patch4   patch5
-    ## patch1 0.0000000 6.7180098 6.2902391 0.1691436 4.874748
-    ## patch2 6.7180098 0.0000000 0.9228446 6.5584745 9.410762
-    ## patch3 6.2902391 0.9228446 0.0000000 6.1248623 9.430991
-    ## patch4 0.1691436 6.5584745 6.1248623 0.0000000 4.977537
-    ## patch5 4.8747481 9.4107625 9.4309907 4.9775372 0.000000
+    ##          patch1   patch2   patch3   patch4   patch5
+    ## patch1 0.000000 4.318499 2.546035 5.621133 1.550521
+    ## patch2 4.318499 0.000000 6.670318 4.025012 3.352600
+    ## patch3 2.546035 6.670318 0.000000 8.088696 4.065424
+    ## patch4 5.621133 4.025012 8.088696 0.000000 4.072806
+    ## patch5 1.550521 3.352600 4.065424 4.072806 0.000000
     ## 
     ## $weighted_distance_matrix
     ## NULL
