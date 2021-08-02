@@ -57,17 +57,9 @@ brnet <- function(n_patch,
 
   fun_adj <- function(n, start_id = 1) {
 
-    if (n == 1) {
+    if (n == 1) m_y <- cbind(1, NA)
 
-      m_y <- cbind(1, NA)
-
-    }
-
-    if (n == 2) {
-
-      m_y <- cbind(c(1, 2), c(2, 1))
-
-    }
+    if (n == 2) m_y <- cbind(c(1, 2), c(2, 1))
 
     if (n > 2) {
 
@@ -94,11 +86,7 @@ brnet <- function(n_patch,
 
   } else {
 
-    if (p_branch == 0) {
-
-      n_branch <- 1
-
-    }
+    if (p_branch == 0) n_branch <- 1
 
     if (p_branch == 1) {
 

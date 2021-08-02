@@ -9,7 +9,7 @@
 
 adjtodist <- function(x) {
 
-  if(!is.matrix(x)) {
+  if (!is.matrix(x)) {
     stop("Adjacency matrix must be provided as a matrix")
   }
 
