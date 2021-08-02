@@ -11,5 +11,9 @@
 
 # check syntax ------------------------------------------------------------
 
+  lintr::lint_package()
+
   #usethis::use_coverage()
+  devtools::build(path='.')
   covr::package_coverage()
+  file.remove("mcbrnet_1.1.0.tar.gz")
