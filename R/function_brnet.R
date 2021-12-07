@@ -5,9 +5,10 @@
 #' @param mean_env_source numeric value indicating the mean value of environmental condition at upstream terminals.
 #' @param sd_env_source numeric value indicating the SD of environmental condition at upstream terminals.
 #' @param rho numeric value indicating the strength of spatial autocorrelation in environmental condition. The environmental condition at patch x \eqn{z}\out{<sub>x</sub>} is determined as \eqn{z}\out{<sub>x</sub>}\eqn{ = \rho}z\out{<sub>x-1</sub>}\eqn{ + \epsilon}\out{<sub>x</sub>}, where \eqn{\epsilon}\out{<sub>x</sub>} is the random variable drawn from a normal distribution with mean 0 and SD \eqn{\sigma}\out{<sub>env</sub>}. See \href{https://github.com/aterui/mcbrnet}{github page} for further details.
-#' @param sd_env_lon numeric value indicating the SD of longitudinal environmental noise (\eqn{\sigma}\out{<sub>env</sub>}).
+#' @param sd_env_lon numeric value indicating the SD of longitudinal environmental noise.
 #' @param mean_disturb_source numeric value indicating the mean of disturbance strength at headwaters. The value is assumed to represent the proportional mortality (0 - 1.0) at the patch level.
 #' @param sd_disturb_source numeric value indicating the SD of disturbance strength at headwaters. The SD is defined in a logit scale with a normal distribution.
+#' @param sd_disturb_lon numeric value indicating the SD of longitudinal noise of disturbance strength. The SD is defined in a logit scale with a normal distribution.
 #' @param asymmetry_factor numeric value rescaling upstream distance. If \code{asymmetry_factor = 1}, distance from a downstream patch x to another upstream patch y would be multiplied by the factor of \code{asymmetry_factor}. This argument does not affect separation distance from an upstream patch to another downstream patch. Default \code{asymmetry_factor = 1} (no asymmetry).
 #' @param randomize_patch logical indicating whether randomize patches or not. If \code{FALSE}, the function may generate a biased network with ordered patches. Default \code{TRUE}.
 #' @param plot logical indicating if a plot should be shown or not. If \code{FALSE}, a plot of the generated network will not be shown. Default \code{TRUE}.
@@ -42,7 +43,8 @@ brnet <- function(n_patch,
                   rho = 1,
                   sd_env_lon = 0.1,
                   mean_disturb_source = 0.9,
-                  sd_disturb_source = 0.1,
+                  sd_disturb_source = 1,
+                  sd_disturb_lon = 0.1,
                   asymmetry_factor = 1,
                   randomize_patch = TRUE,
                   plot = TRUE,
@@ -292,14 +294,22 @@ brnet <- function(n_patch,
 
   }
 
-  v_s <- v_disturb <- rep(0, n_patch)
+  v_s_dummy <- v_s <- v_disturb <- rep(0, n_patch)
   v_s[source] <- v_disturb[source] <- rnorm(n = n_source,
                                             mean = boot::logit(mean_disturb_source),
                                             sd = sd_disturb_source)
 
+  v_s_dummy[source] <- 1
+
   for (i in seq_len(max(m_distance[1, ]))) {
 
-    v_s <- m_wa_prop %*% v_s
+    v_eps_disturb <- rep(0, n_patch)
+    v_eps_disturb[v_s_dummy != 0] <- rnorm(n = length(v_eps_disturb[v_s_dummy != 0]),
+                                           mean = 0,
+                                           sd = sd_disturb_lon)
+
+    v_s <- m_wa_prop %*% (v_s + v_eps_disturb)
+    v_s_dummy <- m_wa_prop %*% v_s_dummy
     v_disturb <- v_s + v_disturb
 
   }
