@@ -51,31 +51,12 @@ brnet <- function(n_patch,
                   patch_label = NULL,
                   patch_size = 6,
                   patch_scaling = TRUE,
-                  scale_factor = 8) {
+                  scale_factor = 8,
+                  n_patch_free = FALSE) {
 
   # define functions and variables ------------------------------------------
 
   resample <- function(x, ...) x[sample.int(length(x), ...)]
-
-  fun_adj <- function(n, start_id = 1) {
-
-    if (n == 1) m_y <- cbind(1, NA)
-
-    if (n == 2) m_y <- cbind(c(1, 2), c(2, 1))
-
-    if (n > 2) {
-
-      y1 <- c(1, rep(2:(n - 1), each = 2), n)
-      y2 <- c(2, sapply(2:(n - 1), function(i) c(i - 1, i + 1)), n - 1)
-      m_y <- cbind(y1, y2)
-
-    }
-
-    colnames(m_y) <- c("patch_1", "patch_2")
-    m_y <- m_y + (start_id - 1)
-    return(m_y)
-  }
-
 
   if (p_branch > 0 & p_branch < 1) {
 
@@ -120,16 +101,23 @@ brnet <- function(n_patch,
   if (p_branch > 0 & n_branch > 1) {
 
     # vector of the number of patches in each branch
-    repeat{
-
+    if (n_patch_free == FALSE) {
       repeat{
 
-        v_n_patch_branch <- rgeom(n = n_branch, prob = p_branch) + 1
-        if (sum(v_n_patch_branch) >= n_patch) break
+        repeat{
+
+          v_n_patch_branch <- rgeom(n = n_branch, prob = p_branch) + 1
+          if (sum(v_n_patch_branch) >= n_patch) break
+
+        }
+
+        if (sum(v_n_patch_branch) == n_patch) break
 
       }
+    } else {
 
-      if (sum(v_n_patch_branch) == n_patch) break
+      v_n_patch_branch <- rgeom(n = n_branch, prob = p_branch) + 1
+      n_patch <- sum(v_n_patch_branch)
 
     }
 
@@ -203,87 +191,32 @@ brnet <- function(n_patch,
 
   # distance matrix ---------------------------------------------------------
 
-  m_distance <- matrix(0,
-                       ncol = n_patch,
-                       nrow = n_patch)
-
-  m_identity <- diag(x = 1,
-                     nrow = n_patch,
-                     ncol = n_patch)
-
-  for (i in seq_len(n_patch)) {
-
-    m_identity <- m_identity %*% m_adj
-    m_distance[m_identity != 0 & m_distance == 0] <- i
-
-    if (length(which(m_distance == 0)) == 0) break
-
-  }
-
-  diag(m_distance) <- 0
-  m_identity <- NULL
+  ## exported function: see "function_adjtodist.R"
+  m_distance <- adjtodist(m_adj)
 
 
   # upstream watershed area ------------------------------------------------
 
-  m_adj_up <- m_adj
-  m_adj_up[lower.tri(m_adj_up)] <- 0
+  ## internal function: see "fun_wa.R"
+  m_wa <- fun_wa(x = m_adj,
+                 n_patch = n_patch)
 
-  m_wa <- matrix(0,
-                 ncol = n_patch,
-                 nrow = n_patch)
-
-  m_identity <- diag(1,
-                     nrow = n_patch,
-                     ncol = n_patch)
-
-  for (i in seq_len(n_patch)) {
-
-    m_identity <- m_identity %*% m_adj_up
-    m_wa[m_identity != 0 & m_wa == 0] <- 1
-
-    if (length(which(m_wa[upper.tri(m_wa)] == 0)) == 0) break
-
-  }
-
-  diag(m_wa) <- 1
   v_wa <- rowSums(m_wa)
 
 
   # environmental condition -------------------------------------------------
 
-  m_wa_prop <- t(apply(X = m_adj_up,
-                       MARGIN = 1,
-                       function(x) {
-                         (x * v_wa) / ifelse(sum(x) == 0,
-                                             yes = 1,
-                                             no = sum(x * v_wa))
-                         }
-                       ))
-
-  n_source <- 0.5 * (n_branch + 1)
-  source <- which(rowSums(m_adj_up) == 0)
-
-  v_z_dummy <- v_z <- v_env <- rep(0, n_patch)
-  v_z[source] <- v_env[source] <- rnorm(n = n_source,
-                                        mean = mean_env_source,
-                                        sd = sd_env_source)
-  v_z_dummy[source] <- 1
-
-  if (!(rho <= 1 & rho >= 0)) stop("rho must be between 0 and 1")
-
-  for (i in seq_len(max(m_distance[1, ]))) {
-
-    v_eps <- rep(0, n_patch)
-    v_eps[v_z_dummy != 0] <- rnorm(n = length(v_eps[v_z_dummy != 0]),
-                                   mean = 0,
-                                   sd = sd_env_lon)
-
-    v_z <- m_wa_prop %*% ((rho * v_z) + v_eps)
-    v_z_dummy <- m_wa_prop %*% v_z_dummy
-    v_env <- v_z + v_env
-
-  }
+  ## internal function: see "fun_patch_attr.R"
+  v_env <- fun_patch_attr(x = m_adj,
+                          n_patch = n_patch,
+                          n_branch = n_branch,
+                          mean_source = mean_env_source,
+                          sd_source = sd_env_source,
+                          sd_lon = sd_env_lon,
+                          m_distance = m_distance,
+                          rho = rho,
+                          v_wa = v_wa,
+                          logit = FALSE)
 
 
   # disturbance -------------------------------------------------------------
@@ -294,25 +227,17 @@ brnet <- function(n_patch,
 
   }
 
-  v_s_dummy <- v_s <- v_disturb <- rep(0, n_patch)
-  v_s[source] <- v_disturb[source] <- rnorm(n = n_source,
-                                            mean = boot::logit(mean_disturb_source),
-                                            sd = sd_disturb_source)
-
-  v_s_dummy[source] <- 1
-
-  for (i in seq_len(max(m_distance[1, ]))) {
-
-    v_eps_disturb <- rep(0, n_patch)
-    v_eps_disturb[v_s_dummy != 0] <- rnorm(n = length(v_eps_disturb[v_s_dummy != 0]),
-                                           mean = 0,
-                                           sd = sd_disturb_lon)
-
-    v_s <- m_wa_prop %*% (v_s + v_eps_disturb)
-    v_s_dummy <- m_wa_prop %*% v_s_dummy
-    v_disturb <- v_s + v_disturb
-
-  }
+  ## internal function: see "fun_patch_attr.R"
+  v_disturb <- fun_patch_attr(x = m_adj,
+                              n_patch = n_patch,
+                              n_branch = n_branch,
+                              mean_source = mean_disturb_source,
+                              sd_source = sd_disturb_source,
+                              sd_lon = sd_disturb_lon,
+                              m_distance = m_distance,
+                              rho = rho,
+                              v_wa = v_wa,
+                              logit = TRUE)
 
 
   # asymmetry ---------------------------------------------------------------
@@ -332,6 +257,7 @@ brnet <- function(n_patch,
 
   m_weighted_distance <- m_distance
   m_weighted_distance[cbind(df_asymmetry$patch1, df_asymmetry$patch2)] <- df_asymmetry$weighted_distance
+
 
   # randomize nodes ---------------------------------------------------------
 
@@ -357,14 +283,14 @@ brnet <- function(n_patch,
 
     } else {
 
-      df_id <- data.frame(branch = 1,
-                          patch = seq_len(n_patch))
+      df_id <- dplyr::tibble(branch = 1,
+                             patch = seq_len(n_patch))
 
     }
   } else {
 
-    df_id <- data.frame(branch = branch,
-                        patch = patch)
+    df_id <- dplyr::tibble(branch = branch,
+                           patch = patch)
 
   }
 
@@ -444,21 +370,6 @@ brnet <- function(n_patch,
 
 
   # return ------------------------------------------------------------------
-
-  rownames(m_adj) <- sapply(seq_len(n_patch),
-                            function(x) paste0("patch", x))
-  colnames(m_adj) <- sapply(seq_len(n_patch),
-                            function(x) paste0("patch", x))
-
-  rownames(m_distance) <- sapply(seq_len(n_patch),
-                                 function(x) paste0("patch", x))
-  colnames(m_distance) <- sapply(seq_len(n_patch),
-                                 function(x) paste0("patch", x))
-
-  rownames(m_weighted_distance) <- sapply(seq_len(n_patch),
-                                          function(x) paste0("patch", x))
-  colnames(m_weighted_distance) <- sapply(seq_len(n_patch),
-                                          function(x) paste0("patch", x))
 
   return(list(adjacency_matrix = m_adj,
               distance_matrix = m_distance,

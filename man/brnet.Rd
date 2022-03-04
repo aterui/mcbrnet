@@ -20,7 +20,8 @@ brnet(
   patch_label = NULL,
   patch_size = 6,
   patch_scaling = TRUE,
-  scale_factor = 8
+  scale_factor = 8,
+  n_patch_free = FALSE
 )
 }
 \arguments{

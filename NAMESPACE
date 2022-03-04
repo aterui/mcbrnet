@@ -2,6 +2,9 @@
 
 export(adjtodist)
 export(brnet)
+export(fun_adj)
+export(fun_patch_attr)
+export(fun_wa)
 export(mcsim)
 importFrom(dplyr,"%>%")
 importFrom(dplyr,filter)
