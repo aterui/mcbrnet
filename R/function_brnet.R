@@ -235,7 +235,7 @@ brnet <- function(n_patch,
                               sd_source = sd_disturb_source,
                               sd_lon = sd_disturb_lon,
                               m_distance = m_distance,
-                              rho = rho,
+                              rho = 1,
                               v_wa = v_wa,
                               logit = TRUE)
 
