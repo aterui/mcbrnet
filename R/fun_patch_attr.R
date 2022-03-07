@@ -67,5 +67,5 @@ fun_patch_attr <- function(x,
 
   }
 
-  return(v_attr)
+  return(c(v_attr))
 }
