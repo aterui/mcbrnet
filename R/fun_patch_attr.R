@@ -1,13 +1,14 @@
 #' Internal function: weighted-mean patch attributes
 #'
-#' @param x Adjacency matrix to be converted
-#' @param rho Longitudinal autocorrelation
-#' @param v_wa Vector of watershed area
-#' @param n_branch Number of branch
-#' @param mean_source Mean value of source attribute
+#' @param x adjacency matrix to be converted
+#' @param n_branch number of branch
+#' @param mean_source mean value of source attribute
 #' @param sd_source SD of source attribute
 #' @param sd_lon SD of longitudinal change
-#' @param logit Logit transformation of mean source attribute
+#' @param m_distance distance matrix
+#' @param rho longitudinal autocorrelation
+#' @param v_wa vector of watershed area
+#' @param logit logit transformation of mean source attribute
 #'
 #' @author Akira Terui, \email{hanabi0111@gmail.com}
 #'
@@ -15,7 +16,6 @@
 #'
 
 fun_patch_attr <- function(x,
-                           n_patch,
                            n_branch,
                            mean_source,
                            sd_source,
@@ -28,6 +28,7 @@ fun_patch_attr <- function(x,
   # extract upstream adjacency
   m_adj_up <- x
   m_adj_up[lower.tri(m_adj_up)] <- 0
+  n_patch <- nrow(x)
 
   # upstream tributary proportion
   m_wa_prop <- t(apply(X = m_adj_up,

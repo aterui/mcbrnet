@@ -208,7 +208,6 @@ brnet <- function(n_patch,
 
   ## internal function: see "fun_patch_attr.R"
   v_env <- fun_patch_attr(x = m_adj,
-                          n_patch = n_patch,
                           n_branch = n_branch,
                           mean_source = mean_env_source,
                           sd_source = sd_env_source,
@@ -229,7 +228,6 @@ brnet <- function(n_patch,
 
   ## internal function: see "fun_patch_attr.R"
   v_disturb <- fun_patch_attr(x = m_adj,
-                              n_patch = n_patch,
                               n_branch = n_branch,
                               mean_source = mean_disturb_source,
                               sd_source = sd_disturb_source,
