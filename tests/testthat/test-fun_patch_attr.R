@@ -55,6 +55,7 @@ v_disturb1 <- fun_patch_attr(x = m_adj,
                              rho = 1,
                              v_wa = v_wa)
 
+
 # test --------------------------------------------------------------------
 
 test_that("patch environment no variation", {
