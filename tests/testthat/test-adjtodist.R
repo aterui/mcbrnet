@@ -1,8 +1,6 @@
 
 # setup -------------------------------------------------------------------
 
-context("adjtodist")
-
 n_patch <- 10
 net <- brnet(n_patch = n_patch,
              p_branch = 0)

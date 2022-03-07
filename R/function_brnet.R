@@ -16,6 +16,7 @@
 #' @param patch_size patch (vertex) size in the plot. Default 6.
 #' @param patch_scaling logical. If \code{TRUE}, patch (vertex) size will be proportional to the number of upstream contributing patches. The patch (vertex) size will be equal to \code{0.3 * scale_factor} at the upstream terminals and \code{1.3 * scale_factor} at the root. Overrides \code{patch_size}.
 #' @param scale_factor numeric value scaling patch (vertex) size. Enabled if \code{patch_scaling = TRUE}.
+#' @param n_patch_free logical value indicating whether imposing a constraint on \code{n_patch}. If \code{TRUE}, the number of patches a random variable following a negative binomial distribution.
 #'
 #' @return \code{adjacency_matrix} adjacency matrix for the generated network.
 #' @return \code{distance_matrix} distance matrix for the generated network.
@@ -198,9 +199,7 @@ brnet <- function(n_patch,
   # upstream watershed area ------------------------------------------------
 
   ## internal function: see "fun_wa.R"
-  m_wa <- fun_wa(x = m_adj,
-                 n_patch = n_patch)
-
+  m_wa <- fun_wa(x = m_adj)
   v_wa <- rowSums(m_wa)
 
 

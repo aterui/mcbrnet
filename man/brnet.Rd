@@ -56,6 +56,8 @@ brnet(
 \item{patch_scaling}{logical. If \code{TRUE}, patch (vertex) size will be proportional to the number of upstream contributing patches. The patch (vertex) size will be equal to \code{0.3 * scale_factor} at the upstream terminals and \code{1.3 * scale_factor} at the root. Overrides \code{patch_size}.}
 
 \item{scale_factor}{numeric value scaling patch (vertex) size. Enabled if \code{patch_scaling = TRUE}.}
+
+\item{n_patch_free}{logical value indicating whether imposing a constraint on \code{n_patch}. If \code{TRUE}, the number of patches a random variable following a negative binomial distribution.}
 }
 \value{
 \code{adjacency_matrix} adjacency matrix for the generated network.

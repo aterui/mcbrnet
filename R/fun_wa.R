@@ -7,11 +7,11 @@
 #' @export
 #'
 
-fun_wa <- function(x,
-                   n_patch) {
+fun_wa <- function(x) {
 
   m_adj_up <- x
   m_adj_up[lower.tri(m_adj_up)] <- 0
+  n_patch <- nrow(x)
 
   m_wa <- matrix(0,
                  ncol = n_patch,
@@ -34,4 +34,3 @@ fun_wa <- function(x,
 
   return(m_wa)
 }
-

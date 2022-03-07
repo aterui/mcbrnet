@@ -1,14 +1,12 @@
 
 # setup -------------------------------------------------------------------
 
-context("mcsim")
-
-n_patch <- 50
-n_species <- 10
+n_patch <- round(runif(1, 40, 60))
+n_species <- round(runif(1, 5, 15))
 mean_env <- rnorm(n_patch)
 niche_optim <- rnorm(n_species)
 sd_niche_width <- 1:n_species * 0.5
-cc <- 1:n_patch
+cc <- 10 * 1:n_patch
 distance_mat <- data.matrix(dist(cbind(runif(n_patch, 0, 10),
                                        runif(n_patch, 0, 10)),
                                  diag = TRUE,
@@ -30,33 +28,49 @@ output2 <- mcsim(n_species = n_species,
                  distance_matrix = distance_mat,
                  interaction_type = "random",
                  min_alpha = 0,
-                 max_alpha = 0.5,
-                 plot = TRUE)
+                 max_alpha = 0.5)
 
 # test --------------------------------------------------------------------
 
-test_that("check environmental/niche parameters", {
-  expect_message(mcsim())
-
+test_that("mean niche", {
   expect_error(mcsim(n_species = n_species, niche_optim = rep(0, n_species + 1)))
+  expect_equal(unique(output1$df_dynamics$niche_optim),
+               niche_optim)
+  expect_equal(output1$df_species$niche_optim,
+               niche_optim)
+  expect_equal(unique(output2$df_dynamics$niche_optim),
+               niche_optim)
+  expect_equal(output2$df_species$niche_optim,
+               niche_optim)
+})
+
+test_that("sd niche", {
   expect_error(mcsim(n_species = n_species, sd_niche_width =  rep(0, n_species + 1)))
+  expect_equal(output1$df_species$sd_niche_width,
+               sd_niche_width)
+  expect_equal(output2$df_species$sd_niche_width,
+               sd_niche_width)
+})
+
+test_that("environment", {
+  expect_equal(unique(output1$df_dynamics$mean_env),
+               mean_env)
+  expect_equal(output1$df_patch$mean_env,
+               mean_env)
+  expect_equal(unique(output2$df_dynamics$mean_env),
+               mean_env)
+  expect_equal(output2$df_patch$mean_env,
+               mean_env)
+})
+
+test_that("carrying capacity", {
   expect_error(mcsim(n_patch = n_patch, carrying_capacity =  rep(10, n_patch + 1)))
-
-  expect_equal(unique(output1$df_dynamics$mean_env), mean_env)
-  expect_equal(unique(output1$df_dynamics$niche_optim), niche_optim)
-  expect_equal(unique(output1$df_dynamics$carrying_capacity), cc)
-
-  expect_equal(output1$df_species$niche_optim, niche_optim)
-  expect_equal(output1$df_species$sd_niche_width, sd_niche_width)
-  expect_equal(output1$df_patch$mean_env, mean_env)
-  expect_equal(output1$df_patch$carrying_capacity, cc)
-
-  expect_equal(unique(output2$df_dynamics$mean_env), mean_env)
-  expect_equal(unique(output2$df_dynamics$niche_optim), niche_optim)
-  expect_equal(unique(output2$df_dynamics$carrying_capacity), cc)
-
-  expect_equal(output2$df_species$niche_optim, niche_optim)
-  expect_equal(output2$df_species$sd_niche_width, sd_niche_width)
-  expect_equal(output2$df_patch$mean_env, mean_env)
-  expect_equal(output2$df_patch$carrying_capacity, cc)
+  expect_equal(unique(output1$df_dynamics$carrying_capacity),
+               cc)
+  expect_equal(output1$df_patch$carrying_capacity,
+               cc)
+  expect_equal(unique(output2$df_dynamics$carrying_capacity),
+               cc)
+  expect_equal(output2$df_patch$carrying_capacity,
+               cc)
 })

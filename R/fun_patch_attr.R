@@ -54,7 +54,7 @@ fun_patch_attr <- function(x,
 
   if (!(rho <= 1 & rho >= 0)) stop("rho must be between 0 and 1")
 
-  for (i in seq_len(max(m_distance[1,]))) {
+  for (i in seq_len(max(m_distance[1, ]))) {
 
     v_eps <- rep(0, n_patch)
     v_eps[v_z_dummy != 0] <- rnorm(n = length(v_eps[v_z_dummy != 0]),

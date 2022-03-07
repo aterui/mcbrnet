@@ -4,7 +4,7 @@
 \alias{fun_wa}
 \title{Internal function: watershed area}
 \usage{
-fun_wa(x, n_patch)
+fun_wa(x)
 }
 \arguments{
 \item{x}{Adjacency matrix to be converted}

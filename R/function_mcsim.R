@@ -289,8 +289,6 @@ mcsim <- function(n_species = 5,
 
     m_dispersal <- data.matrix(exp(-theta * m_distance))
 
-    diag(m_dispersal) <- 0
-
   } else {
 
     if (!is.null(xy_coord) & is.null(distance_matrix)) {
@@ -307,8 +305,6 @@ mcsim <- function(n_species = 5,
                                      upper = TRUE))
 
       m_dispersal <- data.matrix(exp(-theta * m_distance))
-
-      diag(m_dispersal) <- 0
 
     } else {
 
@@ -336,10 +332,10 @@ mcsim <- function(n_species = 5,
 
       }
 
-      diag(m_dispersal) <- 0
-
     }
   }
+
+  diag(m_dispersal) <- 0
 
   if (length(p_dispersal) == 1) {
 
@@ -430,28 +426,28 @@ mcsim <- function(n_species = 5,
 
     }
 
+    ## time-specific local environment
     m_z_xt <- matrix(rep(x = m_z[n, ],
                          each = n_species),
                      nrow = n_species,
                      ncol = n_patch)
 
+    ## time-specific intrinsic growth rate
     m_r_xt <- fun_r(r0 = m_r0,
                     mu = m_mu,
                     z = m_z_xt,
                     sd = m_sd_niche_width,
                     nu = niche_cost)
 
+    ## internal community dynamics with competition
     m_n_hat <- (m_n * m_r_xt) / (1 + ((m_r0 - 1) / m_k) * (m_interaction %*% m_n))
 
-    m_e_hat <- m_n_hat * v_p_dispersal
-    v_e_sum <- rowSums(m_e_hat)
-    m_i_raw <- m_e_hat %*% m_dispersal
-    v_i_sum <- rowSums(m_i_raw)
-    v_i_sum[v_i_sum == 0] <- 1
-    m_i_prob <- m_i_raw / v_i_sum
-    m_i_hat <- m_i_prob * v_e_sum
-    m_n_prime <- m_n_hat + m_i_hat - m_e_hat
+    ## dispersal, internal function: see "fun_dispersal.R"
+    m_n_prime <- fun_dispersal(x = m_n_hat,
+                               v_p_dispersal = v_p_dispersal,
+                               m_dispersal = m_dispersal)
 
+    ## demographic stochasticity
     m_n <- matrix(rpois(n = n_species * n_patch,
                         lambda = m_n_prime),
                   nrow = n_species,
@@ -517,16 +513,6 @@ mcsim <- function(n_species = 5,
 
 
   # return ------------------------------------------------------------------
-
-  colnames(m_distance) <- sapply(X = seq_len(n_patch),
-                                 function(x) paste0("patch", x))
-  rownames(m_distance) <- sapply(X = seq_len(n_patch),
-                                 function(x) paste0("patch", x))
-
-  colnames(m_interaction) <- sapply(X = seq_len(n_species),
-                                    function(x) paste0("sp", x))
-  rownames(m_interaction) <- sapply(X = seq_len(n_species),
-                                    function(x) paste0("sp", x))
 
   # dynamics
   df_dyn <- dplyr::as_tibble(m_dynamics)
