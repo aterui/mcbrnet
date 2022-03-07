@@ -36,8 +36,9 @@ fun_patch_attr <- function(x,
                          (x * v_wa) / ifelse(sum(x) == 0,
                                              yes = 1,
                                              no = sum(x * v_wa))
-                       }
-  ))
+                         }
+                       )
+                 )
 
   n_source <- 0.5 * (n_branch + 1)
   source <- which(rowSums(m_adj_up) == 0)
