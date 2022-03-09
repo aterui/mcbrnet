@@ -21,7 +21,7 @@
 #' @param niche_cost numeric value. Determine the cost of wide niche (smaller values imply greater costs of wider niche). Default \code{1}.
 #' @param xy_coord data frame. Each row should correspond to an individual patch, with x and y coordinates (columns). Defualt \code{NULL}.
 #' @param distance_matrix numeric value. Distance matrix indicating distance between habitat patches. If provided, the distance matrix will be used to generate dispersal matrix and to calculate distance decay of environmental correlations. Default \code{NULL}.
-#' @param weighted_distance_matrix numeric value. Distance matrix indicating weighted distance between habitat patches. Enabled only if both distance_matrix and weighted_distance_matrix are given. The weighted distance matrix will be used to generate dispersal matrix. Default \code{NULL}.
+#' @param dispersal_matrix numeric value. Dispersal matrix to be used to simulate dispersal process. Override distance_matrix. Default \code{NULL}.
 #' @param landscape_size numeric value. Length of a landscape on a side. Enabled if \code{dispersal_matrix = NULL}.
 #' @param mean_env numeric value (length should be one or equal to \code{n_patch}). Mean environmental values of patches.
 #' @param sd_env numeric value. Standard deviation of temporal environmental variation at each patch.
@@ -72,7 +72,7 @@ mcsim <- function(n_species = 5,
                   niche_cost = 1,
                   xy_coord = NULL,
                   distance_matrix = NULL,
-                  weighted_distance_matrix = NULL,
+                  dispersal_matrix = NULL,
                   landscape_size = 10,
                   mean_env = 0,
                   sd_env = 0.1,
@@ -92,28 +92,18 @@ mcsim <- function(n_species = 5,
   # parameter setup ---------------------------------------------------------
 
   # carrying capacity
-  if (length(carrying_capacity) == 1) {
+  ## internal function; see "fun_to_m.R"
+  list_k <- fun_to_m(x = carrying_capacity,
+                     n_species = n_species,
+                     n_patch = n_patch,
+                     param_attr = "patch")
 
-    message("single value of carrying_capacity is given: assume carrying capacities are the same at all habitat patches")
-
-    m_k <- matrix(carrying_capacity,
-                  nrow = n_species,
-                  ncol = n_patch)
-
-  } else {
-
-    if (length(carrying_capacity) != n_patch) stop("carrying_capacity must have length of one or n_patch")
-
-    m_k <- matrix(rep(x = carrying_capacity,
-                      each = n_species),
-                  nrow = n_species,
-                  ncol = n_patch)
-
-  }
+  m_k <- list_k$m_x
 
   # species niche
 
   ## niche optimum
+  ## internal function; see "fun_to_m.R"
   if (is.null(niche_optim)) {
 
     message("niche_optim is not given: generate species niche optimum randomly")
@@ -129,32 +119,18 @@ mcsim <- function(n_species = 5,
 
   } else {
 
-    if (length(niche_optim) == 1) {
+    list_mu <- fun_to_m(x = niche_optim,
+                        n_species = n_species,
+                        n_patch = n_patch,
+                        param_attr = "species")
 
-      message("single value of niche_optim is given: assume niche optimum are the same for all species")
+    v_mu <- list_mu$v_x
+    m_mu <- list_mu$m_x
 
-      v_mu <- rep(x = niche_optim,
-                  times = n_species)
-
-      m_mu <- matrix(niche_optim,
-                     nrow = n_species,
-                     ncol = n_patch)
-
-    } else {
-
-      if (length(niche_optim) != n_species) stop("niche_optim must have length of one or n_species")
-
-      v_mu <- niche_optim
-
-      m_mu <- matrix(rep(x = niche_optim,
-                         times = n_patch),
-                     nrow = n_species,
-                     ncol = n_patch)
-
-    }
   }
 
   ## niche width
+  ## internal function; see "fun_to_m.R"
   if (is.null(sd_niche_width)) {
 
     message("sd_niche_width is not given: generate species niche width randomly")
@@ -170,195 +146,72 @@ mcsim <- function(n_species = 5,
 
   } else {
 
-    if (length(sd_niche_width) == 1) {
+    list_sd_niche_width <- fun_to_m(x = sd_niche_width,
+                                    n_species = n_species,
+                                    n_patch = n_patch,
+                                    param_attr = "species")
 
-      message("single value of sd_niche_width is given: assume niche width are the same for all species")
+    v_sd_niche_width <- list_sd_niche_width$v_x
+    m_sd_niche_width <- list_sd_niche_width$m_x
 
-      v_sd_niche_width <- rep(x = sd_niche_width,
-                              times = n_species)
-
-      m_sd_niche_width <- matrix(sd_niche_width,
-                                 nrow = n_species,
-                                 ncol = n_patch)
-
-    } else {
-
-      if (length(sd_niche_width) != n_species) stop("sd_niche_width must have length of one or n_species")
-
-      v_sd_niche_width <- sd_niche_width
-
-      m_sd_niche_width <- matrix(rep(x = sd_niche_width,
-                                     times = n_patch),
-                                 nrow = n_species,
-                                 ncol = n_patch)
-
-    }
   }
 
   ## maximum reproductive number
+  ## internal function; see "fun_to_m.R"
   if (any(r0 < 1)) stop("r0 must be greater than or equal to one")
 
-  if (length(r0) == 1) {
+  list_r0 <- fun_to_m(x = r0,
+                      n_species = n_species,
+                      n_patch = n_patch,
+                      param_attr = "species")
 
-    v_r0 <- rep(x = r0,
-                times = n_species)
+  v_r0 <- list_r0$v_x
+  m_r0 <- list_r0$m_x
 
-    m_r0 <- matrix(rep(x = r0,
-                       times = n_species * n_patch),
-                   nrow = n_species,
-                   ncol = n_patch)
+  ## environmental variation among patches
+  ## internal function; see "fun_to_m.R"
+  list_mu_z <- fun_to_m(x = mean_env,
+                        n_species = n_species,
+                        n_patch = n_patch,
+                        param_attr = "patch")
 
-  } else {
+  v_mu_z <- list_mu_z$v_x
 
-    if (length(r0) != n_species) stop("r0 must have length of one or n_species")
+  ## interaction matrix
+  ## internal function; see "fun_int_mat.R"
+  m_interaction <- fun_int_mat(n_species = n_species,
+                               alpha = alpha,
+                               min_alpha = min_alpha,
+                               max_alpha = max_alpha,
+                               interaction_type = interaction_type)
 
-    v_r0 <- r0
+  ## dispersal matrix
+  ## internal function; see "fun_disp_mat.R"
+  list_dispersal <- fun_disp_mat(n_patch = n_patch,
+                                 landscape_size = landscape_size,
+                                 theta = theta,
+                                 xy_coord = xy_coord,
+                                 distance_matrix = distance_matrix,
+                                 dispersal_matrix = dispersal_matrix)
 
-    m_r0 <- matrix(rep(x = v_r0,
-                       times = n_patch),
-                   nrow = n_species,
-                   ncol = n_patch)
+  m_distance <- list_dispersal$m_distance
+  m_dispersal <- list_dispersal$m_dispersal
+  df_xy_coord <- list_dispersal$df_xy_coord
 
-  }
+  ## internal function; see "fun_to_v.R"
+  v_p_dispersal <- fun_to_v(x = p_dispersal,
+                            n = n_species)
 
-  # environmental variation among patches
-  if (length(mean_env) == 1) {
-
-    message("single value of mean_env is given: assume environmental conditions are the same at all habitat patches")
-
-    v_mu_z <- rep(x = mean_env,
-                  times = n_patch)
-
-  } else {
-
-    if (length(mean_env) != n_patch) stop("mean_env must have length of one or n_patch")
-
-    v_mu_z <- mean_env
-
-  }
-
-  # interaction matrix
-  if (interaction_type == "constant") {
-
-    if (alpha < 0 | length(alpha) != 1) stop("invalid value of alpha - the value must be a positive scalar")
-
-    m_interaction <- matrix(alpha,
-                            nrow = n_species,
-                            ncol = n_species)
-
-    diag(m_interaction) <- 1
-
-  } else {
-
-    if (interaction_type != "random") stop("invalid interaction_type")
-    if (is.null(min_alpha) | is.null(max_alpha)) stop("provide min_alpha and max_alpha")
-    if (min_alpha < 0 | max_alpha < 0) stop("invalid values of min_alpha and/or max_alpha - values must be positive values")
-    if (min_alpha > max_alpha) stop("max_alpha must exceed min_alpha")
-
-    alpha <- runif(n = n_species * n_species,
-                   min = min_alpha,
-                   max = max_alpha)
-
-    m_interaction <- matrix(alpha,
-                            nrow = n_species,
-                            ncol = n_species)
-
-    diag(m_interaction) <- 1
-
-  }
-
-  # dispersal matrix
-  if (is.null(xy_coord) & is.null(distance_matrix)) {
-
-    message("neither xy_coord nor distance_matrix is given: generate a square landscape with landscape_size (default: 10) on a side")
-
-    v_x_coord <- runif(n = n_patch,
-                       min = 0,
-                       max = landscape_size)
-
-    v_y_coord <- runif(n = n_patch,
-                       min = 0,
-                       max = landscape_size)
-
-    df_xy_coord <- dplyr::tibble(x_coord = v_x_coord,
-                                 y_coord = v_y_coord)
-
-    m_distance <- data.matrix(dist(df_xy_coord,
-                                   diag = TRUE,
-                                   upper = TRUE))
-
-    m_dispersal <- data.matrix(exp(-theta * m_distance))
-
-  } else {
-
-    if (!is.null(xy_coord) & is.null(distance_matrix)) {
-
-      if (nrow(xy_coord) != n_patch) stop("row numbers must match n_patch")
-      if (ncol(xy_coord) != 2) stop("the number of columns must be two, describing x- and y-cooridnates")
-
-      colnames(xy_coord) <- c("x_coord", "y_coord")
-
-      df_xy_coord <- dplyr::as_tibble(xy_coord)
-
-      m_distance <- data.matrix(dist(df_xy_coord,
-                                     diag = TRUE,
-                                     upper = TRUE))
-
-      m_dispersal <- data.matrix(exp(-theta * m_distance))
-
-    } else {
-
-      if (!is.null(xy_coord)) message("both xy_coord and distance matrix are given: argument xy_coord is ignored")
-      if (!is.matrix(distance_matrix)) stop("distance matrix should be provided as matrix")
-      if (nrow(distance_matrix) != n_patch) stop("invalid dimension: distance matrix must have a dimension of n_patch * n_patch")
-      if (any(diag(distance_matrix) != 0)) stop("invalid distance matrix: diagonal elements must be zero")
-
-      df_xy_coord <- NULL
-
-      m_distance <- distance_matrix
-
-      if (!is.null(weighted_distance_matrix)) {
-
-        message("weighted_distance_matrix is provided: weighted_distance_matrix is used to calculate dispersal matrix")
-        if (!is.matrix(weighted_distance_matrix)) stop("distance matrix should be provided as matrix")
-        if (nrow(weighted_distance_matrix) != n_patch) stop("invalid dimension: distance matrix must have a dimension of n_patch * n_patch")
-        if (any(diag(weighted_distance_matrix) != 0)) stop("invalid distance matrix: diagonal elements must be zero")
-
-        m_dispersal <- data.matrix(exp(-theta * weighted_distance_matrix))
-
-      } else {
-
-        m_dispersal <- data.matrix(exp(-theta * m_distance))
-
-      }
-
-    }
-  }
-
-  diag(m_dispersal) <- 0
-
-  if (length(p_dispersal) == 1) {
-
-    message("single value of dispersal probability is given: assume dispersal probability is the same for all species")
-
-    v_p_dispersal <- rep(x = p_dispersal,
-                         times = n_species)
-
-  } else {
-
-    if (length(p_dispersal) != n_species) stop("p_dispersal must have length of one or n_species")
-
-    v_p_dispersal <- p_dispersal
-
-  }
 
   # dynamics ----------------------------------------------------------------
 
-  n_sim <- n_warmup + n_burnin + n_timestep
+  ## object setup ####
 
+  ## number of replicates
+  n_sim <- n_warmup + n_burnin + n_timestep
   n_discard <- n_warmup + n_burnin
 
-  # environment
+  ## environment
   var_env <- sd_env^2
 
   if (spatial_env_cor == TRUE) {
@@ -375,7 +228,7 @@ mcsim <- function(n_species = 5,
                           mean = v_mu_z,
                           sigma = m_sigma)
 
-  # community
+  ## community object
   colname <- c("timestep",
                "patch_id",
                "mean_env",
@@ -396,6 +249,7 @@ mcsim <- function(n_species = 5,
                 to = nrow(m_dynamics),
                 by = n_species * n_patch)
 
+  ## propagule
   if (is.null(propagule_interval)) {
 
     propagule_interval <- ceiling(n_warmup / 10)
@@ -406,6 +260,7 @@ mcsim <- function(n_species = 5,
                    to = max(c(1, n_warmup)),
                    by = propagule_interval)
 
+  ## initial values
   m_n <- matrix(rpois(n = n_species * n_patch,
                       lambda = 0.5),
                 nrow = n_species,
@@ -413,6 +268,7 @@ mcsim <- function(n_species = 5,
 
   pb <- txtProgressBar(min = 0, max = n_sim, style = 3)
 
+  ## temporal process ####
   for (n in seq_len(n_sim)) {
 
     if (n_warmup > 0) {
@@ -459,17 +315,23 @@ mcsim <- function(n_species = 5,
                     to = st_row[n - n_discard] + n_species * n_patch - 1,
                     by = 1)
 
-      m_dynamics[row_id, ] <- cbind(I(n - n_discard),
-                                    rep(x = seq_len(n_patch),
-                                        each = n_species),
-                                    rep(x = v_mu_z,
-                                        each = n_species),
+      m_dynamics[row_id, ] <- cbind(# timestep
+                                    I(n - n_discard),
+                                    # patch_id
+                                    rep(x = seq_len(n_patch), each = n_species),
+                                    # mean_env
+                                    rep(x = v_mu_z, each = n_species),
+                                    # env
                                     c(m_z_xt),
+                                    # carrying_capacity
                                     c(m_k),
-                                    rep(x = seq_len(n_species),
-                                        times = n_patch),
+                                    # species
+                                    rep(x = seq_len(n_species), times = n_patch),
+                                    # niche_optim
                                     c(m_mu),
+                                    # r_xt
                                     c(m_r_xt),
+                                    # abundance
                                     c(m_n))
 
     }
@@ -560,6 +422,5 @@ mcsim <- function(n_species = 5,
               df_diversity = dplyr::tibble(alpha_div, beta_div, gamma_div),
               df_xy_coord = df_xy_coord,
               distance_matrix = m_distance,
-              weighted_distance_matrix = weighted_distance_matrix,
               interaction_matrix = m_interaction))
 }

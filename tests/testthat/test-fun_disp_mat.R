@@ -44,4 +44,3 @@ test_that("distance/dispersal matrix", {
 test_that("df_xy_coord", {
   expect_false(is.null(m2$df_xy_coord))
 })
-
