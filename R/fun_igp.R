@@ -28,7 +28,13 @@ fun_igp <- function(x,
   if (dim(x)[1] != 3) stop("error in x; dim(x)[1] must be 3")
   if (any(a > 1)) warning("a > 1; may yield negative density")
   if (a[1] + a[2] > 1) warning("a[1] + a[2] > 1; may yield negative density")
-
+  if (any(a < 0) |
+      any(e < 0) |
+      any(x < 0) |
+      any(h < 0) |
+      any(s0 < 0) |
+      any(s0 > 1)
+      ) stop("negative values detected in parameters or community matrix")
 
   # define parameters -------------------------------------------------------
 
