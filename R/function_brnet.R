@@ -9,7 +9,6 @@
 #' @param mean_disturb_source numeric value indicating the mean of disturbance strength at headwaters. The value is assumed to represent the proportional mortality (0 - 1.0) at the patch level.
 #' @param sd_disturb_source numeric value indicating the SD of disturbance strength at headwaters. The SD is defined in a logit scale with a normal distribution.
 #' @param sd_disturb_lon numeric value indicating the SD of longitudinal noise of disturbance strength. The SD is defined in a logit scale with a normal distribution.
-#' @param asymmetry_factor numeric value rescaling upstream distance. If \code{asymmetry_factor = 1}, distance from a downstream patch x to another upstream patch y would be multiplied by the factor of \code{asymmetry_factor}. This argument does not affect separation distance from an upstream patch to another downstream patch. Default \code{asymmetry_factor = 1} (no asymmetry).
 #' @param randomize_patch logical indicating whether randomize patches or not. If \code{FALSE}, the function may generate a biased network with ordered patches. Default \code{TRUE}.
 #' @param plot logical indicating if a plot should be shown or not. If \code{FALSE}, a plot of the generated network will not be shown. Default \code{TRUE}.
 #' @param patch_label character string indicating a type of patch (vertex) label (either \code{"patch", "branch", "n_upstream"}). \code{"patch"} shows patch ID, \code{"branch"} branch ID, and \code{"n_upstream"} the number of upstream contributing patches. If \code{NULL}, no label will be shown on patches in the plot. Default \code{NULL}.
@@ -20,7 +19,6 @@
 #'
 #' @return \code{adjacency_matrix} adjacency matrix for the generated network.
 #' @return \code{distance_matrix} distance matrix for the generated network.
-#' @return \code{weighted_distance_matrix} weighted distance matrix for the generated network.
 #' @return \code{df_patch} data frame containing patch attributes.
 #'
 #' @importFrom dplyr %>%
@@ -37,8 +35,9 @@
 #'
 #' @export
 #'
-brnet <- function(n_patch,
-                  p_branch,
+
+brnet <- function(n_patch = 50,
+                  p_branch = 0.5,
                   mean_env_source = 0,
                   sd_env_source = 1,
                   rho = 1,
@@ -46,7 +45,6 @@ brnet <- function(n_patch,
                   mean_disturb_source = 0.9,
                   sd_disturb_source = 1,
                   sd_disturb_lon = 0.1,
-                  asymmetry_factor = 1,
                   randomize_patch = TRUE,
                   plot = TRUE,
                   patch_label = NULL,
@@ -55,144 +53,28 @@ brnet <- function(n_patch,
                   scale_factor = 8,
                   n_patch_free = FALSE) {
 
-  # define functions and variables ------------------------------------------
 
-  resample <- function(x, ...) x[sample.int(length(x), ...)]
+  # define variables --------------------------------------------------------
 
-  if (p_branch > 0 & p_branch < 1) {
-
-    repeat {
-
-      n_branch <- rbinom(n = 1, size = n_patch, prob = p_branch)
-      if (n_branch %% 2 == 1) break
-
-    }
-
-  } else {
-
-    if (p_branch == 0) n_branch <- 1
-
-    if (p_branch == 1) {
-
-      if (n_patch %% 2 == 0) stop("n_patch must be an odd number when p_branch = 1")
-
-      n_branch <- n_patch
-
-    }
-
-  }
+  ## internal function: see "fun_get_n_branch.R"
+  n_branch <- fun_get_n_branch(n_patch = n_patch,
+                               p_branch = p_branch)
 
 
-  # adjacency matrix: linear network ----------------------------------------
+  # adjacency matrix --------------------------------------------------------
 
-  if (p_branch == 0 | n_branch == 1) {
+  list_adj <- fun_m_adj(n_patch = n_patch,
+                        p_branch = p_branch,
+                        n_branch = n_branch,
+                        n_patch_free = n_patch_free)
 
-    v_n_patch_branch <- n_patch
-    m_adj <- matrix(0, nrow = n_patch, ncol = n_patch)
-    x <- seq_len(n_patch - 1)
-    y <- 2:n_patch
-    m_adj[cbind(x, y)] <- 1
-    m_adj[cbind(y, x)] <- 1
-
-  }
-
-
-  # adjacency matrix: branched network --------------------------------------
-
-  if (p_branch > 0 & n_branch > 1) {
-
-    # vector of the number of patches in each branch
-    if (n_patch_free == FALSE) {
-      repeat{
-
-        repeat{
-
-          v_n_patch_branch <- rgeom(n = n_branch, prob = p_branch) + 1
-          if (sum(v_n_patch_branch) >= n_patch) break
-
-        }
-
-        if (sum(v_n_patch_branch) == n_patch) break
-
-      }
-    } else {
-
-      v_n_patch_branch <- rgeom(n = n_branch, prob = p_branch) + 1
-      n_patch <- sum(v_n_patch_branch)
-
-    }
-
-    # start_id, end_id, and neighbor list for each branch
-    v_end_id <- cumsum(v_n_patch_branch)
-    v_start_id <- v_end_id - (v_n_patch_branch - 1)
-
-    list_neighbor_inbranch <- lapply(seq_len(n_branch),
-                                     function(i) {
-                                       fun_adj(n = v_n_patch_branch[i],
-                                               start_id = v_start_id[i])
-                                       }
-                                     )
-
-    m_neighbor_inbranch <- do.call(rbind, list_neighbor_inbranch)
-
-    # combine parent and offspring branches at confluences
-    if (n_branch == 3) {
-
-      parent <- c(1, 1)
-      offspg <- c(2, 3)
-      m_po <- cbind(parent, offspg)
-
-      list_confluence <- lapply(seq_len(nrow(m_po)),
-                                function(x) cbind(v_end_id[m_po[x, 1]],
-                                                  v_start_id[m_po[x, 2]]))
-
-      m_confluence <- do.call(rbind, list_confluence)
-      m_confluence <- rbind(m_confluence, m_confluence[, c(2, 1)])
-
-    } else {
-
-      n_confluence <- 0.5 * (n_branch - 1)
-      v_parent_branch <- seq_len(n_confluence)
-      v_offspg_branch <- 2:n_branch
-
-      m_offspg <- matrix(NA,
-                         nrow = 2,
-                         ncol = n_confluence)
-
-      for (i in n_confluence:1) {
-
-        v_y <- resample(v_offspg_branch[v_offspg_branch > v_parent_branch[i]],
-                        size = 2)
-        v_offspg_branch <- setdiff(v_offspg_branch, v_y)
-        m_offspg[, i] <- v_y
-
-      }
-
-      parent <- rep(v_parent_branch, each = 2)
-      offspg <- c(m_offspg)
-      m_po <- cbind(parent, offspg)
-
-      list_confluence <- lapply(seq_len(nrow(m_po)),
-                                function(x) cbind(v_end_id[m_po[x, 1]],
-                                                  v_start_id[m_po[x, 2]]))
-
-      m_confluence <- do.call(rbind, list_confluence)
-      m_confluence <- rbind(m_confluence, m_confluence[, c(2, 1)])
-
-    }
-
-    m_neighbor_patch <- rbind(m_neighbor_inbranch, m_confluence)
-    m_neighbor_patch <- m_neighbor_patch[complete.cases(m_neighbor_patch), ]
-
-    m_adj <- matrix(0, nrow = n_patch, ncol = n_patch)
-    m_adj[m_neighbor_patch] <- 1
-
-  }
+  v_n_patch_branch <- list_adj$v_n_patch_branch
+  m_adj <- list_adj$m_adj
 
 
   # distance matrix ---------------------------------------------------------
 
-  ## exported function: see "function_adjtodist.R"
+  ## internal function: see "function_adjtodist.R"
   m_distance <- adjtodist(m_adj)
 
 
@@ -237,25 +119,6 @@ brnet <- function(n_patch,
                               logit = TRUE)
 
 
-  # asymmetry ---------------------------------------------------------------
-
-  v_distance_to_root <- m_distance[1, ]
-
-  df_asymmetry <- expand.grid(patch1 = seq_len(n_patch),
-                              patch2 = seq_len(n_patch)) %>%
-    dplyr::mutate(d1 = v_distance_to_root[.data$patch1],
-                  d2 = v_distance_to_root[.data$patch2]) %>%
-    dplyr::mutate(delta = .data$d2 - .data$d1,
-                  distance = m_distance[cbind(.data$patch1, .data$patch2)]) %>%
-    dplyr::mutate(x = 0.5 * (.data$distance - .data$delta)) %>%
-    dplyr::mutate(weighted_distance = (1 + asymmetry_factor) * .data$x +
-                                       asymmetry_factor * .data$delta) %>%
-    dplyr::filter(.data$patch1 != .data$patch2)
-
-  m_weighted_distance <- m_distance
-  m_weighted_distance[cbind(df_asymmetry$patch1, df_asymmetry$patch2)] <- df_asymmetry$weighted_distance
-
-
   # randomize nodes ---------------------------------------------------------
 
   branch <- unlist(lapply(seq_len(n_branch),
@@ -276,7 +139,6 @@ brnet <- function(n_patch,
       v_disturb <- v_disturb[df_id$patch]
       m_adj <- m_adj[df_id$patch, df_id$patch]
       m_distance <- m_distance[df_id$patch, df_id$patch]
-      m_weighted_distance <- m_weighted_distance[df_id$patch, df_id$patch]
 
     } else {
 
@@ -370,7 +232,6 @@ brnet <- function(n_patch,
 
   return(list(adjacency_matrix = m_adj,
               distance_matrix = m_distance,
-              weighted_distance_matrix = m_weighted_distance,
               df_patch = dplyr::tibble(patch_id = seq_len(n_patch),
                                        branch_id = as.numeric(df_id$branch),
                                        environment = c(v_env),

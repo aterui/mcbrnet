@@ -1,7 +1,7 @@
 Package: mcbrnet
 Type: Package
 Title: Simulation functions for metacommunity dynamics in a branching network
-Version: 1.1.1
+Version: 1.2.1
 Author: Akira Terui
 Maintainer: Akira Terui <hanabi0111@gmail.com>
 Description: Simulation functions for metacommunity dynamics in a brancing network.

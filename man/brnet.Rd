@@ -5,8 +5,8 @@
 \title{Generate a random branching network}
 \usage{
 brnet(
-  n_patch,
-  p_branch,
+  n_patch = 50,
+  p_branch = 0.5,
   mean_env_source = 0,
   sd_env_source = 1,
   rho = 1,
@@ -14,7 +14,6 @@ brnet(
   mean_disturb_source = 0.9,
   sd_disturb_source = 1,
   sd_disturb_lon = 0.1,
-  asymmetry_factor = 1,
   randomize_patch = TRUE,
   plot = TRUE,
   patch_label = NULL,
@@ -43,8 +42,6 @@ brnet(
 
 \item{sd_disturb_lon}{numeric value indicating the SD of longitudinal noise of disturbance strength. The SD is defined in a logit scale with a normal distribution.}
 
-\item{asymmetry_factor}{numeric value rescaling upstream distance. If \code{asymmetry_factor = 1}, distance from a downstream patch x to another upstream patch y would be multiplied by the factor of \code{asymmetry_factor}. This argument does not affect separation distance from an upstream patch to another downstream patch. Default \code{asymmetry_factor = 1} (no asymmetry).}
-
 \item{randomize_patch}{logical indicating whether randomize patches or not. If \code{FALSE}, the function may generate a biased network with ordered patches. Default \code{TRUE}.}
 
 \item{plot}{logical indicating if a plot should be shown or not. If \code{FALSE}, a plot of the generated network will not be shown. Default \code{TRUE}.}
@@ -63,8 +60,6 @@ brnet(
 \code{adjacency_matrix} adjacency matrix for the generated network.
 
 \code{distance_matrix} distance matrix for the generated network.
-
-\code{weighted_distance_matrix} weighted distance matrix for the generated network.
 
 \code{df_patch} data frame containing patch attributes.
 }

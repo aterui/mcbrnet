@@ -16,4 +16,4 @@
   #usethis::use_coverage()
   devtools::build(path='.')
   covr::package_coverage()
-  file.remove("mcbrnet_1.1.1.tar.gz")
+  file.remove("mcbrnet_1.2.1.tar.gz")
