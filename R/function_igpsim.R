@@ -80,6 +80,10 @@ igpsim <- function(n_patch = 5,
   v_k <- fun_to_v(x = carrying_capacity,
                   n = n_patch)
 
+  ## background survival ####
+  v_s0 <- fun_to_v(x = s0,
+                   n = n_species)
+
   ## dispersal matrix ####
   list_dispersal <- fun_disp_mat(n_patch = n_patch,
                                  landscape_size = landscape_size,
@@ -174,7 +178,7 @@ igpsim <- function(n_patch = 5,
                           e = v_e,
                           a = v_a,
                           h = v_h,
-                          s0 = s0)
+                          s0 = v_s0)
 
     ## disturbance
     m_n_hat <- t(t(list_n_hat$m_n_hat) * (1 - psi[n] * v_disturb))
