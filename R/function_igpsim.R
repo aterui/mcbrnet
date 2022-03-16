@@ -66,6 +66,16 @@ igpsim <- function(n_patch = 5,
   ## number of species ####
   n_species <- 3
 
+  ## functional response ####
+  v_a <- fun_to_v(x = attack_rate,
+                  n = n_species)
+
+  v_e <- fun_to_v(x = conv_eff,
+                  n = n_species)
+
+  v_h <- fun_to_v(x = handling_time,
+                  n = n_species)
+
   ## carrying capacity ####
   v_k <- fun_to_v(x = carrying_capacity,
                   n = n_patch)
@@ -161,9 +171,9 @@ igpsim <- function(n_patch = 5,
     list_n_hat <- fun_igp(x = m_n,
                           r_b = r_b,
                           k = v_k,
-                          e = conv_eff,
-                          a = attack_rate,
-                          h = handling_time,
+                          e = v_e,
+                          a = v_a,
+                          h = v_h,
                           s0 = s0)
 
     ## disturbance
@@ -281,9 +291,9 @@ igpsim <- function(n_patch = 5,
   df_int <- dplyr::tibble(interaction = c("ig-prey on basal",
                                           "ig-predator on basal",
                                           "ig-predator on ig-prey"),
-                          conv_eff = conv_eff,
-                          attack_rate = attack_rate,
-                          handling_time = handling_time)
+                          conv_eff = v_e,
+                          attack_rate = v_a,
+                          handling_time = v_h)
 
   # return
   return(list(df_dynamics = df_dyn,
