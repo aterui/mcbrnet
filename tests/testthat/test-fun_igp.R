@@ -33,8 +33,6 @@ z_ref[2:3, ] <- 0.25
 test_that("N-zero matrix", {
   expect_equal(y_zero$z,
                zero_ref)
-  expect_equal(y_zero$m_n_bar,
-               zero_ref)
   expect_equal(y_zero$m_n_hat,
                zero_ref)
 })

@@ -115,12 +115,10 @@ fun_igp <- function(x,
 
   # intraguild prey v_n_c ####
   ## survived = basal survival x predation-induced mortality
-  v_n_c_bar <- s0_c * (1 - v_z_cp) * v_n_c
-  v_n_c_hat <- e_bc * (v_z_bc * v_n_b)
+  v_n_c_hat <- e_bc * (s0_c * (1 - v_z_cp) * (v_z_bc * v_n_b))
 
   # intraguild predator v_n_p ####
-  v_n_p_bar <- s0_p * v_n_p
-  v_n_p_hat <- v_delta * e_bp * (v_z_bp * v_n_b) + (1 - v_delta) * e_cp * v_w_cp
+  v_n_p_hat <- s0_p * (v_delta * e_bp * (v_z_bp * v_n_b) + (1 - v_delta) * e_cp * v_w_cp)
   v_n_p_hat[is.nan(v_n_p_hat)] <- 0
 
 
@@ -132,12 +130,6 @@ fun_igp <- function(x,
 
   dimnames(m_z) <- NULL
 
-  m_n_bar <- rbind(v_n_b_bar,
-                   v_n_c_bar,
-                   v_n_p_bar)
-
-  dimnames(m_n_bar) <- NULL
-
   m_n_hat <- rbind(v_n_b_hat,
                    v_n_c_hat,
                    v_n_p_hat)
@@ -146,7 +138,6 @@ fun_igp <- function(x,
 
   return(list(delta = v_delta,
               z = m_z,
-              m_n_bar = m_n_bar,
               m_n_hat = m_n_hat)
   )
 
