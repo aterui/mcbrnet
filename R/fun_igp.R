@@ -116,7 +116,7 @@ fun_igp <- function(x,
   # intraguild prey v_n_c ####
   ## survived = basal survival x predation-induced mortality
   v_n_c_bar <- s0_c * (1 - v_z_cp) * v_n_c
-  v_n_c_hat <- e_bc * v_w_bc
+  v_n_c_hat <- e_bc * (v_z_bc * v_n_b)
 
   # intraguild predator v_n_p ####
   v_n_p_bar <- s0_p * v_n_p
