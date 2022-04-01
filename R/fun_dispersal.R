@@ -1,4 +1,4 @@
-#' Internal use: dispersal
+#' Internal function: dispersal
 #'
 #' @param x matrix of population sizes
 #' @param v_p_dispersal vector of dispersal probability

@@ -31,7 +31,10 @@
 #' @author Akira Terui, \email{hanabi0111@gmail.com}
 #'
 #' @examples
-#' brnet(n_patch = 100, p_branch = 0.5)
+#' \dontrun{
+#' # not run
+#' brnet(n_patch = 10, p_branch = 0.5)
+#' }
 #'
 #' @export
 #'

@@ -24,5 +24,8 @@ Imports:
 Roxygen: list(markdown = TRUE)
 Suggests: 
     testthat (>= 3.0.0),
-    covr
+    covr,
+    knitr,
+    rmarkdown
 Config/testthat/edition: 3
+VignetteBuilder: knitr

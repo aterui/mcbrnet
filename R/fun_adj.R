@@ -1,4 +1,4 @@
-#' Internal use: return adjacency in a linear habitat
+#' Internal function: return adjacency in a linear habitat
 #'
 #' @param n Number of nodes
 #' @param start_id Start node ID

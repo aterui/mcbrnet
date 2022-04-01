@@ -2,7 +2,7 @@
 % Please edit documentation in R/fun_dispersal.R
 \name{fun_dispersal}
 \alias{fun_dispersal}
-\title{Internal use: dispersal}
+\title{Internal function: dispersal}
 \usage{
 fun_dispersal(x, v_p_dispersal, m_dispersal)
 }
@@ -14,7 +14,7 @@ fun_dispersal(x, v_p_dispersal, m_dispersal)
 \item{m_dispersal}{dispersal matrix}
 }
 \description{
-Internal use: dispersal
+Internal function: dispersal
 }
 \author{
 Akira Terui, \email{hanabi0111@gmail.com}

@@ -2,7 +2,7 @@
 % Please edit documentation in R/fun_adj.R
 \name{fun_adj}
 \alias{fun_adj}
-\title{Internal use: return adjacency in a linear habitat}
+\title{Internal function: return adjacency in a linear habitat}
 \usage{
 fun_adj(n, start_id = 1)
 }
@@ -12,7 +12,7 @@ fun_adj(n, start_id = 1)
 \item{start_id}{Start node ID}
 }
 \description{
-Internal use: return adjacency in a linear habitat
+Internal function: return adjacency in a linear habitat
 }
 \author{
 Akira Terui, \email{hanabi0111@gmail.com}

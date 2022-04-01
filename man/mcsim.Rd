@@ -115,7 +115,10 @@ Simulate metacommunity dynamics
 }
 
 \examples{
+\dontrun{
+# not run
 mcsim(n_patch = 5, n_species = 5)
+}
 
 }
 \author{

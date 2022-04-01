@@ -47,7 +47,10 @@
 #' @author Akira Terui, \email{hanabi0111@gmail.com}
 #'
 #' @examples
+#' \dontrun{
+#' # not run
 #' mcsim(n_patch = 5, n_species = 5)
+#' }
 #'
 #' @export
 #'

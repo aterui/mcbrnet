@@ -71,7 +71,10 @@ Generate a random branching network
 }
 
 \examples{
-brnet(n_patch = 100, p_branch = 0.5)
+\dontrun{
+# not run
+brnet(n_patch = 10, p_branch = 0.5)
+}
 
 }
 \author{
