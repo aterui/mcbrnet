@@ -4,7 +4,13 @@
     <loc>/404.html</loc>
   </url>
   <url>
+    <loc>/articles/brnet.html</loc>
+  </url>
+  <url>
     <loc>/articles/index.html</loc>
+  </url>
+  <url>
+    <loc>/articles/mcsim.html</loc>
   </url>
   <url>
     <loc>/articles/vignette-mcbrnet.html</loc>

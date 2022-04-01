@@ -1,0 +1,159 @@
+---
+title: "brnet: network generation"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{brnet}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+
+library(mcbrnet)
+```
+
+## Basic usage
+
+This function generates a random branching network with the specified number of patches and the probability of branching. The key arguments are the number of habitat patches (`n_patch`) and the probability of branching (`p_branch`), which users must specify. With these parameters, the function generates a branching network through the following steps:
+
+1.  Draw the number of branches in the network. An individual branch is defined as a series of connected patches from one confluence (or outlet) to the next confluence upstream (or upstream terminal). The number of branches in a network $N_{b}$ is drawn from a binomial distribution as $N_{b} \sim Binomial(N,P_{b})$, where $N$ is the number of patches and $P_b$ is the branching probability.
+
+2.  Draw the number of patches in each branch. The number of patches in branch $q$, $n_q$, is drawn from a geometric distribution as $n_{q} \sim Ge(P_b)$ but conditional on $\sum_{q}^{N_{b}} n_q = N$.
+
+3.  Organize branches into a bifurcating branching network.
+
+Sample script:
+
+```{r, eval = F}
+library(mcbrnet)
+net <- brnet(n_patch = 50, p_branch = 0.5)
+```
+
+The function returns:
+
+-   `adjacency_matrix`: adjacency matrix.
+
+-   `distance_matrix`: distance matrix. Distance between patches is measured as the number of steps required to reach from the focal patch to the target patch through the network.
+
+-   `df_patch`: a data frame (`dplyr::tibble`) containing patch attributes.
+
+    -   *patch_id*: patch ID.
+    -   *branch_id*: branch ID.
+    -   *environment*: environmental value at each patch (see below for details)
+    -   *disturbance*: disturbance level (i.e., proportional mortality) at each patch (see below for details)
+    -   *n_patch_upstream*: the number of upstream contributing patches (including the focal patch itself; akin to the watershed area in river networks).
+
+## Quick start
+
+The following script produce a branching network with `n_patch = 50` and `p_branch = 0.5`. By default, `brnet()` visualizes the generated network using functions in packages `igraph` (Csardi and Nepusz 2006) and `plotfunctions` (van Rij 2020) (`plot = FALSE` to disable):
+
+```{r, include=F}
+set.seed(1)
+```
+
+```{r}
+net <- brnet(n_patch = 50, p_branch = 0.5)
+```
+
+Randomly generated environmental values color patches and patches' size is proportional to the number of patches upstream. To view matrices, type the following script:
+
+```{r}
+# adjacency matrix
+# showing 5 patches for example
+net$adjacency_matrix[1:5, 1:5]
+
+```
+
+```{r}
+# distance matrix
+# showing 5 patches for example
+net$distance_matrix[1:5, 1:5]
+
+```
+
+The following script lets you view branch ID, environmental values, and the number of upstream contributing patches for each patch:
+
+```{r}
+net$df_patch
+```
+
+## Customize: visualization
+
+**Arguments:** `patch_label`, `patch_scaling`, `patch_size`
+
+Users may add patch labels using the argument `patch_label`:
+
+```{r, include=F}
+set.seed(1)
+```
+
+```{r}
+# patch ID
+net <- brnet(n_patch = 50, p_branch = 0.5, patch_label = "patch")
+```
+
+```{r, include=F}
+set.seed(1)
+```
+
+```{r}
+# branch ID
+net <- brnet(n_patch = 50, p_branch = 0.5, patch_label = "branch")
+```
+
+```{r, include=F}
+set.seed(1)
+```
+
+```{r}
+# number of upstream contributing patches
+net <- brnet(n_patch = 50, p_branch = 0.5, patch_label = "n_upstream")
+```
+
+To remove patch size variation, set `patch_scaling = FALSE` and specify `patch_size`:
+
+```{r, include=F}
+set.seed(1)
+```
+
+```{r}
+# number of upstream contributing patches
+net <- brnet(n_patch = 50, p_branch = 0.5, patch_scaling = FALSE, patch_size = 8)
+```
+
+## Customize: environment
+
+**Arguments:** `mean_env_source`, `sd_env_source`, `rho`, `sd_env_lon`
+
+Some flexibility exists to simulate environmental values, which are determined through an autoregressive process, as detailed below:
+
+1.  Environmental values for upstream terminal patches (i.e., patches with no upstream patch) are drawn from a normal distribution as $z_h \sim N(\mu_{h}, \sigma_h^2)$ (arguments `mean_env_source` and `sd_env_source`).
+
+2.  Downstream environmental values are determined by an autoregressive process as $z_{down} \sim N(\rho z_{up}, \sigma_l^2)$ (argument `sd_env_lon`). At bifurcation patches (or confluence), the environmental value takes a weighted mean of the two contributing patches given the size of these patches $N_{up}$ (the number of upstream contributing patches): $z_{down} = \omega(\rho z_{up, 1} + \epsilon_1) + (1 - \omega)(\rho z_{up,2} + \epsilon_2)$, where $\omega = \frac{N_{up,1}}{N_{up,1} + N_{up,2}}$ and $\epsilon \sim N(0, \sigma_l^2)$.
+
+Users may change the values of $\mu_h$ (default: `mean_env_source = 0`), $\sigma_h$ (`sd_env_source = 1`), $\rho$ (`rho = 1`), and $\sigma_l$ (`sd_env_lon = 0.1`). Increasing the value of `sd_env_source` leads to greater variation in environmental values at upstream terminals. The argument `rho` determines the strength of longitudinal autocorrelation (the greater the stronger autocorrelation). The argument `sd_env_lon` determines the strength of longitudinal environmental noise.
+
+```{r, include = F}
+set.seed(1)
+```
+
+```{r brnet_instruction_2, eval = T}
+net <- brnet(n_patch = 50, p_branch = 0.5,
+             sd_env_source = 3, rho = 0.5, sd_env_lon = 0.5)
+```
+
+## Customize: disturbance
+
+**Arguments:** `mean_disturb_source`, `sd_disturb_source` , `sd_disturb_lon`
+
+Some flexibility exists to simulate disturbance levels, as detailed below:
+
+1.  Disturbance levels for upstream terminal patches (i.e., patches with no upstream patch) are drawn from a normal distribution in a logit scale as $logit~m_h \sim N(logit~\mu_{m}, \sigma_{h,m}^2)$. The argument `mean_disturb_source` controls the proportional mean of the disturbance level. The argument `sd_disturb_source` controls the variation in disturbance level among headwaters in a logit scale.
+
+2.  Disturbance cascades downstream as in environmental values: $logit~m_{down} \sim N(logit~m_{up}, \sigma_{l,m}^2)$. At bifurcation patches (or confluence), the disturbance value takes a weighted mean of the two contributing patches given the stream size of these patches $N_{up}$ (the number of upstream contributing patches): $logit~m_{down} = \omega(logit~logit~m_{up, 1} + \epsilon_1) + (1 - \omega)(logit~ m_{up,2} + \epsilon_2)$, where $\omega = \frac{N_{up,1}}{N_{up,1} + N_{up,2}}$ and $\epsilon \sim N(0, \sigma_{l,m}^2)$.
+
+Users may change the values of $\mu_{m}$ (`mean_disturb_source`), $\sigma_{h,m}$ (`sd_disturb_source`) and $\sigma_{l,m}$(`sd_disturb_lon`).
