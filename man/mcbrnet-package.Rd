@@ -4,7 +4,7 @@
 \name{mcbrnet-package}
 \alias{mcbrnet}
 \alias{mcbrnet-package}
-\title{mcbrnet: Simulation functions for metacommunity dynamics in a branching network}
+\title{mcbrnet: Simulation for metacommunity dynamics in branching networks}
 \description{
 Simulation functions for metacommunity dynamics in a brancing network.
     Function \code{brnet} generates a random branching network and returns adjacency and distance matrices.
