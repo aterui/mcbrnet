@@ -38,7 +38,7 @@
 #'
 #' @importFrom dplyr %>% filter
 #' @importFrom ggplot2 ggplot vars labeller geom_line aes scale_color_viridis_c labs facet_grid label_both
-#' @importFrom stats dist rpois
+#' @importFrom stats dist rbinom rgeom rnorm rpois runif
 #' @importFrom utils setTxtProgressBar txtProgressBar
 #' @importFrom rlang .data
 #'
