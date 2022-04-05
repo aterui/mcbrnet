@@ -152,8 +152,8 @@ net <- brnet(n_patch = 50, p_branch = 0.5,
 
 Some flexibility exists to simulate disturbance levels, as detailed below:
 
-1.  Disturbance levels for upstream terminal patches (i.e., patches with no upstream patch) are drawn from a normal distribution in a logit scale as $logit~m_h \sim N(logit~\mu_{m}, \sigma_{h,m}^2)$. The argument `mean_disturb_source` controls the proportional mean of the disturbance level. The argument `sd_disturb_source` controls the variation in disturbance level among headwaters in a logit scale.
+1.  Disturbance levels for upstream terminal patches (i.e., patches with no upstream patch) are drawn from a normal distribution in a logit scale as $logit~m_h \sim N(logit~\mu_{m}, \sigma_{h,m}^2)$.
 
-2.  Disturbance cascades downstream as in environmental values: $logit~m_{down} \sim N(logit~m_{up}, \sigma_{l,m}^2)$. At bifurcation patches (or confluence), the disturbance value takes a weighted mean of the two contributing patches given the stream size of these patches $N_{up}$ (the number of upstream contributing patches): $logit~m_{down} = \omega(logit~logit~m_{up, 1} + \epsilon_1) + (1 - \omega)(logit~ m_{up,2} + \epsilon_2)$, where $\omega = \frac{N_{up,1}}{N_{up,1} + N_{up,2}}$ and $\epsilon \sim N(0, \sigma_{l,m}^2)$.
+2.  Disturbance cascades downstream as in environmental values: $logit~m_{down} \sim N(logit~m_{up}, \sigma_{l,m}^2)$. At bifurcation patches (or confluence), the disturbance value takes a weighted mean of the two contributing patches given the stream size of these patches $N_{up}$ (the number of upstream contributing patches): $logit~m_{down} = \omega(logit~m_{up, 1} + \epsilon_1) + (1 - \omega)(logit~ m_{up,2} + \epsilon_2)$, where $\omega = \frac{N_{up,1}}{N_{up,1} + N_{up,2}}$ and $\epsilon \sim N(0, \sigma_{l,m}^2)$.
 
 Users may change the values of $\mu_{m}$ (`mean_disturb_source`), $\sigma_{h,m}$ (`sd_disturb_source`) and $\sigma_{l,m}$(`sd_disturb_lon`).

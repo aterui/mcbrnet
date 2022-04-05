@@ -268,18 +268,15 @@ below:</p>
 <li><p>Disturbance levels for upstream terminal patches (i.e., patches
 with no upstream patch) are drawn from a normal distribution in a logit
 scale as <span class="math inline">\(logit~m_h \sim N(logit~\mu_{m},
-\sigma_{h,m}^2)\)</span>. The argument <code>mean_disturb_source</code>
-controls the proportional mean of the disturbance level. The argument
-<code>sd_disturb_source</code> controls the variation in disturbance
-level among headwaters in a logit scale.</p></li>
+\sigma_{h,m}^2)\)</span>.</p></li>
 <li><p>Disturbance cascades downstream as in environmental values: <span class="math inline">\(logit~m_{down} \sim N(logit~m_{up},
 \sigma_{l,m}^2)\)</span>. At bifurcation patches (or confluence), the
 disturbance value takes a weighted mean of the two contributing patches
 given the stream size of these patches <span class="math inline">\(N_{up}\)</span> (the number of upstream
 contributing patches): <span class="math inline">\(logit~m_{down} =
-\omega(logit~logit~m_{up, 1} + \epsilon_1) + (1 - \omega)(logit~
-m_{up,2} + \epsilon_2)\)</span>, where <span class="math inline">\(\omega = \frac{N_{up,1}}{N_{up,1} +
-N_{up,2}}\)</span> and <span class="math inline">\(\epsilon \sim N(0,
+\omega(logit~m_{up, 1} + \epsilon_1) + (1 - \omega)(logit~ m_{up,2} +
+\epsilon_2)\)</span>, where <span class="math inline">\(\omega =
+\frac{N_{up,1}}{N_{up,1} + N_{up,2}}\)</span> and <span class="math inline">\(\epsilon \sim N(0,
 \sigma_{l,m}^2)\)</span>.</p></li>
 </ol>
 <p>Users may change the values of <span class="math inline">\(\mu_{m}\)</span>
