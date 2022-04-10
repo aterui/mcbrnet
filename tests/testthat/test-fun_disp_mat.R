@@ -15,32 +15,46 @@ diag(m_dispersal) <- 0
 # sample
 m1 <- fun_disp_mat(n_patch = n_patch,
                    theta = 1,
-                   distance_matrix = m_distance,
-                   dispersal_matrix = m_dispersal)
+                   landscape_size = 10)
 
 m2 <- fun_disp_mat(n_patch = n_patch,
                    theta = 1,
-                   landscape_size = 10)
+                   distance_matrix = m_distance)
+
+m3 <- fun_disp_mat(n_patch = n_patch,
+                   theta = 1,
+                   distance_matrix = m_distance,
+                   dispersal_matrix = m_dispersal)
 
 
 # test --------------------------------------------------------------------
 
 test_that("check ifelse structure", {
-  expect_error(fun_disp_mat(n_patch = n_patch,
-                            theta = 1,
-                            dispersal_matrix = m_dispersal))
+
   expect_error(fun_disp_mat(n_patch = n_patch,
                             theta = 1))
+
 })
 
 test_that("distance/dispersal matrix", {
-  expect_equal(m1$m_distance,
-               m_distance)
-  expect_equal(m1$m_dispersal,
-               m_dispersal)
-  expect_true(is.null(m1$df_xy_coord))
+
+  # only distance matrix provided
+  expect_true(is.matrix(m2$m_distance))
+
+  # distance & dispersal matrices provided
+  expect_true(is.null(m3$m_distance))
+  expect_true(is.matrix(m3$m_dispersal))
+
+  # m1 & m2 outputs equivalency
+  expect_equal(m2$m_distance, m_distance)
+  expect_equal(m3$m_dispersal, m_dispersal)
+
 })
 
 test_that("df_xy_coord", {
-  expect_false(is.null(m2$df_xy_coord))
+
+  expect_true(tibble::is_tibble(m1$df_xy_coord))
+  expect_true(is.null(m2$df_xy_coord))
+  expect_true(is.null(m3$df_xy_coord))
+
 })

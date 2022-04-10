@@ -19,6 +19,7 @@ fun_disp_mat <- function(n_patch,
                          distance_matrix = NULL,
                          dispersal_matrix = NULL) {
 
+  # with no landscape information
   if (is.null(xy_coord) &
       is.null(distance_matrix) &
       is.null(dispersal_matrix)) {
@@ -42,52 +43,58 @@ fun_disp_mat <- function(n_patch,
 
     m_dispersal <- data.matrix(exp(-theta * m_distance))
 
-  } else {
+  }
 
-    if (!is.null(xy_coord) &
-        is.null(distance_matrix) &
-        is.null(dispersal_matrix)) {
+  # with xy coordinates
+  if (!is.null(xy_coord) &
+      is.null(distance_matrix) &
+      is.null(dispersal_matrix)) {
 
-      if (nrow(xy_coord) != n_patch) stop("row numbers must match n_patch")
-      if (ncol(xy_coord) != 2) stop("the number of columns must be two, describing x- and y-cooridnates")
+    if (nrow(xy_coord) != n_patch) stop("row numbers must match n_patch")
+    if (ncol(xy_coord) != 2) stop("the number of columns must be two, describing x- and y-cooridnates")
 
-      colnames(xy_coord) <- c("x_coord", "y_coord")
+    colnames(xy_coord) <- c("x_coord", "y_coord")
 
-      df_xy_coord <- dplyr::as_tibble(xy_coord)
+    df_xy_coord <- dplyr::as_tibble(xy_coord)
 
-      m_distance <- data.matrix(dist(df_xy_coord,
-                                     diag = TRUE,
-                                     upper = TRUE))
+    m_distance <- data.matrix(dist(df_xy_coord,
+                                   diag = TRUE,
+                                   upper = TRUE))
 
-      m_dispersal <- data.matrix(exp(-theta * m_distance))
+    m_dispersal <- data.matrix(exp(-theta * m_distance))
 
-    } else {
+  }
 
-      if (!is.null(xy_coord)) message("both xy_coord and distance matrix are given: argument xy_coord is ignored")
-      if (!is.matrix(distance_matrix)) stop("distance matrix must be provided as matrix")
-      if (nrow(distance_matrix) != n_patch) stop("invalid dimension: distance matrix must have a dimension of n_patch * n_patch")
-      if (any(diag(distance_matrix) != 0)) stop("invalid distance matrix: diagonal elements must be zero")
+  # with distance matrix
+  if (!is.null(distance_matrix) &
+      is.null(dispersal_matrix)) {
 
-      df_xy_coord <- NULL
+    message("distance_matrix is provided: distance_matrix is used to simulate dispersal process")
+    if (!is.matrix(distance_matrix)) stop("distance matrix must be provided as matrix")
+    if (nrow(distance_matrix) != n_patch) stop("invalid dimension: distance matrix must have a dimension of n_patch * n_patch")
+    if (any(diag(distance_matrix) != 0)) stop("invalid distance matrix: diagonal elements must be zero")
 
-      m_distance <- distance_matrix
+    df_xy_coord <- NULL
 
-      if (!is.null(dispersal_matrix)) {
+    m_distance <- distance_matrix
 
-        message("dispersal_matrix is provided: dispersal_matrix is used to simulate dispersal process")
-        if (!is.matrix(dispersal_matrix)) stop("dispersal_matrix must be provided as matrix")
-        if (nrow(dispersal_matrix) != n_patch) stop("invalid dimension: dispersal_matrix must have a dimension of n_patch * n_patch")
-        if (any(diag(dispersal_matrix) != 0)) stop("invalid dispersal_matrix: diagonal elements must be zero")
+    m_dispersal <- data.matrix(exp(-theta * m_distance))
+  }
 
-        m_dispersal <- data.matrix(dispersal_matrix)
+  # with dispersal matrix
+  if (!is.null(dispersal_matrix)) {
 
-      } else {
+    message("dispersal_matrix is provided: dispersal_matrix is used to simulate dispersal process")
+    if (!is.matrix(dispersal_matrix)) stop("dispersal_matrix must be provided as matrix")
+    if (nrow(dispersal_matrix) != n_patch) stop("invalid dimension: dispersal_matrix must have a dimension of n_patch * n_patch")
+    if (any(diag(dispersal_matrix) != 0)) stop("invalid dispersal_matrix: diagonal elements must be zero")
 
-        m_dispersal <- data.matrix(exp(-theta * m_distance))
+    df_xy_coord <- NULL
 
-      }
+    m_distance <- NULL
 
-    }
+    m_dispersal <- data.matrix(dispersal_matrix)
+
   }
 
   diag(m_dispersal) <- 0
