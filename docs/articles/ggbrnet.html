@@ -64,7 +64,14 @@
   </ul>
 </li>
       </ul>
-<ul class="nav navbar-nav navbar-right"></ul>
+<ul class="nav navbar-nav navbar-right">
+<li>
+  <a href="https://github.com/aterui/mcbrnet/" class="external-link">
+    <span class="fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
 </div>
 <!--/.nav-collapse -->
   </div>
@@ -80,7 +87,7 @@
       <h1 data-toc-skip>ggbrnet</h1>
             
       
-      
+      <small class="dont-index">Source: <a href="https://github.com/aterui/mcbrnet/blob/HEAD/vignettes/ggbrnet.Rmd" class="external-link"><code>vignettes/ggbrnet.Rmd</code></a></small>
       <div class="hidden name"><code>ggbrnet.Rmd</code></div>
 
     </div>
@@ -90,12 +97,17 @@
 <div class="section level2">
 <h2 id="basic-usage">Basic usage<a class="anchor" aria-label="anchor" href="#basic-usage"></a>
 </h2>
-<p><code><a href="../reference/ggbrnet.html">ggbrnet()</a></code> is a wrapper of <code>ggraph</code> functions for easy visualization of a network produced by <code><a href="../reference/brnet.html">brnet()</a></code> .</p>
+<p><code><a href="../reference/ggbrnet.html">ggbrnet()</a></code> is a wrapper of <code>ggraph</code> functions
+for easy visualization of a network produced by <code><a href="../reference/brnet.html">brnet()</a></code>
+.</p>
 </div>
 <div class="section level2">
 <h2 id="quick-start">Quick start<a class="anchor" aria-label="anchor" href="#quick-start"></a>
 </h2>
-<p><code><a href="../reference/ggbrnet.html">ggbrnet()</a></code> takes return values of <code><a href="../reference/brnet.html">brnet()</a></code>, <code>adjacency_matrix</code> and <code>df_patch</code>. By default, it colors patches based on environmental values <code>df_patch$environment</code>:</p>
+<p><code><a href="../reference/ggbrnet.html">ggbrnet()</a></code> takes return values of <code><a href="../reference/brnet.html">brnet()</a></code>,
+<code>adjacency_matrix</code> and <code>df_patch</code>. By default, it
+colors patches based on environmental values
+<code>df_patch$environment</code>:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/brnet.html">brnet</a></span><span class="op">(</span>plot <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
 <span class="fu"><a href="../reference/ggbrnet.html">ggbrnet</a></span><span class="op">(</span>adjacency_matrix <span class="op">=</span> <span class="va">x</span><span class="op">$</span><span class="va">adjacency_matrix</span>,
@@ -106,14 +118,19 @@
 <h2 id="patch-color">Patch color<a class="anchor" aria-label="anchor" href="#patch-color"></a>
 </h2>
 <p><strong>Arguments:</strong> <code>patch_color</code></p>
-<p>Users can change how they color patches by specifying <code>patch_color</code>. Default is <code>env</code> referring to the environment column in <code>patch_attr</code> argument. Another option is <code>disturb</code> referring to the disturbance column:</p>
+<p>Users can change how they color patches by specifying
+<code>patch_color</code>. Default is <code>env</code> referring to the
+environment column in <code>patch_attr</code> argument. Another option
+is <code>disturb</code> referring to the disturbance column:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># patch ID</span>
 <span class="fu"><a href="../reference/ggbrnet.html">ggbrnet</a></span><span class="op">(</span>adjacency_matrix <span class="op">=</span> <span class="va">x</span><span class="op">$</span><span class="va">adjacency_matrix</span>,
         patch_attr <span class="op">=</span> <span class="va">x</span><span class="op">$</span><span class="va">df_patch</span>,
         patch_color <span class="op">=</span> <span class="st">"disturb"</span><span class="op">)</span></code></pre></div>
 <p><img src="ggbrnet_files/figure-html/unnamed-chunk-4-1.png" width="700"></p>
-<p>If <code>patch_color</code> is neither <code>env</code> or <code>disturb</code>, the function takes it as an ordinary color name, for example:</p>
+<p>If <code>patch_color</code> is neither <code>env</code> or
+<code>disturb</code>, the function takes it as an ordinary color name,
+for example:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># patch ID</span>
 <span class="fu"><a href="../reference/ggbrnet.html">ggbrnet</a></span><span class="op">(</span>adjacency_matrix <span class="op">=</span> <span class="va">x</span><span class="op">$</span><span class="va">adjacency_matrix</span>,
@@ -125,7 +142,8 @@
 <h2 id="patch-label">Patch label<a class="anchor" aria-label="anchor" href="#patch-label"></a>
 </h2>
 <p><strong>Arguments:</strong> <code>patch_label</code></p>
-<p>Users may add patch labels using the argument <code>patch_label</code>:</p>
+<p>Users may add patch labels using the argument
+<code>patch_label</code>:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># patch ID</span>
 <span class="fu"><a href="../reference/ggbrnet.html">ggbrnet</a></span><span class="op">(</span>adjacency_matrix <span class="op">=</span> <span class="va">x</span><span class="op">$</span><span class="va">adjacency_matrix</span>,
@@ -144,7 +162,9 @@
         patch_attr <span class="op">=</span> <span class="va">x</span><span class="op">$</span><span class="va">df_patch</span>,
         patch_label <span class="op">=</span> <span class="st">"n_upstream"</span><span class="op">)</span></code></pre></div>
 <p><img src="ggbrnet_files/figure-html/unnamed-chunk-12-1.png" width="700"></p>
-<p>Users may specify additional arguments passed to <code><a href="https://ggraph.data-imaginist.com/reference/geom_node_text.html" class="external-link">ggraph::geom_node_label()</a></code> to tweak details, for example:</p>
+<p>Users may specify additional arguments passed to
+<code><a href="https://ggraph.data-imaginist.com/reference/geom_node_text.html" class="external-link">ggraph::geom_node_label()</a></code> to tweak details, for
+example:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># branch ID adjust label position</span>
 <span class="fu"><a href="../reference/ggbrnet.html">ggbrnet</a></span><span class="op">(</span>adjacency_matrix <span class="op">=</span> <span class="va">x</span><span class="op">$</span><span class="va">adjacency_matrix</span>,
@@ -182,7 +202,8 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
+2.0.2.</p>
 </div>
 
       </footer>

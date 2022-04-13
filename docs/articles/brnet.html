@@ -64,7 +64,14 @@
   </ul>
 </li>
       </ul>
-<ul class="nav navbar-nav navbar-right"></ul>
+<ul class="nav navbar-nav navbar-right">
+<li>
+  <a href="https://github.com/aterui/mcbrnet/" class="external-link">
+    <span class="fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
 </div>
 <!--/.nav-collapse -->
   </div>
@@ -80,7 +87,7 @@
       <h1 data-toc-skip>brnet</h1>
             
       
-      
+      <small class="dont-index">Source: <a href="https://github.com/aterui/mcbrnet/blob/HEAD/vignettes/brnet.Rmd" class="external-link"><code>vignettes/brnet.Rmd</code></a></small>
       <div class="hidden name"><code>brnet.Rmd</code></div>
 
     </div>
@@ -90,29 +97,52 @@
 <div class="section level2">
 <h2 id="basic-usage">Basic usage<a class="anchor" aria-label="anchor" href="#basic-usage"></a>
 </h2>
-<p><code><a href="../reference/brnet.html">brnet()</a></code> generates a random branching network with the specified number of patches and the probability of branching. The key arguments are the number of habitat patches (<code>n_patch</code>) and the probability of branching (<code>p_branch</code>), which users must specify. With these parameters, the function generates a branching network through the following steps:</p>
+<p><code><a href="../reference/brnet.html">brnet()</a></code> generates a random branching network with the
+specified number of patches and the probability of branching. The key
+arguments are the number of habitat patches (<code>n_patch</code>) and
+the probability of branching (<code>p_branch</code>), which users must
+specify. With these parameters, the function generates a branching
+network through the following steps:</p>
 <ol style="list-style-type: decimal">
-<li><p>Draw the number of branches in the network. An individual branch is defined as a series of connected patches from one confluence (or outlet) to the next confluence upstream (or upstream terminal). The number of branches in a network <span class="math inline">\(N_{b}\)</span> is drawn from a binomial distribution as <span class="math inline">\(N_{b} \sim Binomial(N,P_{b})\)</span>, where <span class="math inline">\(N\)</span> is the number of patches and <span class="math inline">\(P_b\)</span> is the branching probability.</p></li>
-<li><p>Draw the number of patches in each branch. The number of patches in branch <span class="math inline">\(q\)</span>, <span class="math inline">\(n_q\)</span>, is drawn from a geometric distribution as <span class="math inline">\(n_{q} \sim Ge(P_b)\)</span> but conditional on <span class="math inline">\(\sum_{q}^{N_{b}} n_q = N\)</span>.</p></li>
+<li><p>Draw the number of branches in the network. An individual branch
+is defined as a series of connected patches from one confluence (or
+outlet) to the next confluence upstream (or upstream terminal). The
+number of branches in a network <span class="math inline">\(N_{b}\)</span> is drawn from a binomial
+distribution as <span class="math inline">\(N_{b} \sim
+Binomial(N,P_{b})\)</span>, where <span class="math inline">\(N\)</span>
+is the number of patches and <span class="math inline">\(P_b\)</span> is
+the branching probability.</p></li>
+<li><p>Draw the number of patches in each branch. The number of patches
+in branch <span class="math inline">\(q\)</span>, <span class="math inline">\(n_q\)</span>, is drawn from a geometric
+distribution as <span class="math inline">\(n_{q} \sim Ge(P_b)\)</span>
+but conditional on <span class="math inline">\(\sum_{q}^{N_{b}} n_q =
+N\)</span>.</p></li>
 <li><p>Organize branches into a bifurcating branching network.</p></li>
 </ol>
 <p>The function returns:</p>
 <ul>
 <li><p><code>adjacency_matrix</code>: adjacency matrix.</p></li>
-<li><p><code>distance_matrix</code>: distance matrix. Distance between patches is measured as the number of steps required to reach from the focal patch to the target patch through the network.</p></li>
+<li><p><code>distance_matrix</code>: distance matrix. Distance between
+patches is measured as the number of steps required to reach from the
+focal patch to the target patch through the network.</p></li>
 <li>
-<p><code>df_patch</code>: data frame (<code><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">dplyr::tibble</a></code>) containing patch attributes.</p>
+<p><code>df_patch</code>: data frame (<code><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">dplyr::tibble</a></code>)
+containing patch attributes.</p>
 <ul>
 <li>
 <em>patch_id</em>: patch ID.</li>
 <li>
 <em>branch_id</em>: branch ID.</li>
 <li>
-<em>environment</em>: environmental value at each patch (see below for details)</li>
+<em>environment</em>: environmental value at each patch (see below
+for details)</li>
 <li>
-<em>disturbance</em>: disturbance level (i.e., proportional mortality) at each patch (see below for details)</li>
+<em>disturbance</em>: disturbance level (i.e., proportional
+mortality) at each patch (see below for details)</li>
 <li>
-<em>n_patch_upstream</em>: the number of upstream contributing patches (including the focal patch itself; akin to the watershed area in river networks).</li>
+<em>n_patch_upstream</em>: the number of upstream contributing
+patches (including the focal patch itself; akin to the watershed area in
+river networks).</li>
 </ul>
 </li>
 </ul>
@@ -120,7 +150,11 @@
 <div class="section level2">
 <h2 id="quick-start">Quick start<a class="anchor" aria-label="anchor" href="#quick-start"></a>
 </h2>
-<p>The following script produce a branching network with <code>n_patch = 50</code> and <code>p_branch = 0.5</code>. By default, <code>brnet</code> visualizes the generated network using functions in R packages <code>igraph</code> and <code>ggraph</code> (<code>plot = FALSE</code> to disable):</p>
+<p>The following script produce a branching network with
+<code>n_patch = 50</code> and <code>p_branch = 0.5</code>. By default,
+<code>brnet</code> visualizes the generated network using functions in R
+packages <code>igraph</code> and <code>ggraph</code>
+(<code>plot = FALSE</code> to disable):</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">net</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/brnet.html">brnet</a></span><span class="op">(</span>n_patch <span class="op">=</span> <span class="fl">50</span>, p_branch <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></code></pre></div>
 <p><img src="brnet_files/figure-html/unnamed-chunk-3-1.png" width="700"></p>
@@ -146,7 +180,9 @@
 <span class="co">#&gt; [3,]    5    1    0    8    9</span>
 <span class="co">#&gt; [4,]    7    7    8    0    1</span>
 <span class="co">#&gt; [5,]    8    8    9    1    0</span></code></pre></div>
-<p>The following script shows patch ID, branch ID, environmental values, disturbance values, and the number of upstream contributing patches for each patch:</p>
+<p>The following script shows patch ID, branch ID, environmental values,
+disturbance values, and the number of upstream contributing patches for
+each patch:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">net</span><span class="op">$</span><span class="va">df_patch</span>
 <span class="co">#&gt; <span style="color: #949494;"># A tibble: 50 x 5</span></span>
@@ -167,8 +203,10 @@
 <div class="section level2">
 <h2 id="customize-visualization">Customize: visualization<a class="anchor" aria-label="anchor" href="#customize-visualization"></a>
 </h2>
-<p><strong>Arguments:</strong> <code>patch_label</code>, <code>patch_size</code></p>
-<p>Users may add patch labels using the argument <code>patch_label</code>:</p>
+<p><strong>Arguments:</strong> <code>patch_label</code>,
+<code>patch_size</code></p>
+<p>Users may add patch labels using the argument
+<code>patch_label</code>:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># patch ID</span>
 <span class="va">net</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/brnet.html">brnet</a></span><span class="op">(</span>n_patch <span class="op">=</span> <span class="fl">50</span>, p_branch <span class="op">=</span> <span class="fl">0.5</span>, patch_label <span class="op">=</span> <span class="st">"patch"</span><span class="op">)</span></code></pre></div>
@@ -190,13 +228,35 @@
 <div class="section level2">
 <h2 id="customize-environment">Customize: environment<a class="anchor" aria-label="anchor" href="#customize-environment"></a>
 </h2>
-<p><strong>Arguments:</strong> <code>mean_env_source</code>, <code>sd_env_source</code>, <code>rho</code>, <code>sd_env_lon</code></p>
+<p><strong>Arguments:</strong> <code>mean_env_source</code>,
+<code>sd_env_source</code>, <code>rho</code>,
+<code>sd_env_lon</code></p>
 <p>Environmental values are generated as detailed below:</p>
 <ol style="list-style-type: decimal">
-<li><p>Environmental values for upstream terminal patches are drawn from a normal distribution as <span class="math inline">\(z_h \sim N(\mu_{h}, \sigma_h^2)\)</span> (arguments <code>mean_env_source</code> and <code>sd_env_source</code>).</p></li>
-<li><p>Downstream environmental values are determined by an autoregressive process as <span class="math inline">\(z_{down} \sim N(\rho z_{up}, \sigma_l^2)\)</span> (argument <code>sd_env_lon</code>). At bifurcation patches (or confluence), the environmental value takes a weighted mean of the two contributing patches given the size of these patches <span class="math inline">\(N_{up}\)</span> (the number of upstream contributing patches): <span class="math inline">\(z_{down} = \omega(\rho z_{up, 1} + \epsilon_1) + (1 - \omega)(\rho z_{up,2} + \epsilon_2)\)</span>, where <span class="math inline">\(\omega = \frac{N_{up,1}}{N_{up,1} + N_{up,2}}\)</span> and <span class="math inline">\(\epsilon \sim N(0, \sigma_l^2)\)</span>.</p></li>
+<li><p>Environmental values for upstream terminal patches are drawn from
+a normal distribution as <span class="math inline">\(z_h \sim N(\mu_{h},
+\sigma_h^2)\)</span> (arguments <code>mean_env_source</code> and
+<code>sd_env_source</code>).</p></li>
+<li><p>Downstream environmental values are determined by an
+autoregressive process as <span class="math inline">\(z_{down} \sim
+N(\rho z_{up}, \sigma_l^2)\)</span> (argument <code>sd_env_lon</code>).
+At bifurcation patches (or confluence), the environmental value takes a
+weighted mean of the two contributing patches given the size of these
+patches <span class="math inline">\(N_{up}\)</span> (the number of
+upstream contributing patches): <span class="math inline">\(z_{down} =
+\omega(\rho z_{up, 1} + \epsilon_1) + (1 - \omega)(\rho z_{up,2} +
+\epsilon_2)\)</span>, where <span class="math inline">\(\omega =
+\frac{N_{up,1}}{N_{up,1} + N_{up,2}}\)</span> and <span class="math inline">\(\epsilon \sim N(0, \sigma_l^2)\)</span>.</p></li>
 </ol>
-<p>Users may change the values of <span class="math inline">\(\mu_h\)</span> (default: <code>mean_env_source = 0</code>), <span class="math inline">\(\sigma_h\)</span> (<code>sd_env_source = 1</code>), <span class="math inline">\(\rho\)</span> (<code>rho = 1</code>), and <span class="math inline">\(\sigma_l\)</span> (<code>sd_env_lon = 0.1</code>). Increasing the value of <code>sd_env_source</code> leads to greater variation in environmental values at upstream terminals. The argument <code>rho</code> determines the strength of longitudinal autocorrelation (the greater the stronger autocorrelation). The argument <code>sd_env_lon</code> determines the strength of longitudinal environmental noise.</p>
+<p>Users may change the values of <span class="math inline">\(\mu_h\)</span> (default:
+<code>mean_env_source = 0</code>), <span class="math inline">\(\sigma_h\)</span>
+(<code>sd_env_source = 1</code>), <span class="math inline">\(\rho\)</span> (<code>rho = 1</code>), and <span class="math inline">\(\sigma_l\)</span> (<code>sd_env_lon = 0.1</code>).
+Increasing the value of <code>sd_env_source</code> leads to greater
+variation in environmental values at upstream terminals. The argument
+<code>rho</code> determines the strength of longitudinal autocorrelation
+(the greater the stronger autocorrelation). The argument
+<code>sd_env_lon</code> determines the strength of longitudinal
+environmental noise.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># with large variation at headwaters</span>
 <span class="va">net</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/brnet.html">brnet</a></span><span class="op">(</span>n_patch <span class="op">=</span> <span class="fl">50</span>,
@@ -217,13 +277,27 @@
 <div class="section level2">
 <h2 id="customize-disturbance">Customize: disturbance<a class="anchor" aria-label="anchor" href="#customize-disturbance"></a>
 </h2>
-<p><strong>Arguments:</strong> <code>mean_disturb_source</code>, <code>sd_disturb_source</code> , <code>sd_disturb_lon</code></p>
+<p><strong>Arguments:</strong> <code>mean_disturb_source</code>,
+<code>sd_disturb_source</code> , <code>sd_disturb_lon</code></p>
 <p>Disturbance values are generated as detailed below:</p>
 <ol style="list-style-type: decimal">
-<li><p>Disturbance levels for upstream terminal patches (i.e., patches with no upstream patch) are drawn from a normal distribution in a logit scale as <span class="math inline">\(logit~m_h \sim N(logit~\mu_{m}, \sigma_{h,m}^2)\)</span>.</p></li>
-<li><p>Disturbance cascades downstream as in environmental values: <span class="math inline">\(logit~m_{down} \sim N(logit~m_{up}, \sigma_{l,m}^2)\)</span>. At bifurcation patches (or confluence), the disturbance value takes a weighted mean of the two contributing patches given the stream size of these patches <span class="math inline">\(N_{up}\)</span> (the number of upstream contributing patches): <span class="math inline">\(logit~m_{down} = \omega(logit~m_{up, 1} + \epsilon_1) + (1 - \omega)(logit~ m_{up,2} + \epsilon_2)\)</span>, where <span class="math inline">\(\omega = \frac{N_{up,1}}{N_{up,1} + N_{up,2}}\)</span> and <span class="math inline">\(\epsilon \sim N(0, \sigma_{l,m}^2)\)</span>.</p></li>
+<li><p>Disturbance levels for upstream terminal patches (i.e., patches
+with no upstream patch) are drawn from a normal distribution in a logit
+scale as <span class="math inline">\(logit~m_h \sim N(logit~\mu_{m},
+\sigma_{h,m}^2)\)</span>.</p></li>
+<li><p>Disturbance cascades downstream as in environmental values: <span class="math inline">\(logit~m_{down} \sim N(logit~m_{up},
+\sigma_{l,m}^2)\)</span>. At bifurcation patches (or confluence), the
+disturbance value takes a weighted mean of the two contributing patches
+given the stream size of these patches <span class="math inline">\(N_{up}\)</span> (the number of upstream
+contributing patches): <span class="math inline">\(logit~m_{down} =
+\omega(logit~m_{up, 1} + \epsilon_1) + (1 - \omega)(logit~ m_{up,2} +
+\epsilon_2)\)</span>, where <span class="math inline">\(\omega =
+\frac{N_{up,1}}{N_{up,1} + N_{up,2}}\)</span> and <span class="math inline">\(\epsilon \sim N(0,
+\sigma_{l,m}^2)\)</span>.</p></li>
 </ol>
-<p>Users may change the values of <span class="math inline">\(\mu_{m}\)</span> (<code>mean_disturb_source</code>), <span class="math inline">\(\sigma_{h,m}\)</span> (<code>sd_disturb_source</code>) and <span class="math inline">\(\sigma_{l,m}\)</span>(<code>sd_disturb_lon</code>).</p>
+<p>Users may change the values of <span class="math inline">\(\mu_{m}\)</span>
+(<code>mean_disturb_source</code>), <span class="math inline">\(\sigma_{h,m}\)</span>
+(<code>sd_disturb_source</code>) and <span class="math inline">\(\sigma_{l,m}\)</span>(<code>sd_disturb_lon</code>).</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># with large variation at headwaters</span>
 <span class="va">net</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/brnet.html">brnet</a></span><span class="op">(</span>n_patch <span class="op">=</span> <span class="fl">50</span>,
@@ -260,7 +334,8 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
+2.0.2.</p>
 </div>
 
       </footer>

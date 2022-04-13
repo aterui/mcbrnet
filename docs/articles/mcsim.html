@@ -64,7 +64,14 @@
   </ul>
 </li>
       </ul>
-<ul class="nav navbar-nav navbar-right"></ul>
+<ul class="nav navbar-nav navbar-right">
+<li>
+  <a href="https://github.com/aterui/mcbrnet/" class="external-link">
+    <span class="fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
 </div>
 <!--/.nav-collapse -->
   </div>
@@ -80,7 +87,7 @@
       <h1 data-toc-skip>mcsim</h1>
             
       
-      
+      <small class="dont-index">Source: <a href="https://github.com/aterui/mcbrnet/blob/HEAD/vignettes/mcsim.Rmd" class="external-link"><code>vignettes/mcsim.Rmd</code></a></small>
       <div class="hidden name"><code>mcsim.Rmd</code></div>
 
     </div>
@@ -90,11 +97,20 @@
 <div class="section level2">
 <h2 id="basic-usage">Basic usage<a class="anchor" aria-label="anchor" href="#basic-usage"></a>
 </h2>
-<p><code><a href="../reference/mcsim.html">mcsim()</a></code> simulates metacommunity dynamics in a given landscape. Community dynamics are modeled based on the Beverton-Holt function. Although this function is designed to be compatible with <code><a href="../reference/brnet.html">brnet()</a></code>, users can provide their distance matrix to simulate dynamics in any landscape. The key arguments are the number of habitat patches (<code>n_patch</code>) and the number of species in a metacommunity (<code>n_species</code>). Metacommunity dynamics are simulated through (1) local dynamics (population growth and competition among species), (2) immigration, and (3) emigration.</p>
+<p><code><a href="../reference/mcsim.html">mcsim()</a></code> simulates metacommunity dynamics in a given
+landscape. Community dynamics are modeled based on the Beverton-Holt
+function. Although this function is designed to be compatible with
+<code><a href="../reference/brnet.html">brnet()</a></code>, users can provide their distance matrix to
+simulate dynamics in any landscape. The key arguments are the number of
+habitat patches (<code>n_patch</code>) and the number of species in a
+metacommunity (<code>n_species</code>). Metacommunity dynamics are
+simulated through (1) local dynamics (population growth and competition
+among species), (2) immigration, and (3) emigration.</p>
 <p>The function returns:</p>
 <ul>
 <li>
-<p><code>df_dynamics</code> data frame containing simulated metacommunity dynamics*.</p>
+<p><code>df_dynamics</code> data frame containing simulated
+metacommunity dynamics*.</p>
 <ul>
 <li>
 <em>timestep</em>: time-step.</li>
@@ -103,30 +119,36 @@
 <li>
 <em>mean_env</em>: mean environmental condition at each patch.</li>
 <li>
-<em>env</em>: environmental condition at patch x and time-step t.</li>
+<em>env</em>: environmental condition at patch x and time-step
+t.</li>
 <li>
 <em>carrying_capacity</em>: carrying capacity at each patch.</li>
 <li>
 <em>species</em>: species ID.</li>
 <li>
-<em>niche_optim</em>: optimal environmental value for species i.</li>
+<em>niche_optim</em>: optimal environmental value for species
+i.</li>
 <li>
-<em>r_xt</em>: reproductive number of species i at patch x and time-step t.</li>
+<em>r_xt</em>: reproductive number of species i at patch x and
+time-step t.</li>
 <li>
 <em>abundance</em>: abundance of species i at patch x.</li>
 </ul>
 </li>
 <li>
-<p><code>df_species</code> data frame containing species attributes.</p>
+<p><code>df_species</code> data frame containing species
+attributes.</p>
 <ul>
 <li>
 <em>species</em>: species ID.</li>
 <li>
-<em>mean_abundance</em>: mean abundance (arithmetic) of species i across sites and time-steps.</li>
+<em>mean_abundance</em>: mean abundance (arithmetic) of species i
+across sites and time-steps.</li>
 <li>
 <em>r0</em>: maximum reproductive number of species i.</li>
 <li>
-<em>niche_optim</em>: optimal environmental value for species i.</li>
+<em>niche_optim</em>: optimal environmental value for species
+i.</li>
 <li>
 <em>sd_niche_width</em>: niche width for species i.</li>
 <li>
@@ -145,22 +167,35 @@
 <li>
 <em>carrying_capacity</em>: carrying capacity at each patch.</li>
 <li>
-<em>disturbance</em>: disturbance-induced mortality at each patch.</li>
+<em>disturbance</em>: disturbance-induced mortality at each
+patch.</li>
 </ul>
 </li>
-<li><p><code>df_diversity</code> data frame containing diversity metrics (α, β, and γ).</p></li>
-<li><p><code>distance_matrix</code> distance matrix used in the simulation.</p></li>
-<li><p><code>interaction_matrix</code> species interaction matrix, in which species X (column) influences species Y (row).</p></li>
+<li><p><code>df_diversity</code> data frame containing diversity metrics
+(α, β, and γ).</p></li>
+<li><p><code>distance_matrix</code> distance matrix used in the
+simulation.</p></li>
+<li><p><code>interaction_matrix</code> species interaction matrix, in
+which species X (column) influences species Y (row).</p></li>
 </ul>
-<p>*NOTE: The warm-up and burn-in periods will not be included in return values.</p>
+<p>*NOTE: The warm-up and burn-in periods will not be included in return
+values.</p>
 </div>
 <div class="section level2">
 <h2 id="quick-start">Quick start<a class="anchor" aria-label="anchor" href="#quick-start"></a>
 </h2>
-<p>The following script simulates metacommunity dynamics with <code>n_patch = 5</code> and <code>n_species = 5</code>. By default, <code><a href="../reference/mcsim.html">mcsim()</a></code> simulates metacommunity dynamics with 200 warm-up (initialization with species introductions: <code>n_warmup</code>), 200 burn-in (burn-in period with no species introductions: <code>n_burnin</code>), and 1000 time-steps for records (<code>n_timestep</code>).</p>
+<p>The following script simulates metacommunity dynamics with
+<code>n_patch = 5</code> and <code>n_species = 5</code>. By default,
+<code><a href="../reference/mcsim.html">mcsim()</a></code> simulates metacommunity dynamics with 200 warm-up
+(initialization with species introductions: <code>n_warmup</code>), 200
+burn-in (burn-in period with no species introductions:
+<code>n_burnin</code>), and 1000 time-steps for records
+(<code>n_timestep</code>).</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">mc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mcsim.html">mcsim</a></span><span class="op">(</span>n_patch <span class="op">=</span> <span class="fl">5</span>, n_species <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></code></pre></div>
-<p>Users can visualize the simulated dynamics using <code>plot = TRUE</code>, which will show five sample patches and species that are randomly chosen:</p>
+<p>Users can visualize the simulated dynamics using
+<code>plot = TRUE</code>, which will show five sample patches and
+species that are randomly chosen:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">mc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mcsim.html">mcsim</a></span><span class="op">(</span>n_patch <span class="op">=</span> <span class="fl">5</span>, n_species <span class="op">=</span> <span class="fl">5</span>, plot <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
 <p><img src="mcsim_files/figure-html/unnamed-chunk-3-1.png" width="1056"></p>
@@ -169,63 +204,63 @@
 <code class="sourceCode R"><span class="va">mc</span>
 <span class="co">#&gt; $df_dynamics</span>
 <span class="co">#&gt; <span style="color: #949494;"># A tibble: 25,000 x 9</span></span>
-<span class="co">#&gt;    timestep patch_id mean_env    env carrying_capacity species niche_optim</span>
-<span class="co">#&gt;       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span>        1        1        0 -<span style="color: #BB0000;">0.151</span>               100       1      0.352 </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span>        1        1        0 -<span style="color: #BB0000;">0.151</span>               100       2     -<span style="color: #BB0000;">0.405</span> </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span>        1        1        0 -<span style="color: #BB0000;">0.151</span>               100       3     -<span style="color: #BB0000;">0.893</span> </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span>        1        1        0 -<span style="color: #BB0000;">0.151</span>               100       4     -<span style="color: #BB0000;">0.427</span> </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span>        1        1        0 -<span style="color: #BB0000;">0.151</span>               100       5      0.081<span style="text-decoration: underline;">0</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span>        1        2        0  0.208               100       1      0.352 </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span>        1        2        0  0.208               100       2     -<span style="color: #BB0000;">0.405</span> </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span>        1        2        0  0.208               100       3     -<span style="color: #BB0000;">0.893</span> </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>        1        2        0  0.208               100       4     -<span style="color: #BB0000;">0.427</span> </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">10</span>        1        2        0  0.208               100       5      0.081<span style="text-decoration: underline;">0</span></span>
-<span class="co">#&gt; <span style="color: #949494;"># ... with 24,990 more rows, and 2 more variables: r_xt &lt;dbl&gt;, abundance &lt;dbl&gt;</span></span>
+<span class="co">#&gt;    timestep patch_id mean_env     env carrying_capaci~ species niche_optim  r_xt</span>
+<span class="co">#&gt;       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span>        1        1        0  0.018<span style="text-decoration: underline;">2</span>              100       1     -<span style="color: #BB0000;">0.023</span><span style="color: #BB0000; text-decoration: underline;">7</span>  3.71</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span>        1        1        0  0.018<span style="text-decoration: underline;">2</span>              100       2      0.284   2.75</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span>        1        1        0  0.018<span style="text-decoration: underline;">2</span>              100       3      0.030<span style="text-decoration: underline;">0</span>  3.05</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span>        1        1        0  0.018<span style="text-decoration: underline;">2</span>              100       4     -<span style="color: #BB0000;">0.549</span>   2.14</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span>        1        1        0  0.018<span style="text-decoration: underline;">2</span>              100       5      0.444   2.50</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span>        1        2        0 -<span style="color: #BB0000;">0.054</span><span style="color: #BB0000; text-decoration: underline;">8</span>              100       1     -<span style="color: #BB0000;">0.023</span><span style="color: #BB0000; text-decoration: underline;">7</span>  3.72</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span>        1        2        0 -<span style="color: #BB0000;">0.054</span><span style="color: #BB0000; text-decoration: underline;">8</span>              100       2      0.284   2.66</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span>        1        2        0 -<span style="color: #BB0000;">0.054</span><span style="color: #BB0000; text-decoration: underline;">8</span>              100       3      0.030<span style="text-decoration: underline;">0</span>  3.03</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>        1        2        0 -<span style="color: #BB0000;">0.054</span><span style="color: #BB0000; text-decoration: underline;">8</span>              100       4     -<span style="color: #BB0000;">0.549</span>   2.38</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">10</span>        1        2        0 -<span style="color: #BB0000;">0.054</span><span style="color: #BB0000; text-decoration: underline;">8</span>              100       5      0.444   2.21</span>
+<span class="co">#&gt; <span style="color: #949494;"># ... with 24,990 more rows, and 1 more variable: abundance &lt;dbl&gt;</span></span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $df_species</span>
 <span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 x 6</span></span>
 <span class="co">#&gt;   species mean_abundance    r0 niche_optim sd_niche_width p_dispersal</span>
 <span class="co">#&gt;     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">1</span>       1           52.4     4      0.352           0.808         0.1</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">2</span>       2           40.0     4     -<span style="color: #BB0000;">0.405</span>           0.994         0.1</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">3</span>       3            0       4     -<span style="color: #BB0000;">0.893</span>           0.282         0.1</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">4</span>       4            0       4     -<span style="color: #BB0000;">0.427</span>           0.272         0.1</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">5</span>       5           76.5     4      0.081<span style="text-decoration: underline;">0</span>          0.578         0.1</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">1</span>       1           85.9     4     -<span style="color: #BB0000;">0.023</span><span style="color: #BB0000; text-decoration: underline;">7</span>          0.372         0.1</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">2</span>       2           56.1     4      0.284           0.797         0.1</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">3</span>       3           66.8     4      0.030<span style="text-decoration: underline;">0</span>          0.734         0.1</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">4</span>       4           38.5     4     -<span style="color: #BB0000;">0.549</span>           0.600         0.1</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">5</span>       5           45.3     4      0.444           0.520         0.1</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $df_patch</span>
 <span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 x 5</span></span>
 <span class="co">#&gt;   patch_id alpha_div mean_env carrying_capacity disturbance</span>
 <span class="co">#&gt;      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">1</span>        1         3        0               100           0</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">2</span>        2         3        0               100           0</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">3</span>        3         3        0               100           0</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">4</span>        4         3        0               100           0</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">5</span>        5         3        0               100           0</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">1</span>        1         5        0               100           0</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">2</span>        2         5        0               100           0</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">3</span>        3         5        0               100           0</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">4</span>        4         5        0               100           0</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">5</span>        5         5        0               100           0</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $df_diversity</span>
 <span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 x 3</span></span>
 <span class="co">#&gt;   alpha_div beta_div gamma_div</span>
 <span class="co">#&gt;       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">1</span>         3        1         3</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">1</span>         5        1         5</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $df_xy_coord</span>
 <span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 x 2</span></span>
 <span class="co">#&gt;   x_coord y_coord</span>
 <span class="co">#&gt;     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">1</span>   0.287   6.99 </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">2</span>   3.68    0.990</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">3</span>   3.56    1.24 </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">4</span>   2.00    7.49 </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">5</span>   4.69    7.64 </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">1</span>    1.48    8.77</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">2</span>    4.47    4.86</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">3</span>    1.54    8.77</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">4</span>    1.60    3.76</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">5</span>    6.25    5.52</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $distance_matrix</span>
-<span class="co">#&gt;          1         2         3        4        5</span>
-<span class="co">#&gt; 1 0.000000 6.8900594 6.6132745 1.785154 4.454963</span>
-<span class="co">#&gt; 2 6.890059 0.0000000 0.2778703 6.712116 6.730322</span>
-<span class="co">#&gt; 3 6.613274 0.2778703 0.0000000 6.438688 6.499585</span>
-<span class="co">#&gt; 4 1.785154 6.7121160 6.4386880 0.000000 2.697555</span>
-<span class="co">#&gt; 5 4.454963 6.7303223 6.4995853 2.697555 0.000000</span>
+<span class="co">#&gt;            1        2          3        4        5</span>
+<span class="co">#&gt; 1 0.00000000 4.925811 0.06458039 5.008214 5.773032</span>
+<span class="co">#&gt; 2 4.92581138 0.000000 4.88600192 3.065474 1.901974</span>
+<span class="co">#&gt; 3 0.06458039 4.886002 0.00000000 5.005906 5.719148</span>
+<span class="co">#&gt; 4 5.00821361 3.065474 5.00590615 0.000000 4.967420</span>
+<span class="co">#&gt; 5 5.77303207 1.901974 5.71914821 4.967420 0.000000</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $interaction_matrix</span>
 <span class="co">#&gt;      [,1] [,2] [,3] [,4] [,5]</span>
@@ -238,7 +273,11 @@
 <div class="section level2">
 <h2 id="customize-brnet-mcsim">Customize: <code>brnet()</code> + <code>mcsim()</code><a class="anchor" aria-label="anchor" href="#customize-brnet-mcsim"></a>
 </h2>
-<p>Return values of <code><a href="../reference/brnet.html">brnet()</a></code> are compatible with <code><a href="../reference/mcsim.html">mcsim()</a></code>. For example, <code>df_patch$environment</code>, <code>df_patch$n_patch_upstream</code>, and <code>df_patch$distance_matrix</code> may be used to inform parameters of <code><a href="../reference/mcsim.html">mcsim()</a></code>:</p>
+<p>Return values of <code><a href="../reference/brnet.html">brnet()</a></code> are compatible with
+<code><a href="../reference/mcsim.html">mcsim()</a></code>. For example, <code>df_patch$environment</code>,
+<code>df_patch$n_patch_upstream</code>, and
+<code>df_patch$distance_matrix</code> may be used to inform parameters
+of <code><a href="../reference/mcsim.html">mcsim()</a></code>:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">patch</span> <span class="op">&lt;-</span> <span class="fl">100</span>
 <span class="va">net</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/brnet.html">brnet</a></span><span class="op">(</span>n_patch <span class="op">=</span> <span class="va">patch</span>, p_branch <span class="op">=</span> <span class="fl">0.5</span>, plot <span class="op">=</span> <span class="cn">F</span><span class="op">)</span>
@@ -252,44 +291,158 @@
 <div class="section level2">
 <h2 id="customize-detailed-parameters">Customize: detailed parameters<a class="anchor" aria-label="anchor" href="#customize-detailed-parameters"></a>
 </h2>
-<p>Users may use the following arguments to custom metacommunity simulations regarding (1) species attributes, (2) competition, (3) patch attributes, and (4) landscape structure.</p>
+<p>Users may use the following arguments to custom metacommunity
+simulations regarding (1) species attributes, (2) competition, (3) patch
+attributes, and (4) landscape structure.</p>
 <div class="section level3">
 <h3 id="species-attributes">Species attributes<a class="anchor" aria-label="anchor" href="#species-attributes"></a>
 </h3>
-<p><strong>Arguments:</strong> <code>r0</code>, <code>niche_optim</code> OR <code>min_optim</code> and <code>max_optim</code>, <code>sd_niche_width</code> OR <code>min_niche_width</code> and <code>max_niche_width</code>, <code>niche_cost</code>, <code>p_dispersal</code></p>
-<p>Species attributes are determined based on the maximum reproductive rate <code>r0</code>, optimal environmental value <code>niche_optim</code> (or <code>min_optim</code> and <code>max_optim</code> for random generation of <code>niche_optim</code>), niche width <code>sd_niche_width</code> (or <code>min_niche_width</code> and <code>max_niche_width</code> for random generation of <code>sd_niche_width</code>) and dispersal probability <code>p_dispersal</code> (see <strong>Model description</strong> for details).</p>
-<p>For optimal environmental values (niche optimum), the function by default assigns random values to species as: <span class="math inline">\(\mu_i \sim Unif(\mu_{min}, \mu_{max})\)</span>, where users can set values of <span class="math inline">\(\mu_{min}\)</span> and <span class="math inline">\(\mu_{max}\)</span> using <code>min_optim</code> and <code>max_optim</code> arguments (default: <code>min_optim = -1</code> and <code>max_optim = 1</code>). Alternatively, users may specify species niche optimums using the argument <code>niche_optim</code> (scalar or vector). If a single value or a vector of <code>niche_optim</code> is provided, the function ignores <code>min_optim</code> and <code>max_optim</code> arguments.</p>
-<p>Similarly, the function by default assigns random values of <span class="math inline">\(\sigma_{niche}\)</span> to species as: <span class="math inline">\(\sigma_{niche,i} \sim Unif(\sigma_{niche,min}, \sigma_{niche,max})\)</span>. Users can set values of <span class="math inline">\(\sigma_{niche,min}\)</span> and <span class="math inline">\(\sigma_{niche,max}\)</span> using <code>min_niche_width</code> and <code>max_niche_width</code> arguments (default: <code>min_niche_width = 0.1</code> and <code>max_niche_width = 1</code>). If a single value or a vector of <code>sd_niche_width</code> is provided, the function ignores <code>min_niche_width</code> and <code>max_niche_width</code> arguments.</p>
-<p>The argument <code>niche_cost</code> determines the cost of having wider niche. Smaller values imply greater costs of wider niche (i.e., decreased maximum reproductive rate; default: <code>niche_cost = 1</code>). To disable (no cost of wide niche), set <code>niche_cost = Inf</code>.</p>
-<p>For other parameters, users may specify species attributes by giving a scalar (assume identical among species) or a vector of values whose length must be one or equal to <code>n_species</code>. Default values are <code>r0 = 4</code>, <code>sd_niche_width = 1</code>, and <code>p_dispersal = 0.1</code>.</p>
+<p><strong>Arguments:</strong> <code>r0</code>, <code>niche_optim</code>
+OR <code>min_optim</code> and <code>max_optim</code>,
+<code>sd_niche_width</code> OR <code>min_niche_width</code> and
+<code>max_niche_width</code>, <code>niche_cost</code>,
+<code>p_dispersal</code></p>
+<p>Species attributes are determined based on the maximum reproductive
+rate <code>r0</code>, optimal environmental value
+<code>niche_optim</code> (or <code>min_optim</code> and
+<code>max_optim</code> for random generation of
+<code>niche_optim</code>), niche width <code>sd_niche_width</code> (or
+<code>min_niche_width</code> and <code>max_niche_width</code> for random
+generation of <code>sd_niche_width</code>) and dispersal probability
+<code>p_dispersal</code> (see <strong>Model description</strong> for
+details).</p>
+<p>For optimal environmental values (niche optimum), the function by
+default assigns random values to species as: <span class="math inline">\(\mu_i \sim Unif(\mu_{min}, \mu_{max})\)</span>,
+where users can set values of <span class="math inline">\(\mu_{min}\)</span> and <span class="math inline">\(\mu_{max}\)</span> using <code>min_optim</code>
+and <code>max_optim</code> arguments (default:
+<code>min_optim = -1</code> and <code>max_optim = 1</code>).
+Alternatively, users may specify species niche optimums using the
+argument <code>niche_optim</code> (scalar or vector). If a single value
+or a vector of <code>niche_optim</code> is provided, the function
+ignores <code>min_optim</code> and <code>max_optim</code> arguments.</p>
+<p>Similarly, the function by default assigns random values of <span class="math inline">\(\sigma_{niche}\)</span> to species as: <span class="math inline">\(\sigma_{niche,i} \sim Unif(\sigma_{niche,min},
+\sigma_{niche,max})\)</span>. Users can set values of <span class="math inline">\(\sigma_{niche,min}\)</span> and <span class="math inline">\(\sigma_{niche,max}\)</span> using
+<code>min_niche_width</code> and <code>max_niche_width</code> arguments
+(default: <code>min_niche_width = 0.1</code> and
+<code>max_niche_width = 1</code>). If a single value or a vector of
+<code>sd_niche_width</code> is provided, the function ignores
+<code>min_niche_width</code> and <code>max_niche_width</code>
+arguments.</p>
+<p>The argument <code>niche_cost</code> determines the cost of having
+wider niche. Smaller values imply greater costs of wider niche (i.e.,
+decreased maximum reproductive rate; default:
+<code>niche_cost = 1</code>). To disable (no cost of wide niche), set
+<code>niche_cost = Inf</code>.</p>
+<p>For other parameters, users may specify species attributes by giving
+a scalar (assume identical among species) or a vector of values whose
+length must be one or equal to <code>n_species</code>. Default values
+are <code>r0 = 4</code>, <code>sd_niche_width = 1</code>, and
+<code>p_dispersal = 0.1</code>.</p>
 </div>
 <div class="section level3">
 <h3 id="competition">Competition<a class="anchor" aria-label="anchor" href="#competition"></a>
 </h3>
-<p><strong>Arguments:</strong> <code>interaction_type</code>, <code>alpha</code> OR <code>min_alpha</code> and <code>max_alpha</code></p>
-<p>The argument <code>interaction_type</code> determines whether interaction coefficient <code>alpha</code> is a constant or random variable. If <code>interaction_type = "constant"</code>, then the interaction coefficients <span class="math inline">\(\alpha_{ij, i \ne j}\)</span> for any pairs of species will be set as a constant <code>alpha</code> (i.e., off-diagonal elements of the interaction matrix). If <code>interaction_type = "random"</code>, <span class="math inline">\(\alpha_{ij, i \ne j}\)</span> will be drawn from a uniform distribution as <span class="math inline">\(\alpha_{ij, i \ne j} \sim Unif(\alpha_{min}, \alpha_{max})\)</span> with corresponding arguments <code>min_alpha</code> and <code>max_alpha</code>. The argument <code>alpha</code> is ignored under the scenario of random interaction strength (i.e., <code>interaction_type = "random"</code>). Note that the diagonal elements of the interaction matrix (<span class="math inline">\(\alpha_{ii}\)</span>) are always 1.0 regardless of <code>interaction_type</code>, as <code>alpha</code> is the strength of interspecific competition relative to that of intraspecific competition (see <strong>Model description</strong>). By default, <code>interaction_type = "constant"</code> and <code>alpha = 0</code>.</p>
+<p><strong>Arguments:</strong> <code>interaction_type</code>,
+<code>alpha</code> OR <code>min_alpha</code> and
+<code>max_alpha</code></p>
+<p>The argument <code>interaction_type</code> determines whether
+interaction coefficient <code>alpha</code> is a constant or random
+variable. If <code>interaction_type = "constant"</code>, then the
+interaction coefficients <span class="math inline">\(\alpha_{ij, i \ne
+j}\)</span> for any pairs of species will be set as a constant
+<code>alpha</code> (i.e., off-diagonal elements of the interaction
+matrix). If <code>interaction_type = "random"</code>, <span class="math inline">\(\alpha_{ij, i \ne j}\)</span> will be drawn from a
+uniform distribution as <span class="math inline">\(\alpha_{ij, i \ne j}
+\sim Unif(\alpha_{min}, \alpha_{max})\)</span> with corresponding
+arguments <code>min_alpha</code> and <code>max_alpha</code>. The
+argument <code>alpha</code> is ignored under the scenario of random
+interaction strength (i.e., <code>interaction_type = "random"</code>).
+Note that the diagonal elements of the interaction matrix (<span class="math inline">\(\alpha_{ii}\)</span>) are always 1.0 regardless of
+<code>interaction_type</code>, as <code>alpha</code> is the strength of
+interspecific competition relative to that of intraspecific competition
+(see <strong>Model description</strong>). By default,
+<code>interaction_type = "constant"</code> and
+<code>alpha = 0</code>.</p>
 </div>
 <div class="section level3">
 <h3 id="patch-attributes">Patch attributes<a class="anchor" aria-label="anchor" href="#patch-attributes"></a>
 </h3>
-<p><strong>Arguments:</strong> <code>carrying_capacity</code>, <code>mean_env</code>, <code>sd_env</code>, <code>spatial_auto_cor</code>, <code>phi</code>, <code>p_disturb</code>, <code>m_disturb</code></p>
-<p>The arguments <code>carrying_capacity</code> (default: <code>carrying_capacity = 100</code>) and <code>mean_env</code> (default: <code>mean_env = 0</code>) determines mean environmental values of habitat patches, which can be a scalar (assume identical among patches) or a vector (length must be equal to <code>n_patch</code>).</p>
-<p>The arguments <code>sd_env</code> (default: <code>sd_env = 0.1</code>), <code>spatial_auto_cor</code> (default: <code>spatial_auto_cor = FALSE</code>) and <code>phi</code> (default: <code>phi = 1</code>) determine spatio-temporal dynamics of environmental values. <code>sd_env</code> determines the magnitude of temporal environmental fluctuations. If <code>spatial_auto_cor = TRUE</code>, the function models spatial autocorrelation of temporal environmental fluctuation based on a multi-variate normal distribution. The degree of spatial autocorrelation would be determined by <code>phi</code>, the parameter describing the strength of distance decay in spatial autocorrelation.</p>
-<p>Users can also define disturbance probability (<code>p_disturb</code>) and mortality (<code>m_disturb</code>). When disturbance occurs, all habitat patches are reduced by <code>m_disturb</code>. <code>m_disturb</code> can be identical or different across habitat patches.</p>
+<p><strong>Arguments:</strong> <code>carrying_capacity</code>,
+<code>mean_env</code>, <code>sd_env</code>,
+<code>spatial_auto_cor</code>, <code>phi</code>, <code>p_disturb</code>,
+<code>m_disturb</code></p>
+<p>The arguments <code>carrying_capacity</code> (default:
+<code>carrying_capacity = 100</code>) and <code>mean_env</code>
+(default: <code>mean_env = 0</code>) determines mean environmental
+values of habitat patches, which can be a scalar (assume identical among
+patches) or a vector (length must be equal to <code>n_patch</code>).</p>
+<p>The arguments <code>sd_env</code> (default:
+<code>sd_env = 0.1</code>), <code>spatial_auto_cor</code> (default:
+<code>spatial_auto_cor = FALSE</code>) and <code>phi</code> (default:
+<code>phi = 1</code>) determine spatio-temporal dynamics of
+environmental values. <code>sd_env</code> determines the magnitude of
+temporal environmental fluctuations. If
+<code>spatial_auto_cor = TRUE</code>, the function models spatial
+autocorrelation of temporal environmental fluctuation based on a
+multi-variate normal distribution. The degree of spatial autocorrelation
+would be determined by <code>phi</code>, the parameter describing the
+strength of distance decay in spatial autocorrelation.</p>
+<p>Users can also define disturbance probability
+(<code>p_disturb</code>) and mortality (<code>m_disturb</code>). When
+disturbance occurs, all habitat patches are reduced by
+<code>m_disturb</code>. <code>m_disturb</code> can be identical or
+different across habitat patches.</p>
 </div>
 <div class="section level3">
 <h3 id="landscape-structure">Landscape structure<a class="anchor" aria-label="anchor" href="#landscape-structure"></a>
 </h3>
-<p><strong>Arguments:</strong> <code>xy_coord</code> OR <code>distance_matrix</code>, <code>landscape_size</code>, <code>theta</code></p>
-<p>These arguments define landscape structure. By default, the function produces a square-shaped landscape (<code>landscape_size = 10</code> on a side) in which habitat patches are distributed randomly through a Poisson point process (i.e., x- and y-coordinates of patches are drawn from a uniform distribution). The parameter θ describes the shape of distance decay in species dispersal (see <strong>Model description</strong>) and determines patches’ structural connectivity (default: <code>theta = 1</code>). Users can define their landscape by providing either <code>xy_coord</code> or <code>distance_matrix</code> (<code>landscape_size</code> will be ignored if either of these arguments is provided). If <code>xy_coord</code> is provided (2-column data frame denoting x- and y-coordinates of patches, respectively; <code>NULL</code> by default), the function calculates the distance between patches based on coordinates. Alternatively, users may provide <code>distance_matrix</code> (the object must be <code>matrix</code>), which describes the distance between habitat patches. The argument <code>distance_matrix</code> overrides <code>xy_coord</code>.</p>
+<p><strong>Arguments:</strong> <code>xy_coord</code> OR
+<code>distance_matrix</code>, <code>landscape_size</code>,
+<code>theta</code></p>
+<p>These arguments define landscape structure. By default, the function
+produces a square-shaped landscape (<code>landscape_size = 10</code> on
+a side) in which habitat patches are distributed randomly through a
+Poisson point process (i.e., x- and y-coordinates of patches are drawn
+from a uniform distribution). The parameter θ describes the shape of
+distance decay in species dispersal (see <strong>Model
+description</strong>) and determines patches’ structural connectivity
+(default: <code>theta = 1</code>). Users can define their landscape by
+providing either <code>xy_coord</code> or <code>distance_matrix</code>
+(<code>landscape_size</code> will be ignored if either of these
+arguments is provided). If <code>xy_coord</code> is provided (2-column
+data frame denoting x- and y-coordinates of patches, respectively;
+<code>NULL</code> by default), the function calculates the distance
+between patches based on coordinates. Alternatively, users may provide
+<code>distance_matrix</code> (the object must be <code>matrix</code>),
+which describes the distance between habitat patches. The argument
+<code>distance_matrix</code> overrides <code>xy_coord</code>.</p>
 </div>
 <div class="section level3">
 <h3 id="others">Others<a class="anchor" aria-label="anchor" href="#others"></a>
 </h3>
-<p><strong>Arguments:</strong> <code>n_warmup</code>, <code>n_burnin</code>, <code>n_timestep</code></p>
-<p>The argument <code>n_warmup</code> is the period during which species introductions occur (default: <code>n_warmup = 200</code>). The initial number of individuals introduced follows a Poisson distribution with a mean of 0.5 and independent across space and time. This random introduction events occur multiple times over the <code>n_warmup</code> period, in which <code>propagule_interval</code> determines the timestep interval of the random introductions (default: <code>propagule_interval = ceiling(n_warmup / 10)</code>).</p>
-<p>The argument <code>n_burnin</code> is the period that will be discarded as <em>burn-in</em> to remove the influence of initial values (default: <code>n_burnin = 200</code>). During the burn-in period, species introductions do not occur.</p>
-<p>The argument <code>n_timestep</code> is the simulation peiord that is recorded in the return <code>df_dynamics</code> (default: <code>n_timestep = 1000</code>). As a result, with the default setting, the function simulates 1400 timesteps (<code>n_warmup</code> + <code>n_burnin</code> + <code>n_timestep</code> = 1400) but returns only the last 1000 timesteps as the resulting metacommunity dynamics. All the derived statistics (e.g., diversity metrics in <code>df_diversity</code> and <code>df_patch</code>) will be calculated based on the results during <code>n_timestep</code>.</p>
+<p><strong>Arguments:</strong> <code>n_warmup</code>,
+<code>n_burnin</code>, <code>n_timestep</code></p>
+<p>The argument <code>n_warmup</code> is the period during which species
+introductions occur (default: <code>n_warmup = 200</code>). The initial
+number of individuals introduced follows a Poisson distribution with a
+mean of 0.5 and independent across space and time. This random
+introduction events occur multiple times over the <code>n_warmup</code>
+period, in which <code>propagule_interval</code> determines the timestep
+interval of the random introductions (default:
+<code>propagule_interval = ceiling(n_warmup / 10)</code>).</p>
+<p>The argument <code>n_burnin</code> is the period that will be
+discarded as <em>burn-in</em> to remove the influence of initial values
+(default: <code>n_burnin = 200</code>). During the burn-in period,
+species introductions do not occur.</p>
+<p>The argument <code>n_timestep</code> is the simulation peiord that is
+recorded in the return <code>df_dynamics</code> (default:
+<code>n_timestep = 1000</code>). As a result, with the default setting,
+the function simulates 1400 timesteps (<code>n_warmup</code> +
+<code>n_burnin</code> + <code>n_timestep</code> = 1400) but returns only
+the last 1000 timesteps as the resulting metacommunity dynamics. All the
+derived statistics (e.g., diversity metrics in <code>df_diversity</code>
+and <code>df_patch</code>) will be calculated based on the results
+during <code>n_timestep</code>.</p>
 </div>
 </div>
 <div class="section level2">
@@ -316,7 +469,8 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
+2.0.2.</p>
 </div>
 
       </footer>
