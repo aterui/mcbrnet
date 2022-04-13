@@ -15,19 +15,19 @@ fun_igp(
 )
 }
 \arguments{
-\item{x}{community matrix for basal, intraguild prey (ig-prey), and intraguild predator (ig-predator)}
+\item{x}{Community matrix for basal, intraguild prey (ig-prey), and intraguild predator (ig-predator)}
 
-\item{r_b}{maximum reproductive rate of basal species}
+\item{r_b}{Maximum reproductive rate of basal species}
 
-\item{k}{carrying capacity}
+\item{k}{Carrying capacity}
 
-\item{e}{energetic conversion efficiency; must be given by the order of basal to ig-prey, basal to ig-predator, and ig-prey to ig-predator}
+\item{e}{Energetic conversion efficiency; must be given by the order of basal to ig-prey, basal to ig-predator, and ig-prey to ig-predator}
 
-\item{a}{attack rate; must be given by the order of basal to ig_prey, basal to ig-predator, and ig-prey to ig-predator}
+\item{a}{Attack rate. Must be given by the order of basal to ig_prey, basal to ig-predator, and ig-prey to ig-predator}
 
-\item{h}{handling time; ; must be given by the order of basal to ig_prey, basal to ig-predator, and ig-prey to ig-predator}
+\item{h}{Handling time. Must be given by the order of basal to ig_prey, basal to ig-predator, and ig-prey to ig-predator}
 
-\item{s0}{background survival rate; must be given by the order of basal, ig-prey, and ig-predator}
+\item{s0}{Background survival rate. Must be given by the order of basal, ig-prey, and ig-predator}
 }
 \description{
 Internal function: igp function

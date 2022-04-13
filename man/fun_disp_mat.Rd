@@ -14,17 +14,17 @@ fun_disp_mat(
 )
 }
 \arguments{
-\item{n_patch}{number of patches}
+\item{n_patch}{Number of patches}
 
-\item{landscape_size}{landscape size}
+\item{landscape_size}{Landscape size}
 
-\item{theta}{rate parameter for a dispersal kernel}
+\item{theta}{Rate parameter for a dispersal kernel}
 
 \item{xy_coord}{xy coordinate}
 
-\item{distance_matrix}{distance matrix}
+\item{distance_matrix}{Distance matrix}
 
-\item{dispersal_matrix}{dispersal matrix}
+\item{dispersal_matrix}{Dispersal matrix}
 }
 \description{
 Internal function: to dispersal matrix

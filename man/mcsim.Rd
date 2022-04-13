@@ -11,6 +11,7 @@ mcsim(
   n_burnin = 200,
   n_timestep = 1000,
   propagule_interval = NULL,
+  propagule_seed = 0.5,
   carrying_capacity = 100,
   interaction_type = "constant",
   alpha = 0,
@@ -27,6 +28,8 @@ mcsim(
   xy_coord = NULL,
   distance_matrix = NULL,
   dispersal_matrix = NULL,
+  p_disturb = 0,
+  m_disturb = 0,
   landscape_size = 10,
   mean_env = 0,
   sd_env = 0.1,
@@ -38,80 +41,77 @@ mcsim(
 )
 }
 \arguments{
-\item{n_species}{numeric value. Number of species in a metacommunity.}
+\item{n_species}{Number of species in a metacommunity.}
 
-\item{n_patch}{numeric value. Number of patches in a metacommunity.}
+\item{n_patch}{Number of patches in a metacommunity.}
 
-\item{n_warmup}{numeric value. Number of time-steps for warm-up. Default \code{200}.}
+\item{n_warmup}{Number of time-steps for warm-up. Default \code{200}.}
 
-\item{n_burnin}{numeric value. Number of time-steps for burn-in. Default \code{200}.}
+\item{n_burnin}{Number of time-steps for burn-in. Default \code{200}.}
 
-\item{n_timestep}{numeric value. Number of time-steps to be saved. Default \code{1000}.}
+\item{n_timestep}{Number of time-steps to be saved. Default \code{1000}.}
 
-\item{propagule_interval}{numeric value. Time interval for propagule introduction during warm-up. If \code{NULL}, a value of \code{ceiling(n_warmup / 10)} will be used.}
+\item{propagule_interval}{Time interval for propagule introduction during warm-up. If \code{NULL}, a value of \code{ceiling(n_warmup / 10)} will be used.}
 
-\item{carrying_capacity}{numeric value (length should be one or equal to \code{n_patch}). Carrying capacities of individual patches. Default \code{100}.}
+\item{propagule_seed}{Propagule mean density (intensity parameter in a Poisson distribution). Default \code{0.5}.}
 
-\item{interaction_type}{character string. \code{"constant"} or \code{"random"}. \code{"constant"} assumes the unique interaction strength of \code{alpha} for all pairs of species. \code{"random"} draws random numbers from a uniform distribution with \code{min_alpha} and \code{max_alpha}.}
+\item{carrying_capacity}{Carrying capacities of individual patches. Length must be one or equal to \code{n_patch}. Default \code{100}.}
 
-\item{alpha}{numeric value. Species interaction strength. Enabled if \code{interaction_type = "constant"}. Default \code{0}.}
+\item{interaction_type}{\code{"constant"} or \code{"random"}. \code{"constant"} assumes the unique interaction strength of \code{alpha} for all pairs of species. \code{"random"} draws random numbers from a uniform distribution with \code{min_alpha} and \code{max_alpha}.}
 
-\item{min_alpha}{numeric value. Minimum value of a uniform distribution that generates species interaction strength. Enabled if \code{interaction_type = "random"}. Default \code{NULL}.}
+\item{alpha}{Species interaction strength. Enabled if \code{interaction_type = "constant"}. Default \code{0}.}
 
-\item{max_alpha}{numeric value. Maximum value of a uniform distribution that generates species interaction strength. Enabled if \code{interaction_type = "random"}. Default \code{NULL}.}
+\item{min_alpha}{Minimum value of a uniform distribution that generates species interaction strength. Enabled if \code{interaction_type = "random"}. Default \code{NULL}.}
 
-\item{r0}{numeric value (length should be one or equal to \code{n_species}). Maximum reproductive number of the Beverton-Holt model.}
+\item{max_alpha}{Maximum value of a uniform distribution that generates species interaction strength. Enabled if \code{interaction_type = "random"}. Default \code{NULL}.}
 
-\item{niche_optim}{numeric value (length should be one or equal to \code{n_species}). Niche optimum of species (environmental value that maximizes the reproductive number). Default \code{NULL}.}
+\item{r0}{Maximum reproductive number of the Beverton-Holt model. Length must be one or equal to \code{n_species}.}
 
-\item{min_optim}{numeric value. Minimum value of a uniform distribution that generates optimal environmental values of simulated species. Values are randomly assigned to species. Enabled if \code{niche_optim = NULL}.}
+\item{niche_optim}{Niche optimum of species (environmental value that maximizes the reproductive number). Length must be one or equal to \code{n_species}. Default \code{NULL}.}
 
-\item{max_optim}{numeric value. Maximum value of a uniform distribution that generates optimal environmental values of simulated species. Values are randomly assigned to species. Enabled if \code{niche_optim = NULL}.}
+\item{min_optim}{Minimum value of a uniform distribution that generates optimal environmental values of simulated species. Values are randomly assigned to species. Enabled if \code{niche_optim = NULL}.}
 
-\item{sd_niche_width}{numeric value (length should be one or equal to \code{n_species}). Niche width of species. Higher values indicate greater niche width.}
+\item{max_optim}{Maximum value of a uniform distribution that generates optimal environmental values of simulated species. Values are randomly assigned to species. Enabled if \code{niche_optim = NULL}.}
 
-\item{min_niche_width}{numeric value. Minimum value of a uniform distribution that generates niche width values of simulated species. Values are randomly assigned to species. Enabled if \code{sd_niche_width = NULL}.}
+\item{sd_niche_width}{Niche width of species. Higher values indicate greater niche width. Length must be one or equal to \code{n_species}.}
 
-\item{max_niche_width}{numeric value. Maximum value of a uniform distribution that generates niche width values of simulated species. Values are randomly assigned to species. Enabled if \code{sd_niche_width = NULL}.}
+\item{min_niche_width}{Minimum value of a uniform distribution that generates niche width values of simulated species. Values are randomly assigned to species. Enabled if \code{sd_niche_width = NULL}.}
 
-\item{niche_cost}{numeric value. Determine the cost of wide niche (smaller values imply greater costs of wider niche). Default \code{1}.}
+\item{max_niche_width}{Maximum value of a uniform distribution that generates niche width values of simulated species. Values are randomly assigned to species. Enabled if \code{sd_niche_width = NULL}.}
 
-\item{xy_coord}{data frame. Each row should correspond to an individual patch, with x and y coordinates (columns). Defualt \code{NULL}.}
+\item{niche_cost}{Determine the cost of wide niche (smaller values imply greater costs of wider niche). Default \code{1}.}
 
-\item{distance_matrix}{numeric value. Distance matrix indicating distance between habitat patches. If provided, the distance matrix will be used to generate dispersal matrix and to calculate distance decay of environmental correlations. Default \code{NULL}.}
+\item{xy_coord}{Site coordinates. Must be provided as a data frame in which each row corresponds to an individual site with x and y coordinates (columns). Defualt \code{NULL}.}
 
-\item{dispersal_matrix}{numeric value. Dispersal matrix to be used to simulate dispersal process. Override distance_matrix. Default \code{NULL}.}
+\item{distance_matrix}{Distance matrix indicating distance between habitat patches. If provided, the distance matrix will be used to generate dispersal matrix and to calculate distance decay of environmental correlations. Default \code{NULL}.}
 
-\item{landscape_size}{numeric value. Length of a landscape on a side. Enabled if \code{dispersal_matrix = NULL}.}
+\item{dispersal_matrix}{Dispersal matrix to be used to simulate dispersal process. Override distance_matrix. Default \code{NULL}.}
 
-\item{mean_env}{numeric value (length should be one or equal to \code{n_patch}). Mean environmental values of patches.}
+\item{p_disturb}{Disturbance probability.}
 
-\item{sd_env}{numeric value. Standard deviation of temporal environmental variation at each patch.}
+\item{m_disturb}{Disturbance-induced proportional mortality. Length must be one or equal to \code{n_patch}.}
 
-\item{spatial_env_cor}{logical. If \code{TRUE}, spatial autocorrelation in temporal environmental fluctuation is considered. Default \code{FALSE}.}
+\item{landscape_size}{Length of a landscape on a side. Enabled if \code{dispersal_matrix = NULL}.}
 
-\item{phi}{numeric value. A parameter describing the distance decay of spatial autocorrelation in temporal environmental fluctuation. Enabled if \code{spatial_env_cor = TRUE}.}
+\item{mean_env}{Mean environmental values of patches. Length must be one or equal to \code{n_patch}.}
 
-\item{p_dispersal}{numeric value (length should be one or equal to \code{n_species}). Probability of dispersal.}
+\item{sd_env}{Standard deviation of temporal environmental variation at each patch.}
 
-\item{theta}{numeric value. Dispersal parameter describing dispersal capability of species.}
+\item{spatial_env_cor}{If \code{TRUE}, spatial autocorrelation in temporal environmental fluctuation is considered. Default \code{FALSE}.}
 
-\item{plot}{logical. If \code{TRUE}, five sample patches and species of \code{df_dynamics} are plotted.}
-}
-\value{
-\code{df_dynamics} data frame containing simulated metacommunity dynamics.
+\item{phi}{Parameter describing the distance decay of spatial autocorrelation in temporal environmental fluctuation. Enabled if \code{spatial_env_cor = TRUE}.}
 
-\code{df_species} data frame containing species attributes.
+\item{p_dispersal}{Dispersal probability. Length must be one or equal to \code{n_species}.}
 
-\code{df_patch} data frame containing patch attributes.
+\item{theta}{Rate parameter of exponential dispersal kernel.}
 
-\code{df_diversity} data frame containing diversity metrics. alpha and gamma diversities were averaged over the simulation time steps (\code{n_timestep}). beta diversity is calculated as gamma / alpha.
+\item{plot}{If \code{TRUE}, five sample patches and species of \code{df_dynamics} are plotted.}
 }
 \description{
 Simulate metacommunity dynamics
 }
 \section{Reference}{
- see \href{https://github.com/aterui/mcbrnet}{github page} for instruction
+ see \href{https://aterui.github.io/mcbrnet/index.html}{package webpage} for instruction
 }
 
 \examples{

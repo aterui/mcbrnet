@@ -7,6 +7,12 @@
     <loc>/articles/brnet.html</loc>
   </url>
   <url>
+    <loc>/articles/ggbrnet.html</loc>
+  </url>
+  <url>
+    <loc>/articles/igpsim.html</loc>
+  </url>
+  <url>
     <loc>/articles/index.html</loc>
   </url>
   <url>
@@ -68,6 +74,9 @@
   </url>
   <url>
     <loc>/reference/fun_wa.html</loc>
+  </url>
+  <url>
+    <loc>/reference/ggbrnet.html</loc>
   </url>
   <url>
     <loc>/reference/igpsim.html</loc>

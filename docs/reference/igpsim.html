@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mcbrnet</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.2.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.2.3</span>
       </span>
     </div>
 
@@ -32,10 +32,16 @@
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu"><li>
-      <a href="../articles/brnet.html">brnet: network generation</a>
+      <a href="../articles/brnet.html">brnet</a>
     </li>
     <li>
-      <a href="../articles/mcsim.html">mcsim: metacommunity simulation</a>
+      <a href="../articles/ggbrnet.html">ggbrnet</a>
+    </li>
+    <li>
+      <a href="../articles/igpsim.html">igpsim</a>
+    </li>
+    <li>
+      <a href="../articles/mcsim.html">mcsim</a>
     </li>
   </ul></li>
       </ul><ul class="nav navbar-nav navbar-right"></ul></div><!--/.nav-collapse -->
@@ -84,56 +90,49 @@
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>n_patch</dt>
-<dd><p>numeric value. Number of patches in a metacommunity.</p></dd>
+<dd><p>Number of patches in a metacommunity.</p></dd>
 <dt>n_warmup</dt>
-<dd><p>numeric value. Number of time-steps for warm-up. Default <code>200</code>.</p></dd>
+<dd><p>Number of time-steps for warm-up. Default <code>200</code>.</p></dd>
 <dt>n_burnin</dt>
-<dd><p>numeric value. Number of time-steps for burn-in. Default <code>200</code>.</p></dd>
+<dd><p>Number of time-steps for burn-in. Default <code>200</code>.</p></dd>
 <dt>n_timestep</dt>
-<dd><p>numeric value. Number of time-steps to be saved. Default <code>1000</code>.</p></dd>
+<dd><p>Number of time-steps to be saved. Default <code>1000</code>.</p></dd>
 <dt>r_b</dt>
-<dd><p>maximum reproductive rate of basal species</p></dd>
+<dd><p>Maximum reproductive rate of basal species</p></dd>
 <dt>conv_eff</dt>
-<dd><p>energetic conversion efficiency; must be given by the order of basal to ig-prey, basal to ig-predator, and ig-prey to ig-predator</p></dd>
+<dd><p>Energetic conversion efficiency; must be given by the order of basal to ig-prey, basal to ig-predator, and ig-prey to ig-predator</p></dd>
 <dt>attack_rate</dt>
-<dd><p>attack rate; must be given by the order of basal to ig_prey, basal to ig-predator, and ig-prey to ig-predator</p></dd>
+<dd><p>Attack rate. Must be given by the order of basal to ig_prey, basal to ig-predator, and ig-prey to ig-predator</p></dd>
 <dt>handling_time</dt>
-<dd><p>handling time; ; must be given by the order of basal to ig_prey, basal to ig-predator, and ig-prey to ig-predator</p></dd>
+<dd><p>Handling time. Must be given by the order of basal to ig_prey, basal to ig-predator, and ig-prey to ig-predator</p></dd>
 <dt>s0</dt>
-<dd><p>background survival rate; must be given by the order of basal, ig-prey, and ig-predator</p></dd>
+<dd><p>Background survival rate. Must be given by the order of basal, ig-prey, and ig-predator</p></dd>
 <dt>propagule_interval</dt>
-<dd><p>numeric value. Time interval for propagule introduction during warm-up. If <code>NULL</code>, a value of <code>ceiling(n_warmup / 10)</code> will be used.</p></dd>
+<dd><p>Time interval for propagule introduction during warm-up. If <code>NULL</code>, a value of <code>ceiling(n_warmup / 10)</code> will be used.</p></dd>
 <dt>carrying_capacity</dt>
-<dd><p>numeric value (length should be one or equal to <code>n_patch</code>). Carrying capacities of individual patches. Default <code>100</code>.</p></dd>
+<dd><p>Carrying capacities of individual patches. Length must be one or equal to <code>n_patch</code>. Default <code>100</code>.</p></dd>
 <dt>xy_coord</dt>
-<dd><p>data frame. Each row should correspond to an individual patch, with x and y coordinates (columns). Defualt <code>NULL</code>.</p></dd>
+<dd><p>Data frame for site coordinates. Each row should correspond to an individual patch, with x and y coordinates (columns). Defualt <code>NULL</code>.</p></dd>
 <dt>distance_matrix</dt>
-<dd><p>numeric value. Distance matrix indicating distance between habitat patches. If provided, the distance matrix will be used to generate dispersal matrix and to calculate distance decay of environmental correlations. Default <code>NULL</code>.</p></dd>
+<dd><p>Distance matrix indicating distance between habitat patches. If provided, the distance matrix will be used to generate dispersal matrix and to calculate distance decay of environmental correlations. Default <code>NULL</code>.</p></dd>
 <dt>dispersal_matrix</dt>
-<dd><p>numeric value. Dispersal matrix to be used to simulate dispersal process. Override distance_matrix. Default <code>NULL</code>.</p></dd>
+<dd><p>Dispersal matrix to be used to simulate dispersal process. Override distance_matrix. Default <code>NULL</code>.</p></dd>
 <dt>p_disturb</dt>
-<dd><p>disturbance probability.</p></dd>
+<dd><p>Disturbance probability.</p></dd>
 <dt>m_disturb</dt>
-<dd><p>disturbance-induced proportional mortality.</p></dd>
+<dd><p>Disturbance-induced proportional mortality.</p></dd>
 <dt>landscape_size</dt>
-<dd><p>numeric value. Length of a landscape on a side. Enabled if <code>dispersal_matrix = NULL</code>.</p></dd>
+<dd><p>Length of a landscape on a side. Enabled if <code>dispersal_matrix = NULL</code>.</p></dd>
 <dt>p_dispersal</dt>
-<dd><p>numeric value (length should be one or equal to <code>n_species</code>). Probability of dispersal.</p></dd>
+<dd><p>Probability of dispersal. Length must be one or equal to <code>n_species</code>.</p></dd>
 <dt>theta</dt>
-<dd><p>numeric value. Dispersal parameter describing dispersal capability of species.</p></dd>
+<dd><p>Dispersal parameter describing dispersal capability of species.</p></dd>
 <dt>plot</dt>
-<dd><p>logical. If <code>TRUE</code>, five sample patches and species of <code>df_dynamics</code> are plotted.</p></dd>
+<dd><p>If <code>TRUE</code>, five sample patches and species of <code>df_dynamics</code> are plotted.</p></dd>
 </dl></div>
-    <div id="value">
-    <h2>Value</h2>
-    <p><code>df_dynamics</code> data frame containing simulated metacommunity dynamics.
-<code>df_species</code> data frame containing species attributes.
-<code>df_patch</code> data frame containing patch attributes.
-<code>df_int</code> parameters for trophic interactions</p>
-    </div>
     <div id="reference">
     <h2>Reference</h2>
-    <p>see <a href="https://github.com/aterui/mcbrnet" class="external-link">github page</a> for instruction</p>
+    <p>see <a href="https://aterui.github.io/mcbrnet/" class="external-link">package webpage</a> for instruction</p>
     </div>
     <div id="author">
     <h2>Author</h2>
@@ -152,8 +151,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
 </div>
 
       </footer></div>

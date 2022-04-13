@@ -17,23 +17,23 @@ fun_patch_attr(
 )
 }
 \arguments{
-\item{x}{adjacency matrix to be converted}
+\item{x}{Adjacency matrix to be converted}
 
-\item{n_branch}{number of branch}
+\item{n_branch}{Number of branch}
 
-\item{mean_source}{mean value of source attribute}
+\item{mean_source}{Mean value of source attribute}
 
 \item{sd_source}{SD of source attribute}
 
 \item{sd_lon}{SD of longitudinal change}
 
-\item{m_distance}{distance matrix}
+\item{m_distance}{Distance matrix}
 
-\item{rho}{longitudinal autocorrelation}
+\item{rho}{Longitudinal autocorrelation}
 
-\item{v_wa}{vector of watershed area}
+\item{v_wa}{Vector of watershed area}
 
-\item{logit}{logit transformation of mean source attribute}
+\item{logit}{Logit transformation of mean source attribute}
 }
 \description{
 Internal function: weighted-mean patch attributes

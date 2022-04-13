@@ -1,30 +1,25 @@
 #' Simulate meta-food web dynamics with intraguild predation
 #'
-#' @param n_patch numeric value. Number of patches in a metacommunity.
-#' @param n_warmup numeric value. Number of time-steps for warm-up. Default \code{200}.
-#' @param n_burnin numeric value. Number of time-steps for burn-in. Default \code{200}.
-#' @param n_timestep numeric value. Number of time-steps to be saved. Default \code{1000}.
-#' @param r_b maximum reproductive rate of basal species
-#' @param conv_eff energetic conversion efficiency; must be given by the order of basal to ig-prey, basal to ig-predator, and ig-prey to ig-predator
-#' @param attack_rate attack rate; must be given by the order of basal to ig_prey, basal to ig-predator, and ig-prey to ig-predator
-#' @param handling_time handling time; ; must be given by the order of basal to ig_prey, basal to ig-predator, and ig-prey to ig-predator
-#' @param s0 background survival rate; must be given by the order of basal, ig-prey, and ig-predator
-#' @param propagule_interval numeric value. Time interval for propagule introduction during warm-up. If \code{NULL}, a value of \code{ceiling(n_warmup / 10)} will be used.
-#' @param carrying_capacity numeric value (length should be one or equal to \code{n_patch}). Carrying capacities of individual patches. Default \code{100}.
-#' @param xy_coord data frame. Each row should correspond to an individual patch, with x and y coordinates (columns). Defualt \code{NULL}.
-#' @param distance_matrix numeric value. Distance matrix indicating distance between habitat patches. If provided, the distance matrix will be used to generate dispersal matrix and to calculate distance decay of environmental correlations. Default \code{NULL}.
-#' @param dispersal_matrix numeric value. Dispersal matrix to be used to simulate dispersal process. Override distance_matrix. Default \code{NULL}.
-#' @param p_disturb disturbance probability.
-#' @param m_disturb disturbance-induced proportional mortality.
-#' @param landscape_size numeric value. Length of a landscape on a side. Enabled if \code{dispersal_matrix = NULL}.
-#' @param p_dispersal numeric value (length should be one or equal to \code{n_species}). Probability of dispersal.
-#' @param theta numeric value. Dispersal parameter describing dispersal capability of species.
-#' @param plot logical. If \code{TRUE}, five sample patches and species of \code{df_dynamics} are plotted.
-#'
-#' @return \code{df_dynamics} data frame containing simulated metacommunity dynamics.
-#' @return \code{df_species} data frame containing species attributes.
-#' @return \code{df_patch} data frame containing patch attributes.
-#' @return \code{df_int} parameters for trophic interactions
+#' @param n_patch Number of patches in a metacommunity.
+#' @param n_warmup Number of time-steps for warm-up. Default \code{200}.
+#' @param n_burnin Number of time-steps for burn-in. Default \code{200}.
+#' @param n_timestep Number of time-steps to be saved. Default \code{1000}.
+#' @param r_b Maximum reproductive rate of basal species
+#' @param conv_eff Energetic conversion efficiency; must be given by the order of basal to ig-prey, basal to ig-predator, and ig-prey to ig-predator
+#' @param attack_rate Attack rate. Must be given by the order of basal to ig_prey, basal to ig-predator, and ig-prey to ig-predator
+#' @param handling_time Handling time. Must be given by the order of basal to ig_prey, basal to ig-predator, and ig-prey to ig-predator
+#' @param s0 Background survival rate. Must be given by the order of basal, ig-prey, and ig-predator
+#' @param propagule_interval Time interval for propagule introduction during warm-up. If \code{NULL}, a value of \code{ceiling(n_warmup / 10)} will be used.
+#' @param carrying_capacity Carrying capacities of individual patches. Length must be one or equal to \code{n_patch}. Default \code{100}.
+#' @param xy_coord Data frame for site coordinates. Each row should correspond to an individual patch, with x and y coordinates (columns). Defualt \code{NULL}.
+#' @param distance_matrix Distance matrix indicating distance between habitat patches. If provided, the distance matrix will be used to generate dispersal matrix and to calculate distance decay of environmental correlations. Default \code{NULL}.
+#' @param dispersal_matrix Dispersal matrix to be used to simulate dispersal process. Override distance_matrix. Default \code{NULL}.
+#' @param p_disturb Disturbance probability.
+#' @param m_disturb Disturbance-induced proportional mortality.
+#' @param landscape_size Length of a landscape on a side. Enabled if \code{dispersal_matrix = NULL}.
+#' @param p_dispersal Probability of dispersal. Length must be one or equal to \code{n_species}.
+#' @param theta Dispersal parameter describing dispersal capability of species.
+#' @param plot If \code{TRUE}, five sample patches and species of \code{df_dynamics} are plotted.
 #'
 #' @importFrom dplyr %>% filter
 #' @importFrom ggplot2 ggplot vars labeller geom_line aes scale_color_viridis_c labs facet_grid label_both
@@ -32,7 +27,7 @@
 #' @importFrom utils setTxtProgressBar txtProgressBar
 #' @importFrom rlang .data
 #'
-#' @section Reference: see \href{https://github.com/aterui/mcbrnet}{github page} for instruction
+#' @section Reference: see \href{https://aterui.github.io/mcbrnet/}{package webpage} for instruction
 #'
 #' @author Akira Terui, \email{hanabi0111@gmail.com}
 #'

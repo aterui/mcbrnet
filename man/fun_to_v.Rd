@@ -7,9 +7,9 @@
 fun_to_v(x, n)
 }
 \arguments{
-\item{x}{scalar or vector}
+\item{x}{Scalar or vector}
 
-\item{n}{replication (n_species or n_patch)}
+\item{n}{Replication (n_species or n_patch)}
 }
 \description{
 Internal function: to vector

@@ -7,7 +7,7 @@
 adjtodist(x)
 }
 \arguments{
-\item{x}{adjacency matrix to be converted}
+\item{x}{Adjacency matrix to be converted}
 }
 \description{
 Convert an adjacency matrix to a distance matrix

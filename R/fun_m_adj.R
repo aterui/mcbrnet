@@ -1,9 +1,9 @@
 #' Internal function: adjacency matrix in branching networks
 #'
-#' @param n_patch number of patches
-#' @param p_branch branching probability
-#' @param n_branch number of branches
-#' @param n_patch_free constraint on number of patches
+#' @param n_patch Number of patches
+#' @param p_branch Branching probability
+#' @param n_branch Number of branches
+#' @param n_patch_free Constraint on number of patches
 #'
 #' @author Akira Terui, \email{hanabi0111@gmail.com}
 #'

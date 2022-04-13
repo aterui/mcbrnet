@@ -1,7 +1,7 @@
 Package: mcbrnet
 Type: Package
 Title: Metacommunity simulation in branching networks
-Version: 1.2.2
+Version: 1.2.3
 Author: Akira Terui
 Maintainer: Akira Terui <hanabi0111@gmail.com>
 Description: Metacommunity simulation in branching networks.
@@ -18,7 +18,9 @@ Imports:
     mvtnorm,
     rlang,
     boot,
-    tibble
+    tibble,
+    ggraph,
+    MetBrewer
 Roxygen: list(markdown = TRUE)
 Suggests: 
     testthat (>= 3.0.0),

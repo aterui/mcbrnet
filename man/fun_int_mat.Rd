@@ -7,15 +7,15 @@
 fun_int_mat(n_species, alpha, min_alpha, max_alpha, interaction_type)
 }
 \arguments{
-\item{n_species}{number of species}
+\item{n_species}{Number of species}
 
-\item{alpha}{interaction strength}
+\item{alpha}{Interaction strength}
 
-\item{min_alpha}{minimum interaction strength}
+\item{min_alpha}{Minimum interaction strength}
 
-\item{max_alpha}{maximum interaction strength}
+\item{max_alpha}{Maximum interaction strength}
 
-\item{interaction_type}{type of interaction}
+\item{interaction_type}{Type of interaction}
 }
 \description{
 Internal function: to vector

@@ -1,32 +1,27 @@
 #' Generate a random branching network
 #'
-#' @param n_patch numeric value indicating the number of patches in a network.
-#' @param p_branch numeric value indicating the branching probability (success probability of a geometric distribution).
-#' @param mean_env_source numeric value indicating the mean value of environmental condition at upstream terminals.
-#' @param sd_env_source numeric value indicating the SD of environmental condition at upstream terminals.
-#' @param rho numeric value indicating the strength of spatial autocorrelation in environmental condition. The environmental condition at patch x \eqn{z}\out{<sub>x</sub>} is determined as \eqn{z}\out{<sub>x</sub>}\eqn{ = \rho}z\out{<sub>x-1</sub>}\eqn{ + \epsilon}\out{<sub>x</sub>}, where \eqn{\epsilon}\out{<sub>x</sub>} is the random variable drawn from a normal distribution with mean 0 and SD \eqn{\sigma}\out{<sub>env</sub>}. See \href{https://github.com/aterui/mcbrnet}{github page} for further details.
-#' @param sd_env_lon numeric value indicating the SD of longitudinal environmental noise.
-#' @param mean_disturb_source numeric value indicating the mean of disturbance strength at headwaters. The value is assumed to represent the proportional mortality (0 - 1.0) at the patch level.
-#' @param sd_disturb_source numeric value indicating the SD of disturbance strength at headwaters. The SD is defined in a logit scale with a normal distribution.
-#' @param sd_disturb_lon numeric value indicating the SD of longitudinal noise of disturbance strength. The SD is defined in a logit scale with a normal distribution.
-#' @param randomize_patch logical indicating whether randomize patches or not. If \code{FALSE}, the function may generate a biased network with ordered patches. Default \code{TRUE}.
-#' @param plot logical indicating if a plot should be shown or not. If \code{FALSE}, a plot of the generated network will not be shown. Default \code{TRUE}.
-#' @param patch_label character string indicating a type of patch (vertex) label (either \code{"patch", "branch", "n_upstream"}). \code{"patch"} shows patch ID, \code{"branch"} branch ID, and \code{"n_upstream"} the number of upstream contributing patches. If \code{NULL}, no label will be shown on patches in the plot. Default \code{NULL}.
-#' @param patch_size patch (vertex) size in the plot. Default 6.
-#' @param patch_scaling logical. If \code{TRUE}, patch (vertex) size will be proportional to the number of upstream contributing patches. The patch (vertex) size will be equal to \code{0.3 * scale_factor} at the upstream terminals and \code{1.3 * scale_factor} at the root. Overrides \code{patch_size}.
-#' @param scale_factor numeric value scaling patch (vertex) size. Enabled if \code{patch_scaling = TRUE}.
-#' @param n_patch_free logical value indicating whether imposing a constraint on \code{n_patch}. If \code{TRUE}, the number of patches a random variable following a negative binomial distribution.
-#'
-#' @return \code{adjacency_matrix} adjacency matrix for the generated network.
-#' @return \code{distance_matrix} distance matrix for the generated network.
-#' @return \code{df_patch} data frame containing patch attributes.
+#' @param n_patch Number of patches in a network.
+#' @param p_branch Branching probability (success probability of a geometric distribution).
+#' @param mean_env_source Mean value of environmental condition at upstream terminals.
+#' @param sd_env_source SD of environmental condition at upstream terminals.
+#' @param rho Strength of spatial autocorrelation in environmental condition.
+#' @param sd_env_lon SD of longitudinal environmental noise.
+#' @param mean_disturb_source Mean disturbance strength at headwaters. The value is assumed to represent the proportional mortality (0 - 1.0) at the patch level.
+#' @param sd_disturb_source SD of disturbance strength at headwaters. The SD is defined in a logit scale with a normal distribution.
+#' @param sd_disturb_lon SD of longitudinal noise of disturbance strength. The SD is defined in a logit scale with a normal distribution.
+#' @param randomize_patch Whether randomize patches or not. If \code{FALSE}, the function may generate a biased network with ordered patches. Default \code{TRUE}.
+#' @param plot Whether a plot should be shown or not. If \code{FALSE}, a plot of the generated network will not be shown. Default \code{TRUE}.
+#' @param patch_color Type of patch (vertex) label (either \code{"env"}, \code{"disturbance"} or any color code). Default \code{"env"}.
+#' @param patch_label Type of patch (vertex) label (either \code{"patch", "branch", "n_upstream"}). \code{"patch"} shows patch ID, \code{"branch"} branch ID, and \code{"n_upstream"} the number of upstream contributing patches. If \code{"none"}, no label will be shown on patches in the plot. Default \code{"none"}.
+#' @param patch_size Patch (vertex) size in the plot.
+#' @param n_patch_free Whether imposing a constraint on \code{n_patch}. If \code{TRUE}, the number of patches a random variable following a negative binomial distribution.
 #'
 #' @importFrom dplyr %>%
 #' @importFrom grDevices grey
 #' @importFrom graphics par text
 #' @importFrom stats complete.cases rbinom rgeom rnorm runif
 #'
-#' @section Reference: see \href{https://github.com/aterui/mcbrnet}{github page} for instruction
+#' @section Reference: see \href{https://aterui.github.io/mcbrnet/}{package webpage} for instruction
 #'
 #' @author Akira Terui, \email{hanabi0111@gmail.com}
 #'
@@ -50,10 +45,9 @@ brnet <- function(n_patch = 50,
                   sd_disturb_lon = 0.1,
                   randomize_patch = TRUE,
                   plot = TRUE,
-                  patch_label = NULL,
-                  patch_size = 6,
-                  patch_scaling = TRUE,
-                  scale_factor = 8,
+                  patch_color = "env",
+                  patch_label = "none",
+                  patch_size = 3,
                   n_patch_free = FALSE) {
 
 
@@ -156,88 +150,30 @@ brnet <- function(n_patch = 50,
 
   }
 
+  df_patch <- dplyr::tibble(patch_id = seq_len(n_patch),
+                            branch_id = as.numeric(df_id$branch),
+                            environment = c(v_env),
+                            disturbance = c(boot::inv.logit(v_disturb)),
+                            n_patch_upstream = c(v_wa))
+
 
   # visualization -----------------------------------------------------------
 
   if (plot == TRUE) {
 
-    adj <- igraph::graph.adjacency(adjmatrix = m_adj,
-                                   mode = "undirected")
+    g <- ggbrnet(adjacency_matrix = m_adj,
+                 patch_attr = df_patch,
+                 patch_color = patch_color,
+                 patch_label = patch_label,
+                 patch_size = patch_size)
 
-    colvalue <- data.frame(color = viridis::viridis(n_patch, alpha = 0.6),
-                           value = sort(v_env))
-
-    layout_tree <- igraph::layout_as_tree(adj,
-                                          root = 1,
-                                          flip.y = F)
-
-    if (is.null(patch_label)) {
-
-      vertex_label <- NA
-
-    } else {
-
-      if (patch_label == "patch") vertex_label <- seq_len(n_patch)
-      if (patch_label == "branch") vertex_label <- df_id$branch
-      if (patch_label == "n_upstream") vertex_label <- v_wa
-
-      if (!(patch_label %in% c("patch", "branch", "n_upstream"))) {
-
-        stop("patch_label must be either patch, branch, or n_upstrem")
-
-      }
-
-    }
-
-    if (patch_scaling == TRUE) {
-
-      vertex_size <- I(scale(v_wa,
-                             center = min(v_wa),
-                             scale = max(v_wa) - min(v_wa)) + 0.3) * scale_factor
-
-    } else {
-
-      vertex_size <- patch_size
-
-    }
-
-    par(mar = c(5.1, 8, 4.1, 2.1))
-    igraph::plot.igraph(adj, layout = layout_tree,
-                        vertex.size = vertex_size,
-                        vertex.label = vertex_label,
-                        vertex.label.cex = 0.8,
-                        vertex.label.dist = 0.8,
-                        vertex.label.degree = pi,
-                        vertex.label.color = grey(0.3),
-                        vertex.frame.color = grey(0.5),
-                        vertex.color = colvalue$color[match(v_env, colvalue$value)],
-                        edge.width = 1.8,
-                        edge.color = "steelblue")
-
-    plotfunctions::gradientLegend(valRange = range(v_env),
-                                  color = viridis::viridis(n_patch),
-                                  pos = 0.8,
-                                  side = 2,
-                                  dec = 2)
-
-    pc <- c(plotfunctions::getCoords(0, side = 1),
-            plotfunctions::getCoords(1, side = 2))
-
-    text(x = pc[1],
-         y = pc[2],
-         labels = "Environmental value",
-         adj = 1)
+    print(g)
 
   }
-
 
   # return ------------------------------------------------------------------
 
   return(list(adjacency_matrix = m_adj,
               distance_matrix = m_distance,
-              df_patch = dplyr::tibble(patch_id = seq_len(n_patch),
-                                       branch_id = as.numeric(df_id$branch),
-                                       environment = c(v_env),
-                                       disturbance = c(boot::inv.logit(v_disturb)),
-                                       n_patch_upstream = c(v_wa))))
+              df_patch = df_patch))
 }

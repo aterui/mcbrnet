@@ -1,6 +1,6 @@
 #' Convert an adjacency matrix to a distance matrix
 #'
-#' @param x adjacency matrix to be converted
+#' @param x Adjacency matrix to be converted
 #'
 #' @author Akira Terui, \email{hanabi0111@gmail.com}
 #'

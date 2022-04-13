@@ -7,9 +7,9 @@
 resample(x, ...)
 }
 \arguments{
-\item{x}{vector}
+\item{x}{Vector}
 
-\item{...}{additional arguments passed to \code{sample}}
+\item{...}{Additional arguments passed to \code{sample}}
 }
 \description{
 Internal function: resample

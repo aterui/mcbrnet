@@ -1,7 +1,7 @@
 #' Internal function: to vector
 #'
-#' @param x scalar or vector
-#' @param n replication (n_species or n_patch)
+#' @param x Scalar or vector
+#' @param n Replication (n_species or n_patch)
 #' @author Akira Terui, \email{hanabi0111@gmail.com}
 #'
 #' @export

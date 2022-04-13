@@ -1,5 +1,5 @@
 ---
-title: "mcsim: metacommunity simulation"
+title: "mcsim"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{mcsim}
@@ -18,18 +18,11 @@ library(mcbrnet)
 
 ## Basic usage
 
-This function simulates metacommunity dynamics. Community dynamics are modeled based on the Beverton-Holt function. Although this function is designed to be compatible with `brnet()`, users can provide their distance matrix to simulate dynamics in any landscape. The key arguments are the number of habitat patches (`n_patch`) and the number of species in a metacommunity (`n_species`). Metacommunity dynamics are simulated through (1) local dynamics (population growth and competition among species), (2) immigration, and (3) emigration.
-
-Sample script:
-
-```{r, eval = F}
-library(mcbrnet)
-mc <- mcsim(n_patch = 5, n_species = 5)
-```
+`mcsim()` simulates metacommunity dynamics in a given landscape. Community dynamics are modeled based on the Beverton-Holt function. Although this function is designed to be compatible with `brnet()`, users can provide their distance matrix to simulate dynamics in any landscape. The key arguments are the number of habitat patches (`n_patch`) and the number of species in a metacommunity (`n_species`). Metacommunity dynamics are simulated through (1) local dynamics (population growth and competition among species), (2) immigration, and (3) emigration.
 
 The function returns:
 
--   `df_dynamics` a data frame containing simulated metacommunity dynamics\*.
+-   `df_dynamics` data frame containing simulated metacommunity dynamics\*.
 
     -   *timestep*: time-step.
     -   *patch_id*: patch ID.
@@ -41,7 +34,7 @@ The function returns:
     -   *r_xt*: reproductive number of species i at patch x and time-step t.
     -   *abundance*: abundance of species i at patch x.
 
--   `df_species` a data frame containing species attributes.
+-   `df_species` data frame containing species attributes.
 
     -   *species*: species ID.
     -   *mean_abundance*: mean abundance (arithmetic) of species i across sites and time-steps.
@@ -50,19 +43,19 @@ The function returns:
     -   *sd_niche_width*: niche width for species i.
     -   *p_dispersal*: dispersal probability of species i.
 
--   `df_patch` a data frame containing patch attributes.
+-   `df_patch` data frame containing patch attributes.
 
     -   *patch*: patch ID.
     -   *alpha_div*: alpha diversity averaged across time-steps.
     -   *mean_env*: mean environmental condition at each patch.
     -   *carrying_capacity*: carrying capacity at each patch.
-    -   *connectivity*: functional connectivity at each patch.
+    -   *disturbance*: disturbance-induced mortality at each patch.
 
--   `df_diversity` a data frame containing diversity metrics (α, β, and γ).
+-   `df_diversity` data frame containing diversity metrics (α, β, and γ).
 
--   `distance_matrix` a distance matrix used in the simulation.
+-   `distance_matrix` distance matrix used in the simulation.
 
--   `interaction_matrix` a species interaction matrix, in which species X (column) influences species Y (row).
+-   `interaction_matrix` species interaction matrix, in which species X (column) influences species Y (row).
 
 \*NOTE: The warm-up and burn-in periods will not be included in return values.
 
@@ -127,11 +120,13 @@ The argument `interaction_type` determines whether interaction coefficient `alph
 
 ### Patch attributes
 
-**Arguments:** `carrying_capacity`, `mean_env`, `sd_env`, `spatial_auto_cor`, `phi`
+**Arguments:** `carrying_capacity`, `mean_env`, `sd_env`, `spatial_auto_cor`, `phi`, `p_disturb`, `m_disturb`
 
-The arguments `carrying_capacity` (default: `carrying_capacity = 100`) and `mean_env` (default: `mean_env = 0`) determines mean attributes of habitat patches, which can be a scalar (assume identical among patches) or a vector (length must be equal to `n_patch`).
+The arguments `carrying_capacity` (default: `carrying_capacity = 100`) and `mean_env` (default: `mean_env = 0`) determines mean environmental values of habitat patches, which can be a scalar (assume identical among patches) or a vector (length must be equal to `n_patch`).
 
-The arguments `sd_env` (default: `sd_env = 0.1`), `spatial_auto_cor` (default: `spatial_auto_cor = FALSE`) and `phi` (default: `phi = 1`) determine spatio-temporal dynamics of environmental values. `sd_env` determines the magnitude of temporal environmental fluctuations. If `spatial_auto_cor = TRUE`, the function models spatial autocorrelation of temporal environmental fluctuation based on a multi-variate normal distribution. The degree of spatial autocorrelation would be determined by `phi`, the parameter describing the strength of distance decay in spatial autocorrelation (see **Model description**).
+The arguments `sd_env` (default: `sd_env = 0.1`), `spatial_auto_cor` (default: `spatial_auto_cor = FALSE`) and `phi` (default: `phi = 1`) determine spatio-temporal dynamics of environmental values. `sd_env` determines the magnitude of temporal environmental fluctuations. If `spatial_auto_cor = TRUE`, the function models spatial autocorrelation of temporal environmental fluctuation based on a multi-variate normal distribution. The degree of spatial autocorrelation would be determined by `phi`, the parameter describing the strength of distance decay in spatial autocorrelation.
+
+Users can also define disturbance probability (`p_disturb`) and mortality (`m_disturb`). When disturbance occurs, all habitat patches are reduced by `m_disturb`. `m_disturb` can be identical or different across habitat patches.
 
 ### Landscape structure
 

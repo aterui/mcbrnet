@@ -28,60 +28,51 @@ igpsim(
 )
 }
 \arguments{
-\item{n_patch}{numeric value. Number of patches in a metacommunity.}
+\item{n_patch}{Number of patches in a metacommunity.}
 
-\item{n_warmup}{numeric value. Number of time-steps for warm-up. Default \code{200}.}
+\item{n_warmup}{Number of time-steps for warm-up. Default \code{200}.}
 
-\item{n_burnin}{numeric value. Number of time-steps for burn-in. Default \code{200}.}
+\item{n_burnin}{Number of time-steps for burn-in. Default \code{200}.}
 
-\item{n_timestep}{numeric value. Number of time-steps to be saved. Default \code{1000}.}
+\item{n_timestep}{Number of time-steps to be saved. Default \code{1000}.}
 
-\item{r_b}{maximum reproductive rate of basal species}
+\item{r_b}{Maximum reproductive rate of basal species}
 
-\item{conv_eff}{energetic conversion efficiency; must be given by the order of basal to ig-prey, basal to ig-predator, and ig-prey to ig-predator}
+\item{conv_eff}{Energetic conversion efficiency; must be given by the order of basal to ig-prey, basal to ig-predator, and ig-prey to ig-predator}
 
-\item{attack_rate}{attack rate; must be given by the order of basal to ig_prey, basal to ig-predator, and ig-prey to ig-predator}
+\item{attack_rate}{Attack rate. Must be given by the order of basal to ig_prey, basal to ig-predator, and ig-prey to ig-predator}
 
-\item{handling_time}{handling time; ; must be given by the order of basal to ig_prey, basal to ig-predator, and ig-prey to ig-predator}
+\item{handling_time}{Handling time. Must be given by the order of basal to ig_prey, basal to ig-predator, and ig-prey to ig-predator}
 
-\item{s0}{background survival rate; must be given by the order of basal, ig-prey, and ig-predator}
+\item{s0}{Background survival rate. Must be given by the order of basal, ig-prey, and ig-predator}
 
-\item{propagule_interval}{numeric value. Time interval for propagule introduction during warm-up. If \code{NULL}, a value of \code{ceiling(n_warmup / 10)} will be used.}
+\item{propagule_interval}{Time interval for propagule introduction during warm-up. If \code{NULL}, a value of \code{ceiling(n_warmup / 10)} will be used.}
 
-\item{carrying_capacity}{numeric value (length should be one or equal to \code{n_patch}). Carrying capacities of individual patches. Default \code{100}.}
+\item{carrying_capacity}{Carrying capacities of individual patches. Length must be one or equal to \code{n_patch}. Default \code{100}.}
 
-\item{xy_coord}{data frame. Each row should correspond to an individual patch, with x and y coordinates (columns). Defualt \code{NULL}.}
+\item{xy_coord}{Data frame for site coordinates. Each row should correspond to an individual patch, with x and y coordinates (columns). Defualt \code{NULL}.}
 
-\item{distance_matrix}{numeric value. Distance matrix indicating distance between habitat patches. If provided, the distance matrix will be used to generate dispersal matrix and to calculate distance decay of environmental correlations. Default \code{NULL}.}
+\item{distance_matrix}{Distance matrix indicating distance between habitat patches. If provided, the distance matrix will be used to generate dispersal matrix and to calculate distance decay of environmental correlations. Default \code{NULL}.}
 
-\item{dispersal_matrix}{numeric value. Dispersal matrix to be used to simulate dispersal process. Override distance_matrix. Default \code{NULL}.}
+\item{dispersal_matrix}{Dispersal matrix to be used to simulate dispersal process. Override distance_matrix. Default \code{NULL}.}
 
-\item{p_disturb}{disturbance probability.}
+\item{p_disturb}{Disturbance probability.}
 
-\item{m_disturb}{disturbance-induced proportional mortality.}
+\item{m_disturb}{Disturbance-induced proportional mortality.}
 
-\item{landscape_size}{numeric value. Length of a landscape on a side. Enabled if \code{dispersal_matrix = NULL}.}
+\item{landscape_size}{Length of a landscape on a side. Enabled if \code{dispersal_matrix = NULL}.}
 
-\item{p_dispersal}{numeric value (length should be one or equal to \code{n_species}). Probability of dispersal.}
+\item{p_dispersal}{Probability of dispersal. Length must be one or equal to \code{n_species}.}
 
-\item{theta}{numeric value. Dispersal parameter describing dispersal capability of species.}
+\item{theta}{Dispersal parameter describing dispersal capability of species.}
 
-\item{plot}{logical. If \code{TRUE}, five sample patches and species of \code{df_dynamics} are plotted.}
-}
-\value{
-\code{df_dynamics} data frame containing simulated metacommunity dynamics.
-
-\code{df_species} data frame containing species attributes.
-
-\code{df_patch} data frame containing patch attributes.
-
-\code{df_int} parameters for trophic interactions
+\item{plot}{If \code{TRUE}, five sample patches and species of \code{df_dynamics} are plotted.}
 }
 \description{
 Simulate meta-food web dynamics with intraguild predation
 }
 \section{Reference}{
- see \href{https://github.com/aterui/mcbrnet}{github page} for instruction
+ see \href{https://aterui.github.io/mcbrnet/}{package webpage} for instruction
 }
 
 \author{

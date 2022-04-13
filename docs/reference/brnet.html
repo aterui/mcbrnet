@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mcbrnet</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.2.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.2.3</span>
       </span>
     </div>
 
@@ -32,10 +32,16 @@
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu"><li>
-      <a href="../articles/brnet.html">brnet: network generation</a>
+      <a href="../articles/brnet.html">brnet</a>
     </li>
     <li>
-      <a href="../articles/mcsim.html">mcsim: metacommunity simulation</a>
+      <a href="../articles/ggbrnet.html">ggbrnet</a>
+    </li>
+    <li>
+      <a href="../articles/igpsim.html">igpsim</a>
+    </li>
+    <li>
+      <a href="../articles/mcsim.html">mcsim</a>
     </li>
   </ul></li>
       </ul><ul class="nav navbar-nav navbar-right"></ul></div><!--/.nav-collapse -->
@@ -69,10 +75,9 @@
   sd_disturb_lon <span class="op">=</span> <span class="fl">0.1</span>,
   randomize_patch <span class="op">=</span> <span class="cn">TRUE</span>,
   plot <span class="op">=</span> <span class="cn">TRUE</span>,
-  patch_label <span class="op">=</span> <span class="cn">NULL</span>,
-  patch_size <span class="op">=</span> <span class="fl">6</span>,
-  patch_scaling <span class="op">=</span> <span class="cn">TRUE</span>,
-  scale_factor <span class="op">=</span> <span class="fl">8</span>,
+  patch_color <span class="op">=</span> <span class="st">"env"</span>,
+  patch_label <span class="op">=</span> <span class="st">"none"</span>,
+  patch_size <span class="op">=</span> <span class="fl">3</span>,
   n_patch_free <span class="op">=</span> <span class="cn">FALSE</span>
 <span class="op">)</span></code></pre></div>
     </div>
@@ -80,47 +85,39 @@
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>n_patch</dt>
-<dd><p>numeric value indicating the number of patches in a network.</p></dd>
+<dd><p>Number of patches in a network.</p></dd>
 <dt>p_branch</dt>
-<dd><p>numeric value indicating the branching probability (success probability of a geometric distribution).</p></dd>
+<dd><p>Branching probability (success probability of a geometric distribution).</p></dd>
 <dt>mean_env_source</dt>
-<dd><p>numeric value indicating the mean value of environmental condition at upstream terminals.</p></dd>
+<dd><p>Mean value of environmental condition at upstream terminals.</p></dd>
 <dt>sd_env_source</dt>
-<dd><p>numeric value indicating the SD of environmental condition at upstream terminals.</p></dd>
+<dd><p>SD of environmental condition at upstream terminals.</p></dd>
 <dt>rho</dt>
-<dd><p>numeric value indicating the strength of spatial autocorrelation in environmental condition. The environmental condition at patch x \(z\)<sub>x</sub> is determined as \(z\)<sub>x</sub>\( = \rho\)z<sub>x-1</sub>\( + \epsilon\)<sub>x</sub>, where \(\epsilon\)<sub>x</sub> is the random variable drawn from a normal distribution with mean 0 and SD \(\sigma\)<sub>env</sub>. See <a href="https://github.com/aterui/mcbrnet" class="external-link">github page</a> for further details.</p></dd>
+<dd><p>Strength of spatial autocorrelation in environmental condition.</p></dd>
 <dt>sd_env_lon</dt>
-<dd><p>numeric value indicating the SD of longitudinal environmental noise.</p></dd>
+<dd><p>SD of longitudinal environmental noise.</p></dd>
 <dt>mean_disturb_source</dt>
-<dd><p>numeric value indicating the mean of disturbance strength at headwaters. The value is assumed to represent the proportional mortality (0 - 1.0) at the patch level.</p></dd>
+<dd><p>Mean disturbance strength at headwaters. The value is assumed to represent the proportional mortality (0 - 1.0) at the patch level.</p></dd>
 <dt>sd_disturb_source</dt>
-<dd><p>numeric value indicating the SD of disturbance strength at headwaters. The SD is defined in a logit scale with a normal distribution.</p></dd>
+<dd><p>SD of disturbance strength at headwaters. The SD is defined in a logit scale with a normal distribution.</p></dd>
 <dt>sd_disturb_lon</dt>
-<dd><p>numeric value indicating the SD of longitudinal noise of disturbance strength. The SD is defined in a logit scale with a normal distribution.</p></dd>
+<dd><p>SD of longitudinal noise of disturbance strength. The SD is defined in a logit scale with a normal distribution.</p></dd>
 <dt>randomize_patch</dt>
-<dd><p>logical indicating whether randomize patches or not. If <code>FALSE</code>, the function may generate a biased network with ordered patches. Default <code>TRUE</code>.</p></dd>
+<dd><p>Whether randomize patches or not. If <code>FALSE</code>, the function may generate a biased network with ordered patches. Default <code>TRUE</code>.</p></dd>
 <dt>plot</dt>
-<dd><p>logical indicating if a plot should be shown or not. If <code>FALSE</code>, a plot of the generated network will not be shown. Default <code>TRUE</code>.</p></dd>
+<dd><p>Whether a plot should be shown or not. If <code>FALSE</code>, a plot of the generated network will not be shown. Default <code>TRUE</code>.</p></dd>
+<dt>patch_color</dt>
+<dd><p>Type of patch (vertex) label (either <code>"env"</code>, <code>"disturbance"</code> or any color code). Default <code>"env"</code>.</p></dd>
 <dt>patch_label</dt>
-<dd><p>character string indicating a type of patch (vertex) label (either <code>"patch", "branch", "n_upstream"</code>). <code>"patch"</code> shows patch ID, <code>"branch"</code> branch ID, and <code>"n_upstream"</code> the number of upstream contributing patches. If <code>NULL</code>, no label will be shown on patches in the plot. Default <code>NULL</code>.</p></dd>
+<dd><p>Type of patch (vertex) label (either <code>"patch", "branch", "n_upstream"</code>). <code>"patch"</code> shows patch ID, <code>"branch"</code> branch ID, and <code>"n_upstream"</code> the number of upstream contributing patches. If <code>"none"</code>, no label will be shown on patches in the plot. Default <code>"none"</code>.</p></dd>
 <dt>patch_size</dt>
-<dd><p>patch (vertex) size in the plot. Default 6.</p></dd>
-<dt>patch_scaling</dt>
-<dd><p>logical. If <code>TRUE</code>, patch (vertex) size will be proportional to the number of upstream contributing patches. The patch (vertex) size will be equal to <code>0.3 * scale_factor</code> at the upstream terminals and <code>1.3 * scale_factor</code> at the root. Overrides <code>patch_size</code>.</p></dd>
-<dt>scale_factor</dt>
-<dd><p>numeric value scaling patch (vertex) size. Enabled if <code>patch_scaling = TRUE</code>.</p></dd>
+<dd><p>Patch (vertex) size in the plot.</p></dd>
 <dt>n_patch_free</dt>
-<dd><p>logical value indicating whether imposing a constraint on <code>n_patch</code>. If <code>TRUE</code>, the number of patches a random variable following a negative binomial distribution.</p></dd>
+<dd><p>Whether imposing a constraint on <code>n_patch</code>. If <code>TRUE</code>, the number of patches a random variable following a negative binomial distribution.</p></dd>
 </dl></div>
-    <div id="value">
-    <h2>Value</h2>
-    <p><code>adjacency_matrix</code> adjacency matrix for the generated network.
-<code>distance_matrix</code> distance matrix for the generated network.
-<code>df_patch</code> data frame containing patch attributes.</p>
-    </div>
     <div id="reference">
     <h2>Reference</h2>
-    <p>see <a href="https://github.com/aterui/mcbrnet" class="external-link">github page</a> for instruction</p>
+    <p>see <a href="https://aterui.github.io/mcbrnet/" class="external-link">package webpage</a> for instruction</p>
     </div>
     <div id="author">
     <h2>Author</h2>
@@ -148,8 +145,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
 </div>
 
       </footer></div>

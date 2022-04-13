@@ -1,10 +1,10 @@
 #' Internal function: to vector
 #'
-#' @param n_species number of species
-#' @param alpha interaction strength
-#' @param min_alpha minimum interaction strength
-#' @param max_alpha maximum interaction strength
-#' @param interaction_type type of interaction
+#' @param n_species Number of species
+#' @param alpha Interaction strength
+#' @param min_alpha Minimum interaction strength
+#' @param max_alpha Maximum interaction strength
+#' @param interaction_type Type of interaction
 #'
 #' @author Akira Terui, \email{hanabi0111@gmail.com}
 #'

@@ -1,8 +1,8 @@
 #' Internal function: dispersal
 #'
-#' @param x matrix of population sizes
-#' @param v_p_dispersal vector of dispersal probability
-#' @param m_dispersal dispersal matrix
+#' @param x Population size matrix
+#' @param v_p_dispersal Vector of dispersal probability
+#' @param m_dispersal Dispersal matrix
 #'
 #' @author Akira Terui, \email{hanabi0111@gmail.com}
 #'

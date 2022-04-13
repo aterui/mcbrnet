@@ -7,9 +7,9 @@
 fun_get_fcl(x, delta)
 }
 \arguments{
-\item{x}{community matrix}
+\item{x}{Community matrix}
 
-\item{delta}{preference to basal over ig-prey}
+\item{delta}{Preference to basal over ig-prey}
 }
 \description{
 Internal function: get fcl

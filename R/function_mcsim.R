@@ -1,40 +1,38 @@
 #' Simulate metacommunity dynamics
 #'
-#' @param n_species numeric value. Number of species in a metacommunity.
-#' @param n_patch numeric value. Number of patches in a metacommunity.
-#' @param n_warmup numeric value. Number of time-steps for warm-up. Default \code{200}.
-#' @param n_burnin numeric value. Number of time-steps for burn-in. Default \code{200}.
-#' @param n_timestep numeric value. Number of time-steps to be saved. Default \code{1000}.
-#' @param propagule_interval numeric value. Time interval for propagule introduction during warm-up. If \code{NULL}, a value of \code{ceiling(n_warmup / 10)} will be used.
-#' @param carrying_capacity numeric value (length should be one or equal to \code{n_patch}). Carrying capacities of individual patches. Default \code{100}.
-#' @param interaction_type character string. \code{"constant"} or \code{"random"}. \code{"constant"} assumes the unique interaction strength of \code{alpha} for all pairs of species. \code{"random"} draws random numbers from a uniform distribution with \code{min_alpha} and \code{max_alpha}.
-#' @param alpha numeric value. Species interaction strength. Enabled if \code{interaction_type = "constant"}. Default \code{0}.
-#' @param min_alpha numeric value. Minimum value of a uniform distribution that generates species interaction strength. Enabled if \code{interaction_type = "random"}. Default \code{NULL}.
-#' @param max_alpha numeric value. Maximum value of a uniform distribution that generates species interaction strength. Enabled if \code{interaction_type = "random"}. Default \code{NULL}.
-#' @param r0 numeric value (length should be one or equal to \code{n_species}). Maximum reproductive number of the Beverton-Holt model.
-#' @param niche_optim numeric value (length should be one or equal to \code{n_species}). Niche optimum of species (environmental value that maximizes the reproductive number). Default \code{NULL}.
-#' @param min_optim numeric value. Minimum value of a uniform distribution that generates optimal environmental values of simulated species. Values are randomly assigned to species. Enabled if \code{niche_optim = NULL}.
-#' @param max_optim numeric value. Maximum value of a uniform distribution that generates optimal environmental values of simulated species. Values are randomly assigned to species. Enabled if \code{niche_optim = NULL}.
-#' @param sd_niche_width numeric value (length should be one or equal to \code{n_species}). Niche width of species. Higher values indicate greater niche width.
-#' @param min_niche_width numeric value. Minimum value of a uniform distribution that generates niche width values of simulated species. Values are randomly assigned to species. Enabled if \code{sd_niche_width = NULL}.
-#' @param max_niche_width numeric value. Maximum value of a uniform distribution that generates niche width values of simulated species. Values are randomly assigned to species. Enabled if \code{sd_niche_width = NULL}.
-#' @param niche_cost numeric value. Determine the cost of wide niche (smaller values imply greater costs of wider niche). Default \code{1}.
-#' @param xy_coord data frame. Each row should correspond to an individual patch, with x and y coordinates (columns). Defualt \code{NULL}.
-#' @param distance_matrix numeric value. Distance matrix indicating distance between habitat patches. If provided, the distance matrix will be used to generate dispersal matrix and to calculate distance decay of environmental correlations. Default \code{NULL}.
-#' @param dispersal_matrix numeric value. Dispersal matrix to be used to simulate dispersal process. Override distance_matrix. Default \code{NULL}.
-#' @param landscape_size numeric value. Length of a landscape on a side. Enabled if \code{dispersal_matrix = NULL}.
-#' @param mean_env numeric value (length should be one or equal to \code{n_patch}). Mean environmental values of patches.
-#' @param sd_env numeric value. Standard deviation of temporal environmental variation at each patch.
-#' @param spatial_env_cor logical. If \code{TRUE}, spatial autocorrelation in temporal environmental fluctuation is considered. Default \code{FALSE}.
-#' @param phi numeric value. A parameter describing the distance decay of spatial autocorrelation in temporal environmental fluctuation. Enabled if \code{spatial_env_cor = TRUE}.
-#' @param p_dispersal numeric value (length should be one or equal to \code{n_species}). Probability of dispersal.
-#' @param theta numeric value. Dispersal parameter describing dispersal capability of species.
-#' @param plot logical. If \code{TRUE}, five sample patches and species of \code{df_dynamics} are plotted.
-#'
-#' @return \code{df_dynamics} data frame containing simulated metacommunity dynamics.
-#' @return \code{df_species} data frame containing species attributes.
-#' @return \code{df_patch} data frame containing patch attributes.
-#' @return \code{df_diversity} data frame containing diversity metrics. alpha and gamma diversities were averaged over the simulation time steps (\code{n_timestep}). beta diversity is calculated as gamma / alpha.
+#' @param n_species Number of species in a metacommunity.
+#' @param n_patch Number of patches in a metacommunity.
+#' @param n_warmup Number of time-steps for warm-up. Default \code{200}.
+#' @param n_burnin Number of time-steps for burn-in. Default \code{200}.
+#' @param n_timestep Number of time-steps to be saved. Default \code{1000}.
+#' @param propagule_interval Time interval for propagule introduction during warm-up. If \code{NULL}, a value of \code{ceiling(n_warmup / 10)} will be used.
+#' @param propagule_seed Propagule mean density (intensity parameter in a Poisson distribution). Default \code{0.5}.
+#' @param carrying_capacity Carrying capacities of individual patches. Length must be one or equal to \code{n_patch}. Default \code{100}.
+#' @param interaction_type \code{"constant"} or \code{"random"}. \code{"constant"} assumes the unique interaction strength of \code{alpha} for all pairs of species. \code{"random"} draws random numbers from a uniform distribution with \code{min_alpha} and \code{max_alpha}.
+#' @param alpha Species interaction strength. Enabled if \code{interaction_type = "constant"}. Default \code{0}.
+#' @param min_alpha Minimum value of a uniform distribution that generates species interaction strength. Enabled if \code{interaction_type = "random"}. Default \code{NULL}.
+#' @param max_alpha Maximum value of a uniform distribution that generates species interaction strength. Enabled if \code{interaction_type = "random"}. Default \code{NULL}.
+#' @param r0 Maximum reproductive number of the Beverton-Holt model. Length must be one or equal to \code{n_species}.
+#' @param niche_optim Niche optimum of species (environmental value that maximizes the reproductive number). Length must be one or equal to \code{n_species}. Default \code{NULL}.
+#' @param min_optim Minimum value of a uniform distribution that generates optimal environmental values of simulated species. Values are randomly assigned to species. Enabled if \code{niche_optim = NULL}.
+#' @param max_optim Maximum value of a uniform distribution that generates optimal environmental values of simulated species. Values are randomly assigned to species. Enabled if \code{niche_optim = NULL}.
+#' @param sd_niche_width Niche width of species. Higher values indicate greater niche width. Length must be one or equal to \code{n_species}.
+#' @param min_niche_width Minimum value of a uniform distribution that generates niche width values of simulated species. Values are randomly assigned to species. Enabled if \code{sd_niche_width = NULL}.
+#' @param max_niche_width Maximum value of a uniform distribution that generates niche width values of simulated species. Values are randomly assigned to species. Enabled if \code{sd_niche_width = NULL}.
+#' @param niche_cost Determine the cost of wide niche (smaller values imply greater costs of wider niche). Default \code{1}.
+#' @param xy_coord Site coordinates. Must be provided as a data frame in which each row corresponds to an individual site with x and y coordinates (columns). Defualt \code{NULL}.
+#' @param distance_matrix Distance matrix indicating distance between habitat patches. If provided, the distance matrix will be used to generate dispersal matrix and to calculate distance decay of environmental correlations. Default \code{NULL}.
+#' @param dispersal_matrix Dispersal matrix to be used to simulate dispersal process. Override distance_matrix. Default \code{NULL}.
+#' @param p_disturb Disturbance probability.
+#' @param m_disturb Disturbance-induced proportional mortality. Length must be one or equal to \code{n_patch}.
+#' @param landscape_size Length of a landscape on a side. Enabled if \code{dispersal_matrix = NULL}.
+#' @param mean_env Mean environmental values of patches. Length must be one or equal to \code{n_patch}.
+#' @param sd_env Standard deviation of temporal environmental variation at each patch.
+#' @param spatial_env_cor If \code{TRUE}, spatial autocorrelation in temporal environmental fluctuation is considered. Default \code{FALSE}.
+#' @param phi Parameter describing the distance decay of spatial autocorrelation in temporal environmental fluctuation. Enabled if \code{spatial_env_cor = TRUE}.
+#' @param p_dispersal Dispersal probability. Length must be one or equal to \code{n_species}.
+#' @param theta Rate parameter of exponential dispersal kernel.
+#' @param plot If \code{TRUE}, five sample patches and species of \code{df_dynamics} are plotted.
 #'
 #' @importFrom dplyr %>% filter
 #' @importFrom ggplot2 ggplot vars labeller geom_line aes scale_color_viridis_c labs facet_grid label_both
@@ -42,7 +40,7 @@
 #' @importFrom utils setTxtProgressBar txtProgressBar
 #' @importFrom rlang .data
 #'
-#' @section Reference: see \href{https://github.com/aterui/mcbrnet}{github page} for instruction
+#' @section Reference: see \href{https://aterui.github.io/mcbrnet/index.html}{package webpage} for instruction
 #'
 #' @author Akira Terui, \email{hanabi0111@gmail.com}
 #'
@@ -60,6 +58,7 @@ mcsim <- function(n_species = 5,
                   n_burnin = 200,
                   n_timestep = 1000,
                   propagule_interval = NULL,
+                  propagule_seed = 0.5,
                   carrying_capacity = 100,
                   interaction_type = "constant",
                   alpha = 0,
@@ -76,6 +75,8 @@ mcsim <- function(n_species = 5,
                   xy_coord = NULL,
                   distance_matrix = NULL,
                   dispersal_matrix = NULL,
+                  p_disturb = 0,
+                  m_disturb = 0,
                   landscape_size = 10,
                   mean_env = 0,
                   sd_env = 0.1,
@@ -94,7 +95,7 @@ mcsim <- function(n_species = 5,
 
   # parameter setup ---------------------------------------------------------
 
-  # carrying capacity
+  # carrying capacity ####
   ## internal function; see "fun_to_m.R"
   list_k <- fun_to_m(x = carrying_capacity,
                      n_species = n_species,
@@ -103,9 +104,7 @@ mcsim <- function(n_species = 5,
 
   m_k <- list_k$m_x
 
-  # species niche
-
-  ## niche optimum
+  ## niche optimum ####
   ## internal function; see "fun_to_m.R"
   if (is.null(niche_optim)) {
 
@@ -132,7 +131,7 @@ mcsim <- function(n_species = 5,
 
   }
 
-  ## niche width
+  ## niche width ####
   ## internal function; see "fun_to_m.R"
   if (is.null(sd_niche_width)) {
 
@@ -159,7 +158,7 @@ mcsim <- function(n_species = 5,
 
   }
 
-  ## maximum reproductive number
+  ## maximum reproductive number ####
   ## internal function; see "fun_to_m.R"
   if (any(r0 < 1)) stop("r0 must be greater than or equal to one")
 
@@ -171,7 +170,7 @@ mcsim <- function(n_species = 5,
   v_r0 <- list_r0$v_x
   m_r0 <- list_r0$m_x
 
-  ## environmental variation among patches
+  ## environmental variation among patches ####
   ## internal function; see "fun_to_m.R"
   list_mu_z <- fun_to_m(x = mean_env,
                         n_species = n_species,
@@ -180,7 +179,7 @@ mcsim <- function(n_species = 5,
 
   v_mu_z <- list_mu_z$v_x
 
-  ## interaction matrix
+  ## interaction matrix ####
   ## internal function; see "fun_int_mat.R"
   m_interaction <- fun_int_mat(n_species = n_species,
                                alpha = alpha,
@@ -188,7 +187,7 @@ mcsim <- function(n_species = 5,
                                max_alpha = max_alpha,
                                interaction_type = interaction_type)
 
-  ## dispersal matrix
+  ## dispersal matrix ####
   ## internal function; see "fun_disp_mat.R"
   list_dispersal <- fun_disp_mat(n_patch = n_patch,
                                  landscape_size = landscape_size,
@@ -205,6 +204,12 @@ mcsim <- function(n_species = 5,
   v_p_dispersal <- fun_to_v(x = p_dispersal,
                             n = n_species)
 
+  ## disturbance ####
+  if (p_disturb > 1 | p_disturb < 0) stop("p_disturb must be 0 to 1")
+  if (any(m_disturb > 1) | any(m_disturb < 0)) stop("m_disturb must be 0 to 1")
+
+  v_disturb <- fun_to_v(x = m_disturb,
+                        n = n_patch)
 
   # dynamics ----------------------------------------------------------------
 
@@ -264,6 +269,12 @@ mcsim <- function(n_species = 5,
                    to = max(c(1, n_warmup)),
                    by = propagule_interval)
 
+  ## disturbance incidence
+  psi <- rbinom(n = n_sim,
+                size = 1,
+                prob = p_disturb)
+  psi[1:n_warmup] <- 0
+
   ## initial values
   m_n <- matrix(rpois(n = n_species * n_patch,
                       lambda = 0.5),
@@ -279,7 +290,7 @@ mcsim <- function(n_species = 5,
 
       if (n %in% propagule) {
         m_n <- m_n + matrix(rpois(n = n_species * n_patch,
-                                  lambda = 0.5),
+                                  lambda = propagule_seed),
                             nrow = n_species,
                             ncol = n_patch)
       }
@@ -302,8 +313,11 @@ mcsim <- function(n_species = 5,
     ## internal community dynamics with competition
     m_n_hat <- (m_n * m_r_xt) / (1 + ((m_r0 - 1) / m_k) * (m_interaction %*% m_n))
 
+    ## disturbance
+    m_n_bar <- t(t(m_n_hat) * (1 - psi[n] * v_disturb))
+
     ## dispersal, internal function: see "fun_dispersal.R"
-    m_n_prime <- fun_dispersal(x = m_n_hat,
+    m_n_prime <- fun_dispersal(x = m_n_bar,
                                v_p_dispersal = v_p_dispersal,
                                m_dispersal = m_dispersal)
 
@@ -401,7 +415,7 @@ mcsim <- function(n_species = 5,
     dplyr::left_join(dplyr::tibble(patch_id = seq_len(n_patch),
                                    mean_env = mean_env,
                                    carrying_capacity = carrying_capacity,
-                                   connectivity = rowSums(m_dispersal)),
+                                   disturbance = v_disturb),
                      by = "patch_id")
 
   # diversity metrics

@@ -1,12 +1,12 @@
 #' Internal function: igp function
 #'
-#' @param x community matrix for basal, intraguild prey (ig-prey), and intraguild predator (ig-predator)
-#' @param r_b maximum reproductive rate of basal species
-#' @param e energetic conversion efficiency; must be given by the order of basal to ig-prey, basal to ig-predator, and ig-prey to ig-predator
-#' @param k carrying capacity
-#' @param a attack rate; must be given by the order of basal to ig_prey, basal to ig-predator, and ig-prey to ig-predator
-#' @param h handling time; ; must be given by the order of basal to ig_prey, basal to ig-predator, and ig-prey to ig-predator
-#' @param s0 background survival rate; must be given by the order of basal, ig-prey, and ig-predator
+#' @param x Community matrix for basal, intraguild prey (ig-prey), and intraguild predator (ig-predator)
+#' @param r_b Maximum reproductive rate of basal species
+#' @param e Energetic conversion efficiency; must be given by the order of basal to ig-prey, basal to ig-predator, and ig-prey to ig-predator
+#' @param k Carrying capacity
+#' @param a Attack rate. Must be given by the order of basal to ig_prey, basal to ig-predator, and ig-prey to ig-predator
+#' @param h Handling time. Must be given by the order of basal to ig_prey, basal to ig-predator, and ig-prey to ig-predator
+#' @param s0 Background survival rate. Must be given by the order of basal, ig-prey, and ig-predator
 #'
 #' @author Akira Terui, \email{hanabi0111@gmail.com}
 #'

@@ -1,7 +1,7 @@
 #' Internal function: get fcl
 #'
-#' @param x community matrix
-#' @param delta preference to basal over ig-prey
+#' @param x Community matrix
+#' @param delta Preference to basal over ig-prey
 #' @author Akira Terui, \email{hanabi0111@gmail.com}
 #'
 #' @export

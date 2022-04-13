@@ -1,11 +1,11 @@
 #' Internal function: to dispersal matrix
 #'
-#' @param n_patch number of patches
-#' @param landscape_size landscape size
-#' @param theta rate parameter for a dispersal kernel
+#' @param n_patch Number of patches
+#' @param landscape_size Landscape size
+#' @param theta Rate parameter for a dispersal kernel
 #' @param xy_coord xy coordinate
-#' @param distance_matrix distance matrix
-#' @param dispersal_matrix dispersal matrix
+#' @param distance_matrix Distance matrix
+#' @param dispersal_matrix Dispersal matrix
 #'
 #' @author Akira Terui, \email{hanabi0111@gmail.com}
 #'

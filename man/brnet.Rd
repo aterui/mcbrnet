@@ -16,58 +16,48 @@ brnet(
   sd_disturb_lon = 0.1,
   randomize_patch = TRUE,
   plot = TRUE,
-  patch_label = NULL,
-  patch_size = 6,
-  patch_scaling = TRUE,
-  scale_factor = 8,
+  patch_color = "env",
+  patch_label = "none",
+  patch_size = 3,
   n_patch_free = FALSE
 )
 }
 \arguments{
-\item{n_patch}{numeric value indicating the number of patches in a network.}
+\item{n_patch}{Number of patches in a network.}
 
-\item{p_branch}{numeric value indicating the branching probability (success probability of a geometric distribution).}
+\item{p_branch}{Branching probability (success probability of a geometric distribution).}
 
-\item{mean_env_source}{numeric value indicating the mean value of environmental condition at upstream terminals.}
+\item{mean_env_source}{Mean value of environmental condition at upstream terminals.}
 
-\item{sd_env_source}{numeric value indicating the SD of environmental condition at upstream terminals.}
+\item{sd_env_source}{SD of environmental condition at upstream terminals.}
 
-\item{rho}{numeric value indicating the strength of spatial autocorrelation in environmental condition. The environmental condition at patch x \eqn{z}\out{<sub>x</sub>} is determined as \eqn{z}\out{<sub>x</sub>}\eqn{ = \rho}z\out{<sub>x-1</sub>}\eqn{ + \epsilon}\out{<sub>x</sub>}, where \eqn{\epsilon}\out{<sub>x</sub>} is the random variable drawn from a normal distribution with mean 0 and SD \eqn{\sigma}\out{<sub>env</sub>}. See \href{https://github.com/aterui/mcbrnet}{github page} for further details.}
+\item{rho}{Strength of spatial autocorrelation in environmental condition.}
 
-\item{sd_env_lon}{numeric value indicating the SD of longitudinal environmental noise.}
+\item{sd_env_lon}{SD of longitudinal environmental noise.}
 
-\item{mean_disturb_source}{numeric value indicating the mean of disturbance strength at headwaters. The value is assumed to represent the proportional mortality (0 - 1.0) at the patch level.}
+\item{mean_disturb_source}{Mean disturbance strength at headwaters. The value is assumed to represent the proportional mortality (0 - 1.0) at the patch level.}
 
-\item{sd_disturb_source}{numeric value indicating the SD of disturbance strength at headwaters. The SD is defined in a logit scale with a normal distribution.}
+\item{sd_disturb_source}{SD of disturbance strength at headwaters. The SD is defined in a logit scale with a normal distribution.}
 
-\item{sd_disturb_lon}{numeric value indicating the SD of longitudinal noise of disturbance strength. The SD is defined in a logit scale with a normal distribution.}
+\item{sd_disturb_lon}{SD of longitudinal noise of disturbance strength. The SD is defined in a logit scale with a normal distribution.}
 
-\item{randomize_patch}{logical indicating whether randomize patches or not. If \code{FALSE}, the function may generate a biased network with ordered patches. Default \code{TRUE}.}
+\item{randomize_patch}{Whether randomize patches or not. If \code{FALSE}, the function may generate a biased network with ordered patches. Default \code{TRUE}.}
 
-\item{plot}{logical indicating if a plot should be shown or not. If \code{FALSE}, a plot of the generated network will not be shown. Default \code{TRUE}.}
+\item{plot}{Whether a plot should be shown or not. If \code{FALSE}, a plot of the generated network will not be shown. Default \code{TRUE}.}
 
-\item{patch_label}{character string indicating a type of patch (vertex) label (either \code{"patch", "branch", "n_upstream"}). \code{"patch"} shows patch ID, \code{"branch"} branch ID, and \code{"n_upstream"} the number of upstream contributing patches. If \code{NULL}, no label will be shown on patches in the plot. Default \code{NULL}.}
+\item{patch_color}{Type of patch (vertex) label (either \code{"env"}, \code{"disturbance"} or any color code). Default \code{"env"}.}
 
-\item{patch_size}{patch (vertex) size in the plot. Default 6.}
+\item{patch_label}{Type of patch (vertex) label (either \code{"patch", "branch", "n_upstream"}). \code{"patch"} shows patch ID, \code{"branch"} branch ID, and \code{"n_upstream"} the number of upstream contributing patches. If \code{"none"}, no label will be shown on patches in the plot. Default \code{"none"}.}
 
-\item{patch_scaling}{logical. If \code{TRUE}, patch (vertex) size will be proportional to the number of upstream contributing patches. The patch (vertex) size will be equal to \code{0.3 * scale_factor} at the upstream terminals and \code{1.3 * scale_factor} at the root. Overrides \code{patch_size}.}
+\item{patch_size}{Patch (vertex) size in the plot.}
 
-\item{scale_factor}{numeric value scaling patch (vertex) size. Enabled if \code{patch_scaling = TRUE}.}
-
-\item{n_patch_free}{logical value indicating whether imposing a constraint on \code{n_patch}. If \code{TRUE}, the number of patches a random variable following a negative binomial distribution.}
-}
-\value{
-\code{adjacency_matrix} adjacency matrix for the generated network.
-
-\code{distance_matrix} distance matrix for the generated network.
-
-\code{df_patch} data frame containing patch attributes.
+\item{n_patch_free}{Whether imposing a constraint on \code{n_patch}. If \code{TRUE}, the number of patches a random variable following a negative binomial distribution.}
 }
 \description{
 Generate a random branching network
 }
 \section{Reference}{
- see \href{https://github.com/aterui/mcbrnet}{github page} for instruction
+ see \href{https://aterui.github.io/mcbrnet/}{package webpage} for instruction
 }
 
 \examples{

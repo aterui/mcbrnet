@@ -16,7 +16,7 @@ lintr::lint_package()
 #usethis::use_coverage()
 devtools::build(path='.')
 covr::package_coverage()
-file.remove("mcbrnet_1.2.2.tar.gz")
+file.remove("mcbrnet_1.2.3.tar.gz")
 
 
 # build website -----------------------------------------------------------
@@ -26,5 +26,3 @@ usethis::use_pkgdown()
 
 # Run to build the website
 pkgdown::build_site()
-
-usethis::use_pkgdown_github_pages()

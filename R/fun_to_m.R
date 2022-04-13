@@ -1,9 +1,9 @@
 #' Internal function: to vector
 #'
-#' @param x scalar or vector
-#' @param n_species number of species
-#' @param n_patch number of patches
-#' @param param_attr indicate species or patch attribute
+#' @param x Scalar or vector
+#' @param n_species Number of species
+#' @param n_patch Number of patches
+#' @param param_attr Indicate species or patch attribute
 #'
 #' @author Akira Terui, \email{hanabi0111@gmail.com}
 #'

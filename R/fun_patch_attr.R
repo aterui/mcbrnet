@@ -1,14 +1,14 @@
 #' Internal function: weighted-mean patch attributes
 #'
-#' @param x adjacency matrix to be converted
-#' @param n_branch number of branch
-#' @param mean_source mean value of source attribute
+#' @param x Adjacency matrix to be converted
+#' @param n_branch Number of branch
+#' @param mean_source Mean value of source attribute
 #' @param sd_source SD of source attribute
 #' @param sd_lon SD of longitudinal change
-#' @param m_distance distance matrix
-#' @param rho longitudinal autocorrelation
-#' @param v_wa vector of watershed area
-#' @param logit logit transformation of mean source attribute
+#' @param m_distance Distance matrix
+#' @param rho Longitudinal autocorrelation
+#' @param v_wa Vector of watershed area
+#' @param logit Logit transformation of mean source attribute
 #'
 #' @author Akira Terui, \email{hanabi0111@gmail.com}
 #'

@@ -1,0 +1,19 @@
+---
+title: "igpsim"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{igpsim}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+
+library(mcbrnet)
+```
+
+In preparation.

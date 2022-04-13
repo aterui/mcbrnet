@@ -1,5 +1,5 @@
 ---
-title: "brnet: network generation"
+title: "brnet"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{brnet}
@@ -18,7 +18,7 @@ library(mcbrnet)
 
 ## Basic usage
 
-This function generates a random branching network with the specified number of patches and the probability of branching. The key arguments are the number of habitat patches (`n_patch`) and the probability of branching (`p_branch`), which users must specify. With these parameters, the function generates a branching network through the following steps:
+`brnet()` generates a random branching network with the specified number of patches and the probability of branching. The key arguments are the number of habitat patches (`n_patch`) and the probability of branching (`p_branch`), which users must specify. With these parameters, the function generates a branching network through the following steps:
 
 1.  Draw the number of branches in the network. An individual branch is defined as a series of connected patches from one confluence (or outlet) to the next confluence upstream (or upstream terminal). The number of branches in a network $N_{b}$ is drawn from a binomial distribution as $N_{b} \sim Binomial(N,P_{b})$, where $N$ is the number of patches and $P_b$ is the branching probability.
 
@@ -26,20 +26,13 @@ This function generates a random branching network with the specified number of 
 
 3.  Organize branches into a bifurcating branching network.
 
-Sample script:
-
-```{r, eval = F}
-library(mcbrnet)
-net <- brnet(n_patch = 50, p_branch = 0.5)
-```
-
 The function returns:
 
 -   `adjacency_matrix`: adjacency matrix.
 
 -   `distance_matrix`: distance matrix. Distance between patches is measured as the number of steps required to reach from the focal patch to the target patch through the network.
 
--   `df_patch`: a data frame (`dplyr::tibble`) containing patch attributes.
+-   `df_patch`: data frame (`dplyr::tibble`) containing patch attributes.
 
     -   *patch_id*: patch ID.
     -   *branch_id*: branch ID.
@@ -49,7 +42,7 @@ The function returns:
 
 ## Quick start
 
-The following script produce a branching network with `n_patch = 50` and `p_branch = 0.5`. By default, `brnet()` visualizes the generated network using functions in packages `igraph` (Csardi and Nepusz 2006) and `plotfunctions` (van Rij 2020) (`plot = FALSE` to disable):
+The following script produce a branching network with `n_patch = 50` and `p_branch = 0.5`. By default, `brnet` visualizes the generated network using functions in R packages `igraph` and `ggraph` (`plot = FALSE` to disable):
 
 ```{r, include=F}
 set.seed(1)
@@ -59,7 +52,9 @@ set.seed(1)
 net <- brnet(n_patch = 50, p_branch = 0.5)
 ```
 
-Randomly generated environmental values color patches and patches' size is proportional to the number of patches upstream. To view matrices, type the following script:
+By default, patches are colored based on environmental values.
+
+To view matrices, type the following script:
 
 ```{r}
 # adjacency matrix
@@ -75,7 +70,7 @@ net$distance_matrix[1:5, 1:5]
 
 ```
 
-The following script lets you view branch ID, environmental values, and the number of upstream contributing patches for each patch:
+The following script shows patch ID, branch ID, environmental values, disturbance values, and the number of upstream contributing patches for each patch:
 
 ```{r}
 net$df_patch
@@ -83,7 +78,7 @@ net$df_patch
 
 ## Customize: visualization
 
-**Arguments:** `patch_label`, `patch_scaling`, `patch_size`
+**Arguments:** `patch_label`, `patch_size`
 
 Users may add patch labels using the argument `patch_label`:
 
@@ -114,7 +109,7 @@ set.seed(1)
 net <- brnet(n_patch = 50, p_branch = 0.5, patch_label = "n_upstream")
 ```
 
-To remove patch size variation, set `patch_scaling = FALSE` and specify `patch_size`:
+To change patch size, specify `patch_size`:
 
 ```{r, include=F}
 set.seed(1)
@@ -122,16 +117,16 @@ set.seed(1)
 
 ```{r}
 # number of upstream contributing patches
-net <- brnet(n_patch = 50, p_branch = 0.5, patch_scaling = FALSE, patch_size = 8)
+net <- brnet(n_patch = 50, p_branch = 0.5, patch_size = 1)
 ```
 
 ## Customize: environment
 
 **Arguments:** `mean_env_source`, `sd_env_source`, `rho`, `sd_env_lon`
 
-Some flexibility exists to simulate environmental values, which are determined through an autoregressive process, as detailed below:
+Environmental values are generated as detailed below:
 
-1.  Environmental values for upstream terminal patches (i.e., patches with no upstream patch) are drawn from a normal distribution as $z_h \sim N(\mu_{h}, \sigma_h^2)$ (arguments `mean_env_source` and `sd_env_source`).
+1.  Environmental values for upstream terminal patches are drawn from a normal distribution as $z_h \sim N(\mu_{h}, \sigma_h^2)$ (arguments `mean_env_source` and `sd_env_source`).
 
 2.  Downstream environmental values are determined by an autoregressive process as $z_{down} \sim N(\rho z_{up}, \sigma_l^2)$ (argument `sd_env_lon`). At bifurcation patches (or confluence), the environmental value takes a weighted mean of the two contributing patches given the size of these patches $N_{up}$ (the number of upstream contributing patches): $z_{down} = \omega(\rho z_{up, 1} + \epsilon_1) + (1 - \omega)(\rho z_{up,2} + \epsilon_2)$, where $\omega = \frac{N_{up,1}}{N_{up,1} + N_{up,2}}$ and $\epsilon \sim N(0, \sigma_l^2)$.
 
@@ -141,19 +136,50 @@ Users may change the values of $\mu_h$ (default: `mean_env_source = 0`), $\sigma
 set.seed(1)
 ```
 
-```{r brnet_instruction_2, eval = T}
-net <- brnet(n_patch = 50, p_branch = 0.5,
-             sd_env_source = 3, rho = 0.5, sd_env_lon = 0.5)
+```{r env1, eval = T}
+# with large variation at headwaters
+net <- brnet(n_patch = 50,
+             p_branch = 0.5,
+             sd_env_source = 3,
+             sd_env_lon = 0.5,
+             rho = 0.5)
+```
+
+```{r env2, eval = T}
+# with large local variation with no headwater variation
+net <- brnet(n_patch = 50,
+             p_branch = 0.5,
+             sd_env_source = 0,
+             sd_env_lon = 3,
+             rho = 0.5)
 ```
 
 ## Customize: disturbance
 
 **Arguments:** `mean_disturb_source`, `sd_disturb_source` , `sd_disturb_lon`
 
-Some flexibility exists to simulate disturbance levels, as detailed below:
+Disturbance values are generated as detailed below:
 
 1.  Disturbance levels for upstream terminal patches (i.e., patches with no upstream patch) are drawn from a normal distribution in a logit scale as $logit~m_h \sim N(logit~\mu_{m}, \sigma_{h,m}^2)$.
 
 2.  Disturbance cascades downstream as in environmental values: $logit~m_{down} \sim N(logit~m_{up}, \sigma_{l,m}^2)$. At bifurcation patches (or confluence), the disturbance value takes a weighted mean of the two contributing patches given the stream size of these patches $N_{up}$ (the number of upstream contributing patches): $logit~m_{down} = \omega(logit~m_{up, 1} + \epsilon_1) + (1 - \omega)(logit~ m_{up,2} + \epsilon_2)$, where $\omega = \frac{N_{up,1}}{N_{up,1} + N_{up,2}}$ and $\epsilon \sim N(0, \sigma_{l,m}^2)$.
 
 Users may change the values of $\mu_{m}$ (`mean_disturb_source`), $\sigma_{h,m}$ (`sd_disturb_source`) and $\sigma_{l,m}$(`sd_disturb_lon`).
+
+```{r disturb1, eval = T}
+# with large variation at headwaters
+net <- brnet(n_patch = 50,
+             p_branch = 0.5,
+             sd_disturb_source = 3,
+             sd_disturb_lon = 0.5,
+             patch_color = "disturb")
+```
+
+```{r disturb2}
+# with large local variation with no headwater variation
+net <- brnet(n_patch = 50,
+             p_branch = 0.5,
+             sd_disturb_source = 0,
+             sd_disturb_lon = 3,
+             patch_color = "disturb")
+```

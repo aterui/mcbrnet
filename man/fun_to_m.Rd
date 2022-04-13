@@ -7,13 +7,13 @@
 fun_to_m(x, n_species, n_patch, param_attr)
 }
 \arguments{
-\item{x}{scalar or vector}
+\item{x}{Scalar or vector}
 
-\item{n_species}{number of species}
+\item{n_species}{Number of species}
 
-\item{n_patch}{number of patches}
+\item{n_patch}{Number of patches}
 
-\item{param_attr}{indicate species or patch attribute}
+\item{param_attr}{Indicate species or patch attribute}
 }
 \description{
 Internal function: to vector

@@ -1,7 +1,7 @@
 #' Internal function: get n_branch
 #'
-#' @param n_patch number of patches
-#' @param p_branch branching probability
+#' @param n_patch Number of patches
+#' @param p_branch Branching probability
 #'
 #' @author Akira Terui, \email{hanabi0111@gmail.com}
 #'

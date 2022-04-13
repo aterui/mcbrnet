@@ -7,9 +7,9 @@
 fun_get_n_branch(n_patch, p_branch)
 }
 \arguments{
-\item{n_patch}{number of patches}
+\item{n_patch}{Number of patches}
 
-\item{p_branch}{branching probability}
+\item{p_branch}{Branching probability}
 }
 \description{
 Internal function: get n_branch

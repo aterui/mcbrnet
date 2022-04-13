@@ -7,11 +7,11 @@
 fun_dispersal(x, v_p_dispersal, m_dispersal)
 }
 \arguments{
-\item{x}{matrix of population sizes}
+\item{x}{Population size matrix}
 
-\item{v_p_dispersal}{vector of dispersal probability}
+\item{v_p_dispersal}{Vector of dispersal probability}
 
-\item{m_dispersal}{dispersal matrix}
+\item{m_dispersal}{Dispersal matrix}
 }
 \description{
 Internal function: dispersal

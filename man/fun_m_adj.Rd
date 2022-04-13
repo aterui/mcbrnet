@@ -7,13 +7,13 @@
 fun_m_adj(n_patch, p_branch, n_branch, n_patch_free)
 }
 \arguments{
-\item{n_patch}{number of patches}
+\item{n_patch}{Number of patches}
 
-\item{p_branch}{branching probability}
+\item{p_branch}{Branching probability}
 
-\item{n_branch}{number of branches}
+\item{n_branch}{Number of branches}
 
-\item{n_patch_free}{constraint on number of patches}
+\item{n_patch_free}{Constraint on number of patches}
 }
 \description{
 Internal function: adjacency matrix in branching networks

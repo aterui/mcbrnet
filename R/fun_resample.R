@@ -1,7 +1,7 @@
 #' Internal function: resample
 #'
-#' @param x vector
-#' @param ... additional arguments passed to \code{sample}
+#' @param x Vector
+#' @param ... Additional arguments passed to \code{sample}
 #'
 #' @author Akira Terui, \email{hanabi0111@gmail.com}
 #'

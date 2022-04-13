@@ -5,7 +5,7 @@ n_patch <- round(runif(1, 20, 50))
 p_branch <- runif(1, 0.2, 0.8)
 
 n_branch <- rbinom(1, n_patch, p_branch)
-while(n_branch %% 2 == 0) {
+while (n_branch %% 2 == 0) {
   n_branch <- rbinom(1, n_patch, p_branch)
 }
 
