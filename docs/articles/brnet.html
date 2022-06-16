@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mcbrnet</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.2.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.3.0</span>
       </span>
     </div>
 
@@ -87,7 +87,7 @@
       <h1 data-toc-skip>brnet</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/aterui/mcbrnet/blob/HEAD/vignettes/brnet.Rmd" class="external-link"><code>vignettes/brnet.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/aterui/mcbrnet/blob/HEAD/../../github/mcbrnet/vignettes/brnet.Rmd" class="external-link"><code>../../github/mcbrnet/vignettes/brnet.Rmd</code></a></small>
       <div class="hidden name"><code>brnet.Rmd</code></div>
 
     </div>
@@ -157,7 +157,6 @@ packages <code>igraph</code> and <code>ggraph</code>
 (<code>plot = FALSE</code> to disable):</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">net</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/brnet.html">brnet</a></span><span class="op">(</span>n_patch <span class="op">=</span> <span class="fl">50</span>, p_branch <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></code></pre></div>
-<p><img src="brnet_files/figure-html/unnamed-chunk-3-1.png" width="700"></p>
 <p>By default, patches are colored based on environmental values.</p>
 <p>To view matrices, type the following script:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
@@ -209,20 +208,27 @@ each patch:</p>
 <code>patch_label</code>:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># patch ID</span>
-<span class="va">net</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/brnet.html">brnet</a></span><span class="op">(</span>n_patch <span class="op">=</span> <span class="fl">50</span>, p_branch <span class="op">=</span> <span class="fl">0.5</span>, patch_label <span class="op">=</span> <span class="st">"patch"</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="../reference/brnet.html">brnet</a></span><span class="op">(</span>n_patch <span class="op">=</span> <span class="fl">50</span>,
+      p_branch <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/ggbrnet.html">ggbrnet</a></span><span class="op">(</span>patch_label <span class="op">=</span> <span class="st">"patch"</span><span class="op">)</span></code></pre></div>
 <p><img src="brnet_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># branch ID</span>
-<span class="va">net</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/brnet.html">brnet</a></span><span class="op">(</span>n_patch <span class="op">=</span> <span class="fl">50</span>, p_branch <span class="op">=</span> <span class="fl">0.5</span>, patch_label <span class="op">=</span> <span class="st">"branch"</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="../reference/brnet.html">brnet</a></span><span class="op">(</span>n_patch <span class="op">=</span> <span class="fl">50</span>,
+      p_branch <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/ggbrnet.html">ggbrnet</a></span><span class="op">(</span>patch_label <span class="op">=</span> <span class="st">"branch"</span><span class="op">)</span></code></pre></div>
 <p><img src="brnet_files/figure-html/unnamed-chunk-10-1.png" width="700"></p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># number of upstream contributing patches</span>
-<span class="va">net</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/brnet.html">brnet</a></span><span class="op">(</span>n_patch <span class="op">=</span> <span class="fl">50</span>, p_branch <span class="op">=</span> <span class="fl">0.5</span>, patch_label <span class="op">=</span> <span class="st">"n_upstream"</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="../reference/brnet.html">brnet</a></span><span class="op">(</span>n_patch <span class="op">=</span> <span class="fl">50</span>,
+      p_branch <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/ggbrnet.html">ggbrnet</a></span><span class="op">(</span>patch_label <span class="op">=</span> <span class="st">"n_upstream"</span><span class="op">)</span></code></pre></div>
 <p><img src="brnet_files/figure-html/unnamed-chunk-12-1.png" width="700"></p>
 <p>To change patch size, specify <code>patch_size</code>:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># number of upstream contributing patches</span>
-<span class="va">net</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/brnet.html">brnet</a></span><span class="op">(</span>n_patch <span class="op">=</span> <span class="fl">50</span>, p_branch <span class="op">=</span> <span class="fl">0.5</span>, patch_size <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="../reference/brnet.html">brnet</a></span><span class="op">(</span>n_patch <span class="op">=</span> <span class="fl">50</span>,
+      p_branch <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/ggbrnet.html">ggbrnet</a></span><span class="op">(</span>patch_size <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></code></pre></div>
 <p><img src="brnet_files/figure-html/unnamed-chunk-14-1.png" width="700"></p>
 </div>
 <div class="section level2">
@@ -259,19 +265,21 @@ variation in environmental values at upstream terminals. The argument
 environmental noise.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># with large variation at headwaters</span>
-<span class="va">net</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/brnet.html">brnet</a></span><span class="op">(</span>n_patch <span class="op">=</span> <span class="fl">50</span>,
-             p_branch <span class="op">=</span> <span class="fl">0.5</span>,
-             sd_env_source <span class="op">=</span> <span class="fl">3</span>,
-             sd_env_lon <span class="op">=</span> <span class="fl">0.5</span>,
-             rho <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="../reference/brnet.html">brnet</a></span><span class="op">(</span>n_patch <span class="op">=</span> <span class="fl">50</span>,
+      p_branch <span class="op">=</span> <span class="fl">0.5</span>,
+      sd_env_source <span class="op">=</span> <span class="fl">3</span>,
+      sd_env_lon <span class="op">=</span> <span class="fl">0.5</span>,
+      rho <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/ggbrnet.html">ggbrnet</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <p><img src="brnet_files/figure-html/env1-1.png" width="700"></p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># with large local variation with no headwater variation</span>
-<span class="va">net</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/brnet.html">brnet</a></span><span class="op">(</span>n_patch <span class="op">=</span> <span class="fl">50</span>,
-             p_branch <span class="op">=</span> <span class="fl">0.5</span>,
-             sd_env_source <span class="op">=</span> <span class="fl">0</span>,
-             sd_env_lon <span class="op">=</span> <span class="fl">3</span>,
-             rho <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="co"># large local variation with no headwater variation</span>
+<span class="fu"><a href="../reference/brnet.html">brnet</a></span><span class="op">(</span>n_patch <span class="op">=</span> <span class="fl">50</span>,
+      p_branch <span class="op">=</span> <span class="fl">0.5</span>,
+      sd_env_source <span class="op">=</span> <span class="fl">0</span>,
+      sd_env_lon <span class="op">=</span> <span class="fl">3</span>,
+      rho <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/ggbrnet.html">ggbrnet</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <p><img src="brnet_files/figure-html/env2-1.png" width="700"></p>
 </div>
 <div class="section level2">
@@ -300,20 +308,121 @@ contributing patches): <span class="math inline">\(logit~m_{down} =
 (<code>sd_disturb_source</code>) and <span class="math inline">\(\sigma_{l,m}\)</span>(<code>sd_disturb_lon</code>).</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># with large variation at headwaters</span>
-<span class="va">net</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/brnet.html">brnet</a></span><span class="op">(</span>n_patch <span class="op">=</span> <span class="fl">50</span>,
-             p_branch <span class="op">=</span> <span class="fl">0.5</span>,
-             sd_disturb_source <span class="op">=</span> <span class="fl">3</span>,
-             sd_disturb_lon <span class="op">=</span> <span class="fl">0.5</span>,
-             patch_color <span class="op">=</span> <span class="st">"disturb"</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="../reference/brnet.html">brnet</a></span><span class="op">(</span>n_patch <span class="op">=</span> <span class="fl">50</span>,
+      p_branch <span class="op">=</span> <span class="fl">0.5</span>,
+      sd_disturb_source <span class="op">=</span> <span class="fl">3</span>,
+      sd_disturb_lon <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/ggbrnet.html">ggbrnet</a></span><span class="op">(</span>patch_color <span class="op">=</span> <span class="st">"disturb"</span><span class="op">)</span></code></pre></div>
 <p><img src="brnet_files/figure-html/disturb1-1.png" width="700"></p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># with large local variation with no headwater variation</span>
-<span class="va">net</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/brnet.html">brnet</a></span><span class="op">(</span>n_patch <span class="op">=</span> <span class="fl">50</span>,
-             p_branch <span class="op">=</span> <span class="fl">0.5</span>,
-             sd_disturb_source <span class="op">=</span> <span class="fl">0</span>,
-             sd_disturb_lon <span class="op">=</span> <span class="fl">3</span>,
-             patch_color <span class="op">=</span> <span class="st">"disturb"</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="../reference/brnet.html">brnet</a></span><span class="op">(</span>n_patch <span class="op">=</span> <span class="fl">50</span>,
+      p_branch <span class="op">=</span> <span class="fl">0.5</span>,
+      sd_disturb_source <span class="op">=</span> <span class="fl">0</span>,
+      sd_disturb_lon <span class="op">=</span> <span class="fl">3</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/ggbrnet.html">ggbrnet</a></span><span class="op">(</span>patch_color <span class="op">=</span> <span class="st">"disturb"</span><span class="op">)</span></code></pre></div>
 <p><img src="brnet_files/figure-html/disturb2-1.png" width="700"></p>
+</div>
+<div class="section level2">
+<h2 id="customize-environmental-pollutants">Customize: environmental pollutants<a class="anchor" aria-label="anchor" href="#customize-environmental-pollutants"></a>
+</h2>
+<p><strong>Arguments:</strong> <code>x</code>, <code>n_source</code>,
+<code>p</code>, <code>q</code>, <code>pattern</code></p>
+<p>From v.1.3.0, mcbrnet offers <code><a href="../reference/ptsource.html">ptsource()</a></code> function to
+simulate propagation of environmental pollutants in a branching network.
+<code><a href="../reference/ptsource.html">ptsource()</a></code> can specify:</p>
+<ul>
+<li><p><code>x</code> <code><a href="../reference/brnet.html">brnet()</a></code> object</p></li>
+<li><p><code>n_source</code> number of point sources</p></li>
+<li><p><code>p</code> strength of downstream propagation</p></li>
+<li><p><code>q</code> strength of upstream propagation</p></li>
+<li><p><code>pattern</code> spatial pattern of point sources -
+<code>"random"</code>, <code>"cluster"</code>, <code>"upstream"</code>,
+<code>"downstream"</code></p></li>
+</ul>
+<p>The function takes <code><a href="../reference/brnet.html">brnet()</a></code> object as the first argument,
+so it’s compatible with pipe <code>%&gt;%</code>. The concentration of
+pollutants has a value of 1.0 at point sources and decays with distance
+as <span class="math inline">\(p^d\)</span> in downstream (<span class="math inline">\(d=\)</span> distance, <span class="math inline">\(p=\)</span> geometric coefficient of distance
+decay) and <span class="math inline">\(q^d\)</span> in upstream. For
+example, if a focal location is 3 patches downstream from the point
+source with <span class="math inline">\(p = 0.8\)</span>, the
+concentration would be <span class="math inline">\(0.8^3 =
+0.512\)</span>. By setting different values of <code>p</code> and
+<code>q</code>, users can model the asymmetric propagation of
+environmental pollutants.</p>
+<p>For example, the following script will add a new column
+<code>impact</code> that represents the concentration of hypothetical
+environmental pollutant:</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/brnet.html">brnet</a></span><span class="op">(</span>n_patch <span class="op">=</span> <span class="fl">10</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/ptsource.html">ptsource</a></span><span class="op">(</span>n_source <span class="op">=</span> <span class="fl">3</span>, p <span class="op">=</span> <span class="fl">0.8</span>, q <span class="op">=</span> <span class="fl">0</span><span class="op">)</span> 
+
+<span class="va">y</span><span class="op">$</span><span class="va">df_patch</span>
+<span class="co">#&gt; <span style="color: #949494;"># A tibble: 10 x 7</span></span>
+<span class="co">#&gt;    patch_id impact point_source branch_id environment disturbance</span>
+<span class="co">#&gt;       <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span>        1   2.36            1         1      0.163        0.964</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span>        2   1.7             1         1      0.272        0.970</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span>        3   0               0         5      0.473        0.879</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span>        4   1               1         2      0.075<span style="text-decoration: underline;">6</span>       0.972</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span>        5   0               0         2      0.031<span style="text-decoration: underline;">4</span>       0.974</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span>        6   0               0         2      0.012<span style="text-decoration: underline;">4</span>       0.979</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span>        7   0               0         3     -<span style="color: #BB0000;">0.586</span>        0.995</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span>        8   0               0         3     -<span style="color: #BB0000;">0.525</span>        0.994</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>        9   0               0         4      0.676        0.918</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">10</span>       10   0               0         4      0.783        0.908</span>
+<span class="co">#&gt; <span style="color: #949494;"># ... with 1 more variable: n_patch_upstream &lt;dbl&gt;</span></span></code></pre></div>
+<p>Also, easy to visualize the spatial pattern of pollution with
+<code><a href="../reference/ggbrnet.html">ggbrnet()</a></code>. Just need to set
+<code>patch_color = "other"</code> and
+<code>value_col = "impact"</code>.</p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/brnet.html">brnet</a></span><span class="op">(</span>n_patch <span class="op">=</span> <span class="fl">30</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/ptsource.html">ptsource</a></span><span class="op">(</span>n_source <span class="op">=</span> <span class="fl">3</span>,
+           p <span class="op">=</span> <span class="fl">0.8</span>,
+           q <span class="op">=</span> <span class="fl">0</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/ggbrnet.html">ggbrnet</a></span><span class="op">(</span>patch_color <span class="op">=</span> <span class="st">"other"</span>, 
+          value_col <span class="op">=</span> <span class="st">"impact"</span><span class="op">)</span></code></pre></div>
+<p><img src="brnet_files/figure-html/unnamed-chunk-17-1.png" width="700"></p>
+<p>Finally, it is possible to specify the spatial pattern of point
+sources. By default, the function generates point sources at random, but
+it may be more realistic to have some spatial clusters.</p>
+<p>The <code>"cluster"</code> pattern randomly pick one location as a
+point source, and the rest of point sources appear close to this initial
+point source:</p>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/brnet.html">brnet</a></span><span class="op">(</span>n_patch <span class="op">=</span> <span class="fl">30</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/ptsource.html">ptsource</a></span><span class="op">(</span>n_source <span class="op">=</span> <span class="fl">3</span>,
+           p <span class="op">=</span> <span class="fl">0.8</span>,
+           q <span class="op">=</span> <span class="fl">0</span>,
+           pattern <span class="op">=</span> <span class="st">"cluster"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/ggbrnet.html">ggbrnet</a></span><span class="op">(</span>patch_color <span class="op">=</span> <span class="st">"other"</span>, 
+          value_col <span class="op">=</span> <span class="st">"impact"</span><span class="op">)</span></code></pre></div>
+<p><img src="brnet_files/figure-html/unnamed-chunk-18-1.png" width="700"></p>
+<p>The <code>"upstream"</code> pattern pick point source locations from
+smaller tributaries (i.e., based on number of upstream patches), but not
+necessarily clustered:</p>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/brnet.html">brnet</a></span><span class="op">(</span>n_patch <span class="op">=</span> <span class="fl">30</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/ptsource.html">ptsource</a></span><span class="op">(</span>n_source <span class="op">=</span> <span class="fl">3</span>,
+           p <span class="op">=</span> <span class="fl">0.8</span>,
+           q <span class="op">=</span> <span class="fl">0</span>,
+           pattern <span class="op">=</span> <span class="st">"upstream"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/ggbrnet.html">ggbrnet</a></span><span class="op">(</span>patch_color <span class="op">=</span> <span class="st">"other"</span>, 
+          value_col <span class="op">=</span> <span class="st">"impact"</span><span class="op">)</span></code></pre></div>
+<p><img src="brnet_files/figure-html/unnamed-chunk-19-1.png" width="700"></p>
+<p>The <code>"downstream"</code> does the opposite (pick from larger
+streams):</p>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/brnet.html">brnet</a></span><span class="op">(</span>n_patch <span class="op">=</span> <span class="fl">30</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/ptsource.html">ptsource</a></span><span class="op">(</span>n_source <span class="op">=</span> <span class="fl">3</span>,
+           p <span class="op">=</span> <span class="fl">0.8</span>,
+           q <span class="op">=</span> <span class="fl">0</span>,
+           pattern <span class="op">=</span> <span class="st">"downstream"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/ggbrnet.html">ggbrnet</a></span><span class="op">(</span>patch_color <span class="op">=</span> <span class="st">"other"</span>, 
+          value_col <span class="op">=</span> <span class="st">"impact"</span><span class="op">)</span></code></pre></div>
+<p><img src="brnet_files/figure-html/unnamed-chunk-20-1.png" width="700"></p>
 </div>
   </div>
 

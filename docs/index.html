@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">mcbrnet</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.2.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.3.0</span>
       </span>
     </div>
 
@@ -116,6 +116,9 @@ with <code><a href="reference/mcsim.html">mcsim()</a></code>. Currently under de
 <li><p><code><a href="reference/ggbrnet.html">ggbrnet()</a></code> is a wrapper of <code>ggraph</code>
 functions for easy visualization of a network produced by
 <code><a href="reference/brnet.html">brnet()</a></code> .</p></li>
+<li><p><code><a href="reference/ptsource.html">ptsource()</a></code> is a function to simulate propagation of
+environmental pollutants in a river network. Produced values may be
+plugged into <code>q</code> argument in <code><a href="reference/mcsim.html">mcsim()</a></code>.</p></li>
 <li><p><code><a href="reference/adjtodist.html">adjtodist()</a></code> converts an adjacency matrix to a
 distance matrix.</p></li>
 </ul>
@@ -138,11 +141,21 @@ script:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">#install.packages("remotes")</span>
 <span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"aterui/mcbrnet"</span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/aterui/mcbrnet" class="external-link">mcbrnet</a></span><span class="op">)</span></code></pre></div>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">mcbrnet</span><span class="op">)</span></code></pre></div>
 </div>
 <div class="section level1">
 <h1 id="change-log">Change-log<a class="anchor" aria-label="anchor" href="#change-log"></a>
 </h1>
+<div class="section level4">
+<h4 id="v130-061522">v.1.3.0 (06/15/22)<a class="anchor" aria-label="anchor" href="#v130-061522"></a>
+</h4>
+<ul>
+<li><p>add a new function <code><a href="reference/ptsource.html">ptsource()</a></code></p></li>
+<li><p>add new arguments to <code><a href="reference/mcsim.html">mcsim()</a></code></p></li>
+<li><p>update <code><a href="reference/ggbrnet.html">ggbrnet()</a></code> to be compatible with
+piping</p></li>
+</ul>
+</div>
 <div class="section level4">
 <h4 id="v123-041322">v.1.2.3 (04/13/22)<a class="anchor" aria-label="anchor" href="#v123-041322"></a>
 </h4>

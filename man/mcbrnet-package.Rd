@@ -8,4 +8,11 @@
 \description{
 Metacommunity simulation in branching networks.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/aterui/mcbrnet}
+}
+
+}
 \keyword{internal}

@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mcbrnet</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.2.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.3.0</span>
       </span>
     </div>
 
@@ -80,11 +80,12 @@
   sd_disturb_source <span class="op">=</span> <span class="fl">1</span>,
   sd_disturb_lon <span class="op">=</span> <span class="fl">0.1</span>,
   randomize_patch <span class="op">=</span> <span class="cn">TRUE</span>,
-  plot <span class="op">=</span> <span class="cn">TRUE</span>,
+  plot <span class="op">=</span> <span class="cn">FALSE</span>,
   patch_color <span class="op">=</span> <span class="st">"env"</span>,
   patch_label <span class="op">=</span> <span class="st">"none"</span>,
   patch_size <span class="op">=</span> <span class="fl">3</span>,
-  n_patch_free <span class="op">=</span> <span class="cn">FALSE</span>
+  n_patch_free <span class="op">=</span> <span class="cn">FALSE</span>,
+  <span class="va">...</span>
 <span class="op">)</span></code></pre></div>
     </div>
 
@@ -120,6 +121,8 @@
 <dd><p>Patch (vertex) size in the plot.</p></dd>
 <dt>n_patch_free</dt>
 <dd><p>Whether imposing a constraint on <code>n_patch</code>. If <code>TRUE</code>, the number of patches a random variable following a negative binomial distribution.</p></dd>
+<dt>...</dt>
+<dd><p>Arguments passed to <code><a href="https://ggraph.data-imaginist.com/reference/geom_node_text.html" class="external-link">ggraph::geom_node_label()</a></code>.</p></dd>
 </dl></div>
     <div id="reference">
     <h2>Reference</h2>
