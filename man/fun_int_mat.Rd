@@ -2,7 +2,7 @@
 % Please edit documentation in R/fun_int_mat.R
 \name{fun_int_mat}
 \alias{fun_int_mat}
-\title{Internal function: to vector}
+\title{Internal function: interaction matrix}
 \usage{
 fun_int_mat(n_species, alpha, min_alpha, max_alpha, interaction_type)
 }
@@ -18,7 +18,7 @@ fun_int_mat(n_species, alpha, min_alpha, max_alpha, interaction_type)
 \item{interaction_type}{Type of interaction}
 }
 \description{
-Internal function: to vector
+Internal function: interaction matrix
 }
 \author{
 Akira Terui, \email{hanabi0111@gmail.com}

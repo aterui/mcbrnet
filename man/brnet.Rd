@@ -15,11 +15,12 @@ brnet(
   sd_disturb_source = 1,
   sd_disturb_lon = 0.1,
   randomize_patch = TRUE,
-  plot = TRUE,
+  plot = FALSE,
   patch_color = "env",
   patch_label = "none",
   patch_size = 3,
-  n_patch_free = FALSE
+  n_patch_free = FALSE,
+  ...
 )
 }
 \arguments{
@@ -52,6 +53,8 @@ brnet(
 \item{patch_size}{Patch (vertex) size in the plot.}
 
 \item{n_patch_free}{Whether imposing a constraint on \code{n_patch}. If \code{TRUE}, the number of patches a random variable following a negative binomial distribution.}
+
+\item{...}{Arguments passed to \code{ggraph::geom_node_label()}.}
 }
 \description{
 Generate a random branching network

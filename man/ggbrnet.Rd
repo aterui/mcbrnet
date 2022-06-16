@@ -5,20 +5,23 @@
 \title{Visualize a branching network}
 \usage{
 ggbrnet(
-  adjacency_matrix,
-  patch_attr,
+  x,
   patch_color = "env",
+  value_col = NULL,
+  color_label = NULL,
   patch_label = "none",
   patch_size = 3,
   ...
 )
 }
 \arguments{
-\item{adjacency_matrix}{Adjacency matrix.}
+\item{x}{\code{brnet()} object}
 
-\item{patch_attr}{Data frame for patch attributes.}
+\item{patch_color}{Type of patch (vertex) label (either \code{"env"}, \code{"disturbance"}, \code{"other"} or any color). Default \code{"env"}.}
 
-\item{patch_color}{Type of patch (vertex) label (either \code{"env"}, \code{"disturbance"} or any color code). Default \code{"env"}.}
+\item{value_col}{Patch values. Must be specified if \code{patch_color = "other"}.}
+
+\item{color_label}{Color legend title}
 
 \item{patch_label}{Type of patch (vertex) label (either \code{"patch", "branch", "n_upstream"}). \code{"patch"} shows patch ID, \code{"branch"} branch ID, and \code{"n_upstream"} the number of upstream contributing patches. If \code{"none"}, no label will be shown on patches in the plot. Default \code{"none"}.}
 

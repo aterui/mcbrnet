@@ -2,7 +2,7 @@
 % Please edit documentation in R/fun_to_m.R
 \name{fun_to_m}
 \alias{fun_to_m}
-\title{Internal function: to vector}
+\title{Internal function: to matrix}
 \usage{
 fun_to_m(x, n_species, n_patch, param_attr)
 }
@@ -16,7 +16,7 @@ fun_to_m(x, n_species, n_patch, param_attr)
 \item{param_attr}{Indicate species or patch attribute}
 }
 \description{
-Internal function: to vector
+Internal function: to matrix
 }
 \author{
 Akira Terui, \email{hanabi0111@gmail.com}

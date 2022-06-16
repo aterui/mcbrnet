@@ -15,6 +15,7 @@
 #' @param patch_label Type of patch (vertex) label (either \code{"patch", "branch", "n_upstream"}). \code{"patch"} shows patch ID, \code{"branch"} branch ID, and \code{"n_upstream"} the number of upstream contributing patches. If \code{"none"}, no label will be shown on patches in the plot. Default \code{"none"}.
 #' @param patch_size Patch (vertex) size in the plot.
 #' @param n_patch_free Whether imposing a constraint on \code{n_patch}. If \code{TRUE}, the number of patches a random variable following a negative binomial distribution.
+#' @param ... Arguments passed to \code{ggraph::geom_node_label()}.
 #'
 #' @importFrom dplyr %>%
 #' @importFrom grDevices grey
@@ -44,11 +45,12 @@ brnet <- function(n_patch = 50,
                   sd_disturb_source = 1,
                   sd_disturb_lon = 0.1,
                   randomize_patch = TRUE,
-                  plot = TRUE,
+                  plot = FALSE,
                   patch_color = "env",
                   patch_label = "none",
                   patch_size = 3,
-                  n_patch_free = FALSE) {
+                  n_patch_free = FALSE,
+                  ...) {
 
 
   # define variables --------------------------------------------------------
@@ -161,11 +163,13 @@ brnet <- function(n_patch = 50,
 
   if (plot == TRUE) {
 
-    g <- ggbrnet(adjacency_matrix = m_adj,
-                 patch_attr = df_patch,
+    g <- ggbrnet(x = list(adjacency_matrix = m_adj,
+                          distance_matrix = m_distance,
+                          df_patch = df_patch),
                  patch_color = patch_color,
                  patch_label = patch_label,
-                 patch_size = patch_size)
+                 patch_size = patch_size,
+                 ...)
 
     print(g)
 

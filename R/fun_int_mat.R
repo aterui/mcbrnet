@@ -1,4 +1,4 @@
-#' Internal function: to vector
+#' Internal function: interaction matrix
 #'
 #' @param n_species Number of species
 #' @param alpha Interaction strength

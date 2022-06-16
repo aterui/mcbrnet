@@ -15,12 +15,12 @@ list_adj <- fun_m_adj(n_patch = n_patch,
                       n_patch_free = FALSE)
 
 n_conf_raw <- sum(rowSums(list_adj$m_adj) == 3)
-n_conf <- ifelse(sum(list_adj$m_adj[1,]) == 2,
+n_conf <- ifelse(sum(list_adj$m_adj[1, ]) == 2,
                  n_conf_raw + 1,
                  n_conf_raw)
 
 n_source_raw <- sum(rowSums(list_adj$m_adj) == 1)
-n_source <- ifelse(sum(list_adj$m_adj[1,]) == 2,
+n_source <- ifelse(sum(list_adj$m_adj[1, ]) == 2,
                    n_source_raw,
                    n_source_raw - 1)
 

@@ -21,8 +21,8 @@ simulation in branching networks. Main functions include:
     dynamics in the specified landscape. Function `mcsim()` follows a
     general framework proposed by [Thompson et
     al. (2020)](https://doi.org/10.1111/ele.13568). However, it has
-    several unique features that are detailed in [Terui et
-    al (2021)](https://doi.org/10.1073/pnas.2105574118).
+    several unique features that are detailed in [Terui et al
+    (2021)](https://doi.org/10.1073/pnas.2105574118).
 
 -   `igpsim()` simulates three-species meta-food web dynamics with
     intraguild predation. This function shares many features with
@@ -55,6 +55,14 @@ library(mcbrnet)
 
 # Change-log
 
+#### v.1.3.0 (06/15/22)
+
+-   add a new function `ptsource()`
+
+-   add new arguments to `mcsim()`
+
+-   update `ggbrnet()` to be compatible with piping
+
 #### v.1.2.3 (04/13/22)
 
 -   fix a bug in `fun_disp_mat()`
@@ -71,10 +79,10 @@ library(mcbrnet)
 
 -   implement internal functions to `mcsim()` and `brnet()`
 
--   remove argument weighted\_distance\_matrix from `mcsim()` and
+-   remove argument weighted_distance_matrix from `mcsim()` and
     `brnet()`
 
--   add argument dispersal\_matrix to `mcsim()`
+-   add argument dispersal_matrix to `mcsim()`
 
 #### v.1.2.0 (03/09/22)
 

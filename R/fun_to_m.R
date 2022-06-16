@@ -1,4 +1,4 @@
-#' Internal function: to vector
+#' Internal function: to matrix
 #'
 #' @param x Scalar or vector
 #' @param n_species Number of species

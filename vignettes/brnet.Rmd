@@ -14,6 +14,7 @@ knitr::opts_chunk$set(
 )
 
 library(mcbrnet)
+library(tidyverse)
 ```
 
 ## Basic usage
@@ -88,7 +89,9 @@ set.seed(1)
 
 ```{r}
 # patch ID
-net <- brnet(n_patch = 50, p_branch = 0.5, patch_label = "patch")
+brnet(n_patch = 50,
+      p_branch = 0.5) %>% 
+  ggbrnet(patch_label = "patch")
 ```
 
 ```{r, include=F}
@@ -97,7 +100,9 @@ set.seed(1)
 
 ```{r}
 # branch ID
-net <- brnet(n_patch = 50, p_branch = 0.5, patch_label = "branch")
+brnet(n_patch = 50,
+      p_branch = 0.5) %>% 
+  ggbrnet(patch_label = "branch")
 ```
 
 ```{r, include=F}
@@ -106,7 +111,9 @@ set.seed(1)
 
 ```{r}
 # number of upstream contributing patches
-net <- brnet(n_patch = 50, p_branch = 0.5, patch_label = "n_upstream")
+brnet(n_patch = 50,
+      p_branch = 0.5) %>% 
+  ggbrnet(patch_label = "n_upstream")
 ```
 
 To change patch size, specify `patch_size`:
@@ -116,8 +123,9 @@ set.seed(1)
 ```
 
 ```{r}
-# number of upstream contributing patches
-net <- brnet(n_patch = 50, p_branch = 0.5, patch_size = 1)
+brnet(n_patch = 50,
+      p_branch = 0.5) %>% 
+  ggbrnet(patch_size = 1)
 ```
 
 ## Customize: environment
@@ -138,20 +146,22 @@ set.seed(1)
 
 ```{r env1, eval = T}
 # with large variation at headwaters
-net <- brnet(n_patch = 50,
-             p_branch = 0.5,
-             sd_env_source = 3,
-             sd_env_lon = 0.5,
-             rho = 0.5)
+brnet(n_patch = 50,
+      p_branch = 0.5,
+      sd_env_source = 3,
+      sd_env_lon = 0.5,
+      rho = 0.5) %>% 
+  ggbrnet()
 ```
 
 ```{r env2, eval = T}
-# with large local variation with no headwater variation
-net <- brnet(n_patch = 50,
-             p_branch = 0.5,
-             sd_env_source = 0,
-             sd_env_lon = 3,
-             rho = 0.5)
+# large local variation with no headwater variation
+brnet(n_patch = 50,
+      p_branch = 0.5,
+      sd_env_source = 0,
+      sd_env_lon = 3,
+      rho = 0.5) %>% 
+  ggbrnet()
 ```
 
 ## Customize: disturbance
@@ -168,18 +178,94 @@ Users may change the values of $\mu_{m}$ (`mean_disturb_source`), $\sigma_{h,m}$
 
 ```{r disturb1, eval = T}
 # with large variation at headwaters
-net <- brnet(n_patch = 50,
-             p_branch = 0.5,
-             sd_disturb_source = 3,
-             sd_disturb_lon = 0.5,
-             patch_color = "disturb")
+brnet(n_patch = 50,
+      p_branch = 0.5,
+      sd_disturb_source = 3,
+      sd_disturb_lon = 0.5) %>% 
+  ggbrnet(patch_color = "disturb")
 ```
 
 ```{r disturb2}
 # with large local variation with no headwater variation
-net <- brnet(n_patch = 50,
-             p_branch = 0.5,
-             sd_disturb_source = 0,
-             sd_disturb_lon = 3,
-             patch_color = "disturb")
+brnet(n_patch = 50,
+      p_branch = 0.5,
+      sd_disturb_source = 0,
+      sd_disturb_lon = 3) %>% 
+  ggbrnet(patch_color = "disturb")
+```
+
+## Customize: environmental pollutants
+
+**Arguments:** `x`, `n_source`, `p`, `q`, `pattern`
+
+From v.1.3.0, mcbrnet offers `ptsource()` function to simulate propagation of environmental pollutants in a branching network. `ptsource()` can specify:
+
+-   `x` `brnet()` object
+
+-   `n_source` number of point sources
+
+-   `p` strength of downstream propagation
+
+-   `q` strength of upstream propagation
+
+-   `pattern` spatial pattern of point sources - `"random"`, `"cluster"`, `"upstream"`, `"downstream"`
+
+The function takes `brnet()` object as the first argument, so it's compatible with pipe `%>%`. The concentration of pollutants has a value of 1.0 at point sources and decays with distance as $p^d$ in downstream ($d=$ distance, $p=$ geometric coefficient of distance decay) and $q^d$ in upstream. For example, if a focal location is 3 patches downstream from the point source with $p = 0.8$, the concentration would be $0.8^3 = 0.512$. By setting different values of `p` and `q`, users can model the asymmetric propagation of environmental pollutants.
+
+For example, the following script will add a new column `impact` that represents the concentration of hypothetical environmental pollutant:
+
+```{r}
+y <- brnet(n_patch = 10) %>% 
+  ptsource(n_source = 3, p = 0.8, q = 0) 
+
+y$df_patch
+```
+
+Also, easy to visualize the spatial pattern of pollution with `ggbrnet()`. Just need to set `patch_color = "other"` and `value_col = "impact"`.
+
+```{r}
+brnet(n_patch = 30) %>% 
+  ptsource(n_source = 3,
+           p = 0.8,
+           q = 0) %>% 
+  ggbrnet(patch_color = "other", 
+          value_col = "impact")
+```
+
+Finally, it is possible to specify the spatial pattern of point sources. By default, the function generates point sources at random, but it may be more realistic to have some spatial clusters.
+
+The `"cluster"` pattern randomly pick one location as a point source, and the rest of point sources appear close to this initial point source:
+
+```{r}
+brnet(n_patch = 30) %>% 
+  ptsource(n_source = 3,
+           p = 0.8,
+           q = 0,
+           pattern = "cluster") %>% 
+  ggbrnet(patch_color = "other", 
+          value_col = "impact")
+```
+
+The `"upstream"` pattern pick point source locations from smaller tributaries (i.e., based on number of upstream patches), but not necessarily clustered:
+
+```{r}
+brnet(n_patch = 30) %>% 
+  ptsource(n_source = 3,
+           p = 0.8,
+           q = 0,
+           pattern = "upstream") %>% 
+  ggbrnet(patch_color = "other", 
+          value_col = "impact")
+```
+
+The `"downstream"` does the opposite (pick from larger streams):
+
+```{r}
+brnet(n_patch = 30) %>% 
+  ptsource(n_source = 3,
+           p = 0.8,
+           q = 0,
+           pattern = "downstream") %>% 
+  ggbrnet(patch_color = "other", 
+          value_col = "impact")
 ```

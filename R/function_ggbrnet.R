@@ -1,8 +1,9 @@
 #' Visualize a branching network
 #'
-#' @param adjacency_matrix Adjacency matrix.
-#' @param patch_attr Data frame for patch attributes.
-#' @param patch_color Type of patch (vertex) label (either \code{"env"}, \code{"disturbance"} or any color code). Default \code{"env"}.
+#' @param x `brnet()` object
+#' @param patch_color Type of patch (vertex) label (either \code{"env"}, \code{"disturbance"}, \code{"other"} or any color). Default \code{"env"}.
+#' @param value_col Patch values. Must be specified if \code{patch_color = "other"}.
+#' @param color_label Color legend title
 #' @param patch_label Type of patch (vertex) label (either \code{"patch", "branch", "n_upstream"}). \code{"patch"} shows patch ID, \code{"branch"} branch ID, and \code{"n_upstream"} the number of upstream contributing patches. If \code{"none"}, no label will be shown on patches in the plot. Default \code{"none"}.
 #' @param patch_size Patch (vertex) size in the plot.
 #' @param ... Arguments passed to \code{ggraph::geom_node_label()}.
@@ -14,32 +15,41 @@
 #' @export
 #'
 
-ggbrnet <- function(adjacency_matrix,
-                    patch_attr,
+ggbrnet <- function(x,
                     patch_color = "env",
+                    value_col = NULL,
+                    color_label = NULL,
                     patch_label = "none",
                     patch_size = 3,
                     ...) {
 
   # patch attributes --------------------------------------------------------
 
-  adj <- igraph::graph.adjacency(adjacency_matrix,
+  adj <- igraph::graph.adjacency(x$adjacency_matrix,
                                  mode = "undirected")
+
+  patch_attr <- x$df_patch
 
   ## patch color
   if (patch_color == "env") {
 
     igraph::V(adj)$patch_value <- patch_attr$environment
-    color_label <- "Environment"
+    if (is.null(color_label)) color_label <- "Environment"
 
-  } else {
+  }
 
-    if (patch_color == "disturb") {
+  if (patch_color == "disturb") {
 
-      igraph::V(adj)$patch_value <- patch_attr$disturbance
-      color_label <- "Disturbance"
+    igraph::V(adj)$patch_value <- patch_attr$disturbance
+    if (is.null(color_label)) color_label <- "Disturbance"
 
-    }
+  }
+
+  if (patch_color == "other") {
+
+    if (is.null(value_col)) stop("Provide 'value_col' if patch_color = 'other'")
+    igraph::V(adj)$patch_value <- unlist(patch_attr[, value_col])
+    if (is.null(color_label)) color_label <- "Value"
 
   }
 
@@ -74,12 +84,14 @@ ggbrnet <- function(adjacency_matrix,
 
   # plot --------------------------------------------------------------------
 
-  if (!(patch_color %in% c("env", "disturb"))) {
+  g <- ggraph::ggraph(adj,
+                      layout = igraph::layout_as_tree(adj,
+                                                      root = 1,
+                                                      flip.y = FALSE))
 
-    g <- ggraph::ggraph(adj,
-                        layout = igraph::layout_as_tree(adj,
-                                                        root = 1,
-                                                        flip.y = FALSE)) +
+  if (!(patch_color %in% c("env", "disturb", "other"))) {
+
+    g <- g +
       ggraph::geom_edge_link(color = grey(0.5)) +
       ggraph::geom_node_point(size = patch_size,
                               color = patch_color) +
@@ -92,10 +104,7 @@ ggbrnet <- function(adjacency_matrix,
 
   } else {
 
-    g <- ggraph::ggraph(adj,
-                        layout = igraph::layout_as_tree(adj,
-                                                        root = 1,
-                                                        flip.y = FALSE)) +
+    g <- g +
       ggraph::geom_edge_link(color = grey(0.5)) +
       ggraph::geom_node_point(ggplot2::aes(color = .data$patch_value),
                               size = patch_size) +

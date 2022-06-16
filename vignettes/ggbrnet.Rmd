@@ -14,6 +14,7 @@ knitr::opts_chunk$set(
 )
 
 library(mcbrnet)
+library(tidyverse)
 ```
 
 ## Basic usage
@@ -22,12 +23,11 @@ library(mcbrnet)
 
 ## Quick start
 
-`ggbrnet()` takes return values of `brnet()`, `adjacency_matrix` and `df_patch`. By default, it colors patches based on environmental values `df_patch$environment`:
+`ggbrnet()` takes `brnet()` object as the first argument, so it's compatible with pipe `%>%`. By default, it colors patches based on environmental values `df_patch$environment`:
 
 ```{r}
-x <- brnet(plot = FALSE)
-ggbrnet(adjacency_matrix = x$adjacency_matrix,
-        patch_attr = x$df_patch)
+brnet() %>% 
+  ggbrnet()
 ```
 
 ## Patch color
@@ -41,23 +41,31 @@ set.seed(1)
 ```
 
 ```{r}
-# patch ID
-ggbrnet(adjacency_matrix = x$adjacency_matrix,
-        patch_attr = x$df_patch,
-        patch_color = "disturb")
+brnet() %>% 
+  ggbrnet(patch_color = "disturb")
 ```
 
-If `patch_color` is neither `env` or `disturb`, the function takes it as an ordinary color name, for example:
+As a special case, the function accepts `"other"`, which allows users to specify any column in `$df_patch`. In this case, it is required to specify the column in which data exist in `value_col` with quotation:
+
+```{r}
+df0 <- brnet()
+df0$df_patch <- df0$df_patch %>% 
+  mutate(x = runif(50, 0, 100))
+
+df0 %>% 
+  ggbrnet(patch_color = "other",
+          value_col = "x")
+```
+
+If `patch_color` is neither `env`, `disturb`, nor `other`, the function takes it as an ordinary color name, for example:
 
 ```{r, include=F}
 set.seed(1)
 ```
 
 ```{r}
-# patch ID
-ggbrnet(adjacency_matrix = x$adjacency_matrix,
-        patch_attr = x$df_patch,
-        patch_color = "salmon")
+brnet() %>% 
+  ggbrnet(patch_color = "salmon")
 ```
 
 ## Patch label
@@ -72,9 +80,8 @@ set.seed(1)
 
 ```{r}
 # patch ID
-ggbrnet(adjacency_matrix = x$adjacency_matrix,
-        patch_attr = x$df_patch,
-        patch_label = "patch")
+brnet() %>% 
+  ggbrnet(patch_label = "patch")
 ```
 
 ```{r, include=F}
@@ -83,9 +90,8 @@ set.seed(1)
 
 ```{r}
 # branch ID
-ggbrnet(adjacency_matrix = x$adjacency_matrix,
-        patch_attr = x$df_patch,
-        patch_label = "branch")
+brnet() %>% 
+  ggbrnet(patch_label = "branch")
 ```
 
 ```{r, include=F}
@@ -94,19 +100,17 @@ set.seed(1)
 
 ```{r}
 # number of upstream contributing patches
-ggbrnet(adjacency_matrix = x$adjacency_matrix,
-        patch_attr = x$df_patch,
-        patch_label = "n_upstream")
+brnet() %>% 
+  ggbrnet(patch_label = "n_upstream")
 ```
 
 Users may specify additional arguments passed to `ggraph::geom_node_label()` to tweak details, for example:
 
 ```{r}
 # branch ID adjust label position
-ggbrnet(adjacency_matrix = x$adjacency_matrix,
-        patch_attr = x$df_patch,
-        patch_label = "branch",
-        nudge_x = 0.2)
+brnet() %>% 
+  ggbrnet(patch_label = "branch",
+          nudge_x = 0.2)
 ```
 
 ## Patch size
@@ -118,7 +122,6 @@ set.seed(1)
 ```
 
 ```{r}
-ggbrnet(adjacency_matrix = x$adjacency_matrix,
-        patch_attr = x$df_patch,
-        patch_size = 1)
+brnet() %>% 
+  ggbrnet(patch_size = 1)
 ```
