@@ -31,6 +31,10 @@ simulation in branching networks. Main functions include:
 -   `ggbrnet()` is a wrapper of `ggraph` functions for easy
     visualization of a network produced by `brnet()` .
 
+-   `ptsource()` is a function to simulate propagation of environmental
+    pollutants in a river network. Produced values may be plugged into
+    `q` argument in `mcsim()`.
+
 -   `adjtodist()` converts an adjacency matrix to a distance matrix.
 
 See Articles for instruction.
