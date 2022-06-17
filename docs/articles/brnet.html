@@ -211,25 +211,25 @@ each patch:</p>
 <span class="fu"><a href="../reference/brnet.html">brnet</a></span><span class="op">(</span>n_patch <span class="op">=</span> <span class="fl">50</span>,
       p_branch <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="../reference/ggbrnet.html">ggbrnet</a></span><span class="op">(</span>patch_label <span class="op">=</span> <span class="st">"patch"</span><span class="op">)</span></code></pre></div>
-<p><img src="brnet_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
+<p><img src="brnet_files/figure-html/viz1-1.png" width="700"></p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># branch ID</span>
 <span class="fu"><a href="../reference/brnet.html">brnet</a></span><span class="op">(</span>n_patch <span class="op">=</span> <span class="fl">50</span>,
       p_branch <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="../reference/ggbrnet.html">ggbrnet</a></span><span class="op">(</span>patch_label <span class="op">=</span> <span class="st">"branch"</span><span class="op">)</span></code></pre></div>
-<p><img src="brnet_files/figure-html/unnamed-chunk-10-1.png" width="700"></p>
+<p><img src="brnet_files/figure-html/viz2-1.png" width="700"></p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># number of upstream contributing patches</span>
 <span class="fu"><a href="../reference/brnet.html">brnet</a></span><span class="op">(</span>n_patch <span class="op">=</span> <span class="fl">50</span>,
       p_branch <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="../reference/ggbrnet.html">ggbrnet</a></span><span class="op">(</span>patch_label <span class="op">=</span> <span class="st">"n_upstream"</span><span class="op">)</span></code></pre></div>
-<p><img src="brnet_files/figure-html/unnamed-chunk-12-1.png" width="700"></p>
+<p><img src="brnet_files/figure-html/viz3-1.png" width="700"></p>
 <p>To change patch size, specify <code>patch_size</code>:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/brnet.html">brnet</a></span><span class="op">(</span>n_patch <span class="op">=</span> <span class="fl">50</span>,
       p_branch <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="../reference/ggbrnet.html">ggbrnet</a></span><span class="op">(</span>patch_size <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></code></pre></div>
-<p><img src="brnet_files/figure-html/unnamed-chunk-14-1.png" width="700"></p>
+<p><img src="brnet_files/figure-html/viz4-1.png" width="700"></p>
 </div>
 <div class="section level2">
 <h2 id="customize-environment">Customize: environment<a class="anchor" aria-label="anchor" href="#customize-environment"></a>
@@ -384,7 +384,7 @@ environmental pollutant:</p>
            q <span class="op">=</span> <span class="fl">0</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="../reference/ggbrnet.html">ggbrnet</a></span><span class="op">(</span>patch_color <span class="op">=</span> <span class="st">"other"</span>, 
           value_col <span class="op">=</span> <span class="st">"impact"</span><span class="op">)</span></code></pre></div>
-<p><img src="brnet_files/figure-html/unnamed-chunk-17-1.png" width="700"></p>
+<p><img src="brnet_files/figure-html/pollute2-1.png" width="700"></p>
 <p>Finally, it is possible to specify the spatial pattern of point
 sources. By default, the function generates point sources at random, but
 it may be more realistic to have some spatial clusters.</p>
@@ -399,7 +399,7 @@ point source:</p>
            pattern <span class="op">=</span> <span class="st">"cluster"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="../reference/ggbrnet.html">ggbrnet</a></span><span class="op">(</span>patch_color <span class="op">=</span> <span class="st">"other"</span>, 
           value_col <span class="op">=</span> <span class="st">"impact"</span><span class="op">)</span></code></pre></div>
-<p><img src="brnet_files/figure-html/unnamed-chunk-18-1.png" width="700"></p>
+<p><img src="brnet_files/figure-html/pollute3-1.png" width="700"></p>
 <p>The <code>"upstream"</code> pattern pick point source locations from
 smaller tributaries (i.e., based on number of upstream patches), but not
 necessarily clustered:</p>
@@ -411,7 +411,7 @@ necessarily clustered:</p>
            pattern <span class="op">=</span> <span class="st">"upstream"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="../reference/ggbrnet.html">ggbrnet</a></span><span class="op">(</span>patch_color <span class="op">=</span> <span class="st">"other"</span>, 
           value_col <span class="op">=</span> <span class="st">"impact"</span><span class="op">)</span></code></pre></div>
-<p><img src="brnet_files/figure-html/unnamed-chunk-19-1.png" width="700"></p>
+<p><img src="brnet_files/figure-html/pollute4-1.png" width="700"></p>
 <p>The <code>"downstream"</code> does the opposite (pick from larger
 streams):</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
@@ -422,7 +422,7 @@ streams):</p>
            pattern <span class="op">=</span> <span class="st">"downstream"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="../reference/ggbrnet.html">ggbrnet</a></span><span class="op">(</span>patch_color <span class="op">=</span> <span class="st">"other"</span>, 
           value_col <span class="op">=</span> <span class="st">"impact"</span><span class="op">)</span></code></pre></div>
-<p><img src="brnet_files/figure-html/unnamed-chunk-20-1.png" width="700"></p>
+<p><img src="brnet_files/figure-html/pollute5-1.png" width="700"></p>
 </div>
   </div>
 

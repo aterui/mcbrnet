@@ -87,7 +87,7 @@ Users may add patch labels using the argument `patch_label`:
 set.seed(1)
 ```
 
-```{r}
+```{r viz1}
 # patch ID
 brnet(n_patch = 50,
       p_branch = 0.5) %>% 
@@ -98,7 +98,7 @@ brnet(n_patch = 50,
 set.seed(1)
 ```
 
-```{r}
+```{r viz2}
 # branch ID
 brnet(n_patch = 50,
       p_branch = 0.5) %>% 
@@ -109,7 +109,7 @@ brnet(n_patch = 50,
 set.seed(1)
 ```
 
-```{r}
+```{r viz3}
 # number of upstream contributing patches
 brnet(n_patch = 50,
       p_branch = 0.5) %>% 
@@ -122,7 +122,7 @@ To change patch size, specify `patch_size`:
 set.seed(1)
 ```
 
-```{r}
+```{r viz4}
 brnet(n_patch = 50,
       p_branch = 0.5) %>% 
   ggbrnet(patch_size = 1)
@@ -214,7 +214,7 @@ The function takes `brnet()` object as the first argument, so it's compatible wi
 
 For example, the following script will add a new column `impact` that represents the concentration of hypothetical environmental pollutant:
 
-```{r}
+```{r pollute1}
 y <- brnet(n_patch = 10) %>% 
   ptsource(n_source = 3, p = 0.8, q = 0) 
 
@@ -223,7 +223,7 @@ y$df_patch
 
 Also, easy to visualize the spatial pattern of pollution with `ggbrnet()`. Just need to set `patch_color = "other"` and `value_col = "impact"`.
 
-```{r}
+```{r pollute2}
 brnet(n_patch = 30) %>% 
   ptsource(n_source = 3,
            p = 0.8,
@@ -236,7 +236,7 @@ Finally, it is possible to specify the spatial pattern of point sources. By defa
 
 The `"cluster"` pattern randomly pick one location as a point source, and the rest of point sources appear close to this initial point source:
 
-```{r}
+```{r pollute3}
 brnet(n_patch = 30) %>% 
   ptsource(n_source = 3,
            p = 0.8,
@@ -248,7 +248,7 @@ brnet(n_patch = 30) %>%
 
 The `"upstream"` pattern pick point source locations from smaller tributaries (i.e., based on number of upstream patches), but not necessarily clustered:
 
-```{r}
+```{r pollute4}
 brnet(n_patch = 30) %>% 
   ptsource(n_source = 3,
            p = 0.8,
@@ -260,7 +260,7 @@ brnet(n_patch = 30) %>%
 
 The `"downstream"` does the opposite (pick from larger streams):
 
-```{r}
+```{r pollute5}
 brnet(n_patch = 30) %>% 
   ptsource(n_source = 3,
            p = 0.8,
