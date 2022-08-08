@@ -177,7 +177,11 @@ brnet <- function(n_patch = 50,
 
   # return ------------------------------------------------------------------
 
-  return(list(adjacency_matrix = m_adj,
-              distance_matrix = m_distance,
-              df_patch = df_patch))
+  list_brnet <- list(adjacency_matrix = m_adj,
+                     distance_matrix = m_distance,
+                     df_patch = df_patch)
+
+  class(list_brnet) <- "brnet"
+
+  return(list_brnet)
 }
