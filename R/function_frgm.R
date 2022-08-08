@@ -1,8 +1,10 @@
 #' Return a dispersal probability matrix after accounting for network fragmentation
 #'
-#' @param adjacency_matrix adjacency matrix
+#' @param x
 #' @param dispersal_matrix adjacency matrix
-#' @param omega adjacency matrix
+#' @param pattern
+#' @param p
+#' @param n_barrier
 #'
 #' @author Akira Terui, \email{hanabi0111@gmail.com}
 #'
@@ -14,36 +16,69 @@
 #' @export
 #'
 
-frgm <- function(adjacency_matrix,
-                 dispersal_matrix
-                 omega) {
+frgm <- function(x,
+                 dispersal_matrix,
+                 patten = "random",
+                 p = NULL,
+                 n_barrier) {
 
-  m_adj <- adjacency_matrix
+  ## adjacency graph
+  m_adj <- ifelse(class(x) == "brnet", x$adjacency_matrix, x)
+  g0 <- m_adj %>%
+    graph_from_adjacency_matrix("undirected")
+
+  ## distance matrix
+  m_dist <- ifelse(class(x) == "brnet",
+                   x$distance_matrix,
+                   igraph::distances(g0))
+
+  ## basic numbers
+  n_patch <- unique(dim(m_adj))
+  n_edge <- n_patch - 1
   m_disp <- dispersal_matrix
 
   if(dplyr::n_distinct(dim(m_adj)) != 1) stop("invalid dimension in the adjacency matrix")
-  if(unique(dim(m_adj)) != length(omega)) stop('invalid length in "prob"; must match the dimension of the adjacency matrix')
 
-  n_patch <- unique(dim(m_adj))
-  v_seq <- 1:n_patch
+  if (!is.null(p)) {
 
-  m_p <- sapply(1:n_patch, function(i) {
-    y <- m_adj %>%
-      graph_from_adjacency_matrix("undirected") %>%
-      shortest_paths(from = i) %>%
-      .$vpath %>%
-      lapply(FUN = function(x) cumprod(omega[x[-1]])[length(x) - 1]) %>%
-      unlist()
+    ## if p specified
+    if(any(p < 0 | p > 1)) stop("p must be 0 - 1.")
+    if(n_edge != length(p)) stop("invalid length in p;
+                                  resistance p must match
+                                  the dimension of
+                                  the adjacency matrix")
 
-    v_seq[v_seq != i] <- y
+    v_p <- p
+    E(g0)$weight <- -log(v_p)
+    m_frag <- exp(-distances(g0))
 
-    return(v_seq)
-  }) %>%
-    t()
+  } else {
 
-  diag(m_p) <- 0
+    ## if p not specified
+    if (n_barrier > n_edge) stop("n_barrier exceeds the number of edges in the graph")
 
-  m_disp_prime <- m_p * m_disp
+    if (pattern == "random") {
+      barrier <- resample(seq_len(n_edge), size = n_barrier)
+    }
 
-  return(m_disp_prime)
+    if (pattern == "cluster") {
+      s <- resample(seq_len(n_edge), size = 1)
+      barrier <- order(m_dist[s, ])[seq_len(n_barrier)]
+    }
+
+    if (pattern == "downstream"|"upstream") {
+
+      if (class(x) != "brnet") stop("x must be class 'brnet'")
+
+      v_wa <- x$df_patch$n_patch_upstream
+      s <- ifelse(pattern == "downstream",
+                  order(-v_wa),
+                  order(v_wa))
+
+      barrier <- s[seq_len(n_barrier)]
+
+    }
+
+  }
+
 }
