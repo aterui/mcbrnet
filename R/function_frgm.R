@@ -1,6 +1,6 @@
-#' Return a dispersal probability matrix after accounting for network fragmentation
+#' Dispersal probability matrix after accounting for network fragmentation
 #'
-#' @param x
+#' @param x 'brnet' object or adjacency matrix
 #' @param dispersal_matrix adjacency matrix
 #' @param pattern
 #' @param p
@@ -17,7 +17,7 @@
 #'
 
 frgm <- function(x,
-                 dispersal_matrix,
+                 dispersal_matrix = NULL,
                  patten = "random",
                  p = NULL,
                  n_barrier) {
@@ -26,11 +26,6 @@ frgm <- function(x,
   m_adj <- ifelse(class(x) == "brnet", x$adjacency_matrix, x)
   g0 <- m_adj %>%
     graph_from_adjacency_matrix("undirected")
-
-  ## distance matrix
-  m_dist <- ifelse(class(x) == "brnet",
-                   x$distance_matrix,
-                   igraph::distances(g0))
 
   ## basic numbers
   n_patch <- unique(dim(m_adj))
@@ -49,8 +44,6 @@ frgm <- function(x,
                                   the adjacency matrix")
 
     v_p <- p
-    E(g0)$weight <- -log(v_p)
-    m_frag <- exp(-distances(g0))
 
   } else {
 
@@ -78,6 +71,28 @@ frgm <- function(x,
       barrier <- s[seq_len(n_barrier)]
 
     }
+
+    v_p <- rep(1, n_edge)
+    v_p[barrier] <- p
+
+  }
+
+  E(g0)$weight <- -log(v_p)
+  m_frgm <- exp(-distances(g0))
+
+  if (class(x) == "brnet") {
+
+    x$frgm_matrix <- m_frag
+    x$dispersal_matrix_frgm <- dispersal_matrix * m_frag
+
+    return(x)
+
+  } else {
+
+    if (is.null(m_disp)) stop("dispersal matrix must be provided")
+    m_disp_frgm <- m_disp * m_frgm
+
+    return(m_disp_frgm)
 
   }
 
