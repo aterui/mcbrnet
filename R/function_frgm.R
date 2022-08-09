@@ -1,10 +1,10 @@
 #' Dispersal probability matrix after accounting for network fragmentation
 #'
 #' @param x 'brnet' object or adjacency matrix
-#' @param dispersal_matrix adjacency matrix
-#' @param pattern
-#' @param p
-#' @param n_barrier
+#' @param dispersal_matrix dispersal matrix
+#' @param pattern fragmentation pattern
+#' @param p passability of fragmented edges (probability)
+#' @param n_barrier number of barriers
 #'
 #' @author Akira Terui, \email{hanabi0111@gmail.com}
 #'
@@ -18,14 +18,21 @@
 
 frgm <- function(x,
                  dispersal_matrix = NULL,
-                 patten = "random",
+                 pattern = "random",
                  p = NULL,
                  n_barrier) {
 
   ## adjacency graph
-  m_adj <- ifelse(class(x) == "brnet", x$adjacency_matrix, x)
+  m_adj <- ifelse(inherits(x, what = "brnet"),
+                  x$adjacency_matrix,
+                  x)
+
   g0 <- m_adj %>%
-    graph_from_adjacency_matrix("undirected")
+    igraph::graph_from_adjacency_matrix("undirected")
+
+  m_dist <- ifelse(inherits(x, what = "brnet"),
+                   x$distance_matrix,
+                   igraph::distances(g0))
 
   ## basic numbers
   n_patch <- unique(dim(m_adj))
@@ -38,17 +45,18 @@ frgm <- function(x,
 
     ## if p specified
     if(any(p < 0 | p > 1)) stop("p must be 0 - 1.")
-    if(n_edge != length(p)) stop("invalid length in p;
-                                  resistance p must match
-                                  the dimension of
-                                  the adjacency matrix")
+    if(n_edge != length(p)) stop(paste("invalid length in p;
+                                        length must match
+                                        the dimension of
+                                        the adjacency matrix,", n_edge))
 
     v_p <- p
 
   } else {
 
     ## if p not specified
-    if (n_barrier > n_edge) stop("n_barrier exceeds the number of edges in the graph")
+    if (n_barrier > n_edge) stop("n_barrier exceeds
+                                 the number of edges in the graph")
 
     if (pattern == "random") {
       barrier <- resample(seq_len(n_edge), size = n_barrier)
@@ -61,7 +69,7 @@ frgm <- function(x,
 
     if (pattern == "downstream"|"upstream") {
 
-      if (class(x) != "brnet") stop("x must be class 'brnet'")
+      if (!inherits(x, what = "brnet")) stop("x must be class 'brnet'")
 
       v_wa <- x$df_patch$n_patch_upstream
       s <- ifelse(pattern == "downstream",
@@ -72,18 +80,23 @@ frgm <- function(x,
 
     }
 
+
+    if (length(p) != 1 | length(p) != n_barrier) stop(paste("invalid length in p;
+                                                            length must be one or
+                                                            match n_barrier,",
+                                                            n_barrier))
     v_p <- rep(1, n_edge)
     v_p[barrier] <- p
 
   }
 
-  E(g0)$weight <- -log(v_p)
-  m_frgm <- exp(-distances(g0))
+  igraph::E(g0)$weight <- -log(v_p)
+  m_frgm <- exp(-igraph::distances(g0))
 
-  if (class(x) == "brnet") {
+  if (inherits(x, what = "brnet")) {
 
-    x$frgm_matrix <- m_frag
-    x$dispersal_matrix_frgm <- dispersal_matrix * m_frag
+    x$frgm_matrix <- m_frgm
+    x$dispersal_matrix_frgm <- dispersal_matrix * m_frgm
 
     return(x)
 

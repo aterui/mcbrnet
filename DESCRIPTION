@@ -11,14 +11,11 @@ LazyData: true
 RoxygenNote: 7.1.1
 Imports: 
     igraph,
-    plotfunctions,
-    viridis,
     dplyr,
     ggplot2,
     mvtnorm,
     rlang,
     boot,
-    tibble,
     ggraph,
     MetBrewer
 Roxygen: list(markdown = TRUE)

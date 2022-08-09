@@ -53,7 +53,6 @@ test_that("distance/dispersal matrix", {
 
 test_that("df_xy_coord", {
 
-  expect_true(tibble::is_tibble(m1$df_xy_coord))
   expect_true(is.null(m2$df_xy_coord))
   expect_true(is.null(m3$df_xy_coord))
 
