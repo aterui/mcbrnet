@@ -51,6 +51,7 @@ frgm <- function(x,
   m_disp <- exp(-rate * m_dist)
   diag(m_disp) <- 0
 
+
   # passability -------------------------------------------------------------
 
   if (any(p < 0 | p > 1)) stop("p must be 0 - 1.")
