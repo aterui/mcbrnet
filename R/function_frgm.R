@@ -31,6 +31,8 @@ frgm <- function(x,
     m_adj <- x
   }
 
+  if(dplyr::n_distinct(dim(m_adj)) != 1) stop("invalid dimension in the adjacency matrix")
+
   g0 <- m_adj %>%
     igraph::graph_from_adjacency_matrix("undirected")
 
@@ -40,69 +42,62 @@ frgm <- function(x,
     m_dist <- igraph::distances(g0)
   }
 
-  ## basic numbers
+
+  # basic numbers -----------------------------------------------------------
+
   n_patch <- unique(dim(m_adj))
   n_edge <- n_patch - 1
+
   m_disp <- exp(-rate * m_dist)
+  diag(m_disp) <- 0
 
-  if(dplyr::n_distinct(dim(m_adj)) != 1) stop("invalid dimension in the adjacency matrix")
+  # passability -------------------------------------------------------------
 
-  if (!is.null(p)) {
+  if (any(p < 0 | p > 1)) stop("p must be 0 - 1.")
 
-    ## if p specified
-    if (any(p < 0 | p > 1)) stop("p must be 0 - 1.")
-    if (n_edge != length(p)) stop(paste("invalid length in p;
-                                                   length must be one or match
-                                                   the dimension of
-                                                   the adjacency matrix,", n_edge))
-
-    v_p <- p
-
-  } else {
-
-    ## if p not specified
-    if (n_barrier > n_edge) stop("n_barrier exceeds
+  if (n_barrier > n_edge) stop("n_barrier exceeds
                                  the number of edges in the graph")
 
-    if (pattern == "random") {
-      barrier <- resample(seq_len(n_edge), size = n_barrier)
-    }
+  if (pattern == "random") {
+    barrier <- resample(seq_len(n_edge), size = n_barrier)
+  }
 
-    if (pattern == "cluster") {
-      s <- resample(seq_len(n_edge), size = 1)
-      barrier <- order(m_dist[s, ])[seq_len(n_barrier)]
-    }
+  if (pattern == "cluster") {
+    s <- resample(seq_len(n_edge), size = 1)
+    barrier <- order(m_dist[s, ])[seq_len(n_barrier)]
+  }
 
-    if (pattern == "downstream"|"upstream") {
+  if (pattern == "downstream"|pattern == "upstream") {
 
-      if (!inherits(x, what = "brnet")) stop("x must be class 'brnet'")
+    if (!inherits(x, what = "brnet")) stop("x must be class 'brnet'")
 
-      v_wa <- x$df_patch$n_patch_upstream
-      s <- ifelse(pattern == "downstream",
-                  order(-v_wa),
-                  order(v_wa))
+    v_wa <- x$df_patch$n_patch_upstream
+    s <- ifelse(pattern == "downstream",
+                order(-v_wa),
+                order(v_wa))
 
-      barrier <- s[seq_len(n_barrier)]
-
-    }
-
-
-    if (length(p) != 1 | length(p) != n_barrier) stop(paste("invalid length in p;
-                                                            length must be one or
-                                                            match n_barrier,",
-                                                            n_barrier))
-    v_p <- rep(1, n_edge)
-    v_p[barrier] <- p
+    barrier <- s[seq_len(n_barrier)]
 
   }
+
+  if (!(length(p) == 1 | length(p) == n_barrier)) stop(paste("invalid length in p;
+                                                          length must be one or
+                                                          match n_barrier,",
+                                                             n_barrier))
+
+  v_p <- rep(1, n_edge)
+  v_p[barrier] <- p
 
   igraph::E(g0)$weight <- -log(v_p)
   m_frgm <- exp(-igraph::distances(g0))
 
+
+  # append frgm matrix ------------------------------------------------------
+
   if (inherits(x, what = "brnet")) {
 
     x$frgm_matrix <- m_frgm
-    x$dispersal_matrix_frgm <- dispersal_matrix * m_frgm
+    x$dispersal_matrix_frgm <- m_disp * m_frgm
 
     return(x)
 
@@ -111,7 +106,8 @@ frgm <- function(x,
     if (is.null(m_disp)) stop("dispersal matrix must be provided")
     m_disp_frgm <- m_disp * m_frgm
 
-    return(m_disp_frgm)
+    return(list(frgm_matrix = m_frgm,
+                dispersal_matrix_frgm = m_disp_frgm))
 
   }
 
