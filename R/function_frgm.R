@@ -23,7 +23,7 @@ frgm <- function(x,
                  n_barrier) {
 
 
-  # adjacency graph & distancce matrix --------------------------------------
+  # adjacency graph & distance matrix ---------------------------------------
 
   if(inherits(x, what = "brnet")) {
     m_adj <- x$adjacency_matrix
