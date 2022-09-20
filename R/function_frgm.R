@@ -1,7 +1,7 @@
 #' Dispersal probability matrix after accounting for network fragmentation
 #'
 #' @param x 'brnet' object or adjacency matrix
-#' @param dispersal_matrix dispersal matrix
+#' @param rate rate parameter of exponential dispersal kernel
 #' @param pattern fragmentation pattern
 #' @param p passability of fragmented edges (probability)
 #' @param n_barrier number of barriers
@@ -17,12 +17,14 @@
 #'
 
 frgm <- function(x,
-                 dispersal_matrix = NULL,
+                 rate,
                  pattern = "random",
                  p = NULL,
                  n_barrier) {
 
-  ## adjacency graph
+
+  # adjacency graph & distancce matrix --------------------------------------
+
   if(inherits(x, what = "brnet")) {
     m_adj <- x$adjacency_matrix
   } else {
@@ -41,18 +43,18 @@ frgm <- function(x,
   ## basic numbers
   n_patch <- unique(dim(m_adj))
   n_edge <- n_patch - 1
-  m_disp <- dispersal_matrix
+  m_disp <- exp(-rate * m_dist)
 
   if(dplyr::n_distinct(dim(m_adj)) != 1) stop("invalid dimension in the adjacency matrix")
 
   if (!is.null(p)) {
 
     ## if p specified
-    if(any(p < 0 | p > 1)) stop("p must be 0 - 1.")
-    if(n_edge != length(p)) stop(paste("invalid length in p;
-                                        length must match
-                                        the dimension of
-                                        the adjacency matrix,", n_edge))
+    if (any(p < 0 | p > 1)) stop("p must be 0 - 1.")
+    if (n_edge != length(p)) stop(paste("invalid length in p;
+                                                   length must be one or match
+                                                   the dimension of
+                                                   the adjacency matrix,", n_edge))
 
     v_p <- p
 
