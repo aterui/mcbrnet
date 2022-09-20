@@ -23,16 +23,20 @@ frgm <- function(x,
                  n_barrier) {
 
   ## adjacency graph
-  m_adj <- ifelse(inherits(x, what = "brnet"),
-                  x$adjacency_matrix,
-                  x)
+  if(inherits(x, what = "brnet")) {
+    m_adj <- x$adjacency_matrix
+  } else {
+    m_adj <- x
+  }
 
   g0 <- m_adj %>%
     igraph::graph_from_adjacency_matrix("undirected")
 
-  m_dist <- ifelse(inherits(x, what = "brnet"),
-                   x$distance_matrix,
-                   igraph::distances(g0))
+  if(inherits(x, what = "brnet")) {
+    m_dist <- x$distance_matrix
+  } else {
+    m_dist <- igraph::distances(g0)
+  }
 
   ## basic numbers
   n_patch <- unique(dim(m_adj))
