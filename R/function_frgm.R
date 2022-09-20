@@ -56,8 +56,7 @@ frgm <- function(x,
 
   if (any(p < 0 | p > 1)) stop("p must be 0 - 1.")
 
-  if (n_barrier > n_edge) stop("n_barrier exceeds
-                                 the number of edges in the graph")
+  if (n_barrier > n_edge) stop("n_barrier exceeds the number of edges in the graph")
 
   if (pattern == "random") {
     barrier <- resample(seq_len(n_edge), size = n_barrier)
