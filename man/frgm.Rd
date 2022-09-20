@@ -4,12 +4,12 @@
 \alias{frgm}
 \title{Dispersal probability matrix after accounting for network fragmentation}
 \usage{
-frgm(x, dispersal_matrix = NULL, pattern = "random", p = NULL, n_barrier)
+frgm(x, rate, pattern = "random", p = NULL, n_barrier)
 }
 \arguments{
 \item{x}{'brnet' object or adjacency matrix}
 
-\item{dispersal_matrix}{dispersal matrix}
+\item{rate}{rate parameter of exponential dispersal kernel}
 
 \item{pattern}{fragmentation pattern}
 
