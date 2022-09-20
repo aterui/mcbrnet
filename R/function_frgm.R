@@ -86,7 +86,7 @@ frgm <- function(x,
   if (!(length(p) == 1 | length(p) == n_barrier)) stop(paste("invalid length in p;
                                                        length must be one or
                                                        match n_barrier,",
-                                                             n_barrier))
+                                                       n_barrier))
 
   v_p <- rep(1, n_edge)
   v_p[barrier] <- p
