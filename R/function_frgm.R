@@ -72,11 +72,13 @@ frgm <- function(x,
     if (!inherits(x, what = "brnet")) stop("x must be class 'brnet'")
 
     v_wa <- x$df_patch$n_patch_upstream
-    s <- ifelse(pattern == "downstream",
-                order(-v_wa),
-                order(v_wa))
+    prob <- ifelse(pattern == "downstream",
+                   v_wa,
+                   1 / v_wa)
 
-    barrier <- s[seq_len(n_barrier)]
+    barrier <- sample(n_patch,
+                      size = n_barrier,
+                      prob = prob)
 
   }
 

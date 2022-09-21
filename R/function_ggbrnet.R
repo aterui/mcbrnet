@@ -20,7 +20,7 @@
 ggbrnet <- function(x,
                     patch_color = "env",
                     edge_color = "black",
-                    edge_weight = NULL,
+                    edge_weight = "none",
                     value_col = NULL,
                     color_label = NULL,
                     patch_label = "none",
