@@ -58,27 +58,36 @@ ptsource <- function(x,
   # impact ------------------------------------------------------------------
 
   if (pattern == "random") {
-    source <- resample(seq_len(n_patch), size = n_source)
+    pts <- resample(seq_len(n_patch), size = n_source)
   }
 
   if (pattern == "cluster") {
     s <- resample(seq_len(n_patch), size = 1)
-    source <- order(m_dist[s, ])[seq_len(n_source)]
+    distance <- m_dist[s, ]
+    distance[distance == 0] <- 2
+    prob <- 1 / dis
+    pts <- resample(seq_len(n_patch),
+                    size = n_source,
+                    prob = prob)
   }
 
   if (pattern == "downstream") {
-    s <- order(-v_wa)
-    source <- s[seq_len(n_source)]
+    prob <- v_wa
+    pts <- resample(seq_len(n_patch),
+                    size = n_source,
+                    prob = prob)
   }
 
   if (pattern == "upstream") {
-    s <- order(v_wa)
-    source <- s[seq_len(n_source)]
+    prob <- 1 / v_wa
+    pts <- resample(seq_len(n_patch),
+                    size = n_source,
+                    prob = prob)
   }
 
   v_d <- v_u <- v_d_attr <- v_u_attr <- rep(0, n_patch)
-  v_d[source] <- v_u[source] <- 1
-  v_d_attr[source] <- v_u_attr[source] <- 1
+  v_d[pts] <- v_u[pts] <- 1
+  v_d_attr[pts] <- v_u_attr[pts] <- 1
 
   for (i in seq_len(max(v_d_to_root))) {
     ## upstream propagation
@@ -90,14 +99,14 @@ ptsource <- function(x,
     v_d_attr <- v_d + v_d_attr
   }
 
-  v_u_attr[source] <- v_u_attr[source] - 1
+  v_u_attr[pts] <- v_u_attr[pts] - 1
   v_attr <- v_u_attr + v_d_attr
 
 
   # export ------------------------------------------------------------------
 
   v_source <- rep(0, n_patch)
-  v_source[source] <- 1
+  v_source[pts] <- 1
 
   df0 <- dplyr::tibble(patch_id = x$df_patch$patch_id[order(v_patch_order)],
                        impact = c(v_attr),
