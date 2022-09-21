@@ -69,33 +69,46 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">ggbrnet</span><span class="op">(</span>
-  <span class="va">x</span>,
-  patch_color <span class="op">=</span> <span class="st">"env"</span>,
-  value_col <span class="op">=</span> <span class="cn">NULL</span>,
-  color_label <span class="op">=</span> <span class="cn">NULL</span>,
-  patch_label <span class="op">=</span> <span class="st">"none"</span>,
-  patch_size <span class="op">=</span> <span class="fl">3</span>,
-  <span class="va">...</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">ggbrnet</span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  patch_color <span class="op">=</span> <span class="st">"env"</span>,</span>
+<span>  value_col <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  color_label <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  patch_label <span class="op">=</span> <span class="st">"none"</span>,</span>
+<span>  patch_size <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>x</dt>
 <dd><p><code><a href="brnet.html">brnet()</a></code> object</p></dd>
+
+
 <dt>patch_color</dt>
 <dd><p>Type of patch (vertex) label (either <code>"env"</code>, <code>"disturbance"</code>, <code>"other"</code> or any color). Default <code>"env"</code>.</p></dd>
+
+
 <dt>value_col</dt>
 <dd><p>Patch values. Must be specified if <code>patch_color = "other"</code>.</p></dd>
+
+
 <dt>color_label</dt>
 <dd><p>Color legend title</p></dd>
+
+
 <dt>patch_label</dt>
 <dd><p>Type of patch (vertex) label (either <code>"patch", "branch", "n_upstream"</code>). <code>"patch"</code> shows patch ID, <code>"branch"</code> branch ID, and <code>"n_upstream"</code> the number of upstream contributing patches. If <code>"none"</code>, no label will be shown on patches in the plot. Default <code>"none"</code>.</p></dd>
+
+
 <dt>patch_size</dt>
 <dd><p>Patch (vertex) size in the plot.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>Arguments passed to <code><a href="https://ggraph.data-imaginist.com/reference/geom_node_text.html" class="external-link">ggraph::geom_node_label()</a></code>.</p></dd>
+
 </dl></div>
     <div id="author">
     <h2>Author</h2>
@@ -114,8 +127,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

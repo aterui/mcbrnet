@@ -69,120 +69,191 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">mcsim</span><span class="op">(</span>
-  n_species <span class="op">=</span> <span class="fl">5</span>,
-  n_patch <span class="op">=</span> <span class="fl">5</span>,
-  n_warmup <span class="op">=</span> <span class="fl">200</span>,
-  n_burnin <span class="op">=</span> <span class="fl">200</span>,
-  n_timestep <span class="op">=</span> <span class="fl">1000</span>,
-  propagule_interval <span class="op">=</span> <span class="cn">NULL</span>,
-  propagule_seed <span class="op">=</span> <span class="fl">0.5</span>,
-  carrying_capacity <span class="op">=</span> <span class="fl">100</span>,
-  xi <span class="op">=</span> <span class="fl">1</span>,
-  interaction_type <span class="op">=</span> <span class="st">"constant"</span>,
-  alpha <span class="op">=</span> <span class="fl">0</span>,
-  min_alpha <span class="op">=</span> <span class="cn">NULL</span>,
-  max_alpha <span class="op">=</span> <span class="cn">NULL</span>,
-  r0 <span class="op">=</span> <span class="fl">4</span>,
-  niche_optim <span class="op">=</span> <span class="cn">NULL</span>,
-  min_optim <span class="op">=</span> <span class="op">-</span><span class="fl">1</span>,
-  max_optim <span class="op">=</span> <span class="fl">1</span>,
-  sd_niche_width <span class="op">=</span> <span class="cn">NULL</span>,
-  min_niche_width <span class="op">=</span> <span class="fl">0.1</span>,
-  max_niche_width <span class="op">=</span> <span class="fl">1</span>,
-  niche_cost <span class="op">=</span> <span class="fl">1</span>,
-  xy_coord <span class="op">=</span> <span class="cn">NULL</span>,
-  distance_matrix <span class="op">=</span> <span class="cn">NULL</span>,
-  dispersal_matrix <span class="op">=</span> <span class="cn">NULL</span>,
-  p_disturb <span class="op">=</span> <span class="fl">0</span>,
-  i_disturb <span class="op">=</span> <span class="fl">0</span>,
-  landscape_size <span class="op">=</span> <span class="fl">10</span>,
-  mean_env <span class="op">=</span> <span class="fl">0</span>,
-  sd_env <span class="op">=</span> <span class="fl">0.1</span>,
-  spatial_env_cor <span class="op">=</span> <span class="cn">FALSE</span>,
-  phi <span class="op">=</span> <span class="fl">1</span>,
-  p_dispersal <span class="op">=</span> <span class="fl">0.1</span>,
-  theta <span class="op">=</span> <span class="fl">1</span>,
-  zeta <span class="op">=</span> <span class="fl">0</span>,
-  q <span class="op">=</span> <span class="fl">0</span>,
-  plot <span class="op">=</span> <span class="cn">FALSE</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">mcsim</span><span class="op">(</span></span>
+<span>  n_species <span class="op">=</span> <span class="fl">5</span>,</span>
+<span>  n_patch <span class="op">=</span> <span class="fl">5</span>,</span>
+<span>  n_warmup <span class="op">=</span> <span class="fl">200</span>,</span>
+<span>  n_burnin <span class="op">=</span> <span class="fl">200</span>,</span>
+<span>  n_timestep <span class="op">=</span> <span class="fl">1000</span>,</span>
+<span>  propagule_interval <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  propagule_seed <span class="op">=</span> <span class="fl">0.5</span>,</span>
+<span>  carrying_capacity <span class="op">=</span> <span class="fl">100</span>,</span>
+<span>  xi <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  interaction_type <span class="op">=</span> <span class="st">"constant"</span>,</span>
+<span>  alpha <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  min_alpha <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  max_alpha <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  r0 <span class="op">=</span> <span class="fl">4</span>,</span>
+<span>  niche_optim <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  min_optim <span class="op">=</span> <span class="op">-</span><span class="fl">1</span>,</span>
+<span>  max_optim <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  sd_niche_width <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  min_niche_width <span class="op">=</span> <span class="fl">0.1</span>,</span>
+<span>  max_niche_width <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  niche_cost <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  xy_coord <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  distance_matrix <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  dispersal_matrix <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  p_disturb <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  i_disturb <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  landscape_size <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>  mean_env <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  sd_env <span class="op">=</span> <span class="fl">0.1</span>,</span>
+<span>  spatial_env_cor <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  phi <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  p_dispersal <span class="op">=</span> <span class="fl">0.1</span>,</span>
+<span>  theta <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  zeta <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  q <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  plot <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>n_species</dt>
 <dd><p>Number of species in a metacommunity.</p></dd>
+
+
 <dt>n_patch</dt>
 <dd><p>Number of patches in a metacommunity.</p></dd>
+
+
 <dt>n_warmup</dt>
 <dd><p>Number of time-steps for warm-up. Default <code>200</code>.</p></dd>
+
+
 <dt>n_burnin</dt>
 <dd><p>Number of time-steps for burn-in. Default <code>200</code>.</p></dd>
+
+
 <dt>n_timestep</dt>
 <dd><p>Number of time-steps to be saved. Default <code>1000</code>.</p></dd>
+
+
 <dt>propagule_interval</dt>
 <dd><p>Time interval for propagule introduction during warm-up. If <code>NULL</code>, a value of <code>ceiling(n_warmup / 10)</code> will be used.</p></dd>
+
+
 <dt>propagule_seed</dt>
 <dd><p>Propagule mean density (intensity parameter in a Poisson distribution). Default <code>0.5</code>.</p></dd>
+
+
 <dt>carrying_capacity</dt>
 <dd><p>Carrying capacities of individual patches. Length must be one or equal to <code>n_patch</code>. Default <code>100</code>.</p></dd>
+
+
 <dt>xi</dt>
 <dd><p>Hassell exponent. Undercompensation (xi &lt; 1), no compensation (xi = 1; reduced to Beverton-Holt), and overcompensation (xi &gt; 1).</p></dd>
+
+
 <dt>interaction_type</dt>
 <dd><p><code>"constant"</code> or <code>"random"</code>. <code>"constant"</code> assumes the unique interaction strength of <code>alpha</code> for all pairs of species. <code>"random"</code> draws random numbers from a uniform distribution with <code>min_alpha</code> and <code>max_alpha</code>.</p></dd>
+
+
 <dt>alpha</dt>
 <dd><p>Species interaction strength. Enabled if <code>interaction_type = "constant"</code>. Default <code>0</code>.</p></dd>
+
+
 <dt>min_alpha</dt>
 <dd><p>Minimum value of a uniform distribution that generates species interaction strength. Enabled if <code>interaction_type = "random"</code>. Default <code>NULL</code>.</p></dd>
+
+
 <dt>max_alpha</dt>
 <dd><p>Maximum value of a uniform distribution that generates species interaction strength. Enabled if <code>interaction_type = "random"</code>. Default <code>NULL</code>.</p></dd>
+
+
 <dt>r0</dt>
 <dd><p>Maximum reproductive number of the Beverton-Holt model. Length must be one or equal to <code>n_species</code>.</p></dd>
+
+
 <dt>niche_optim</dt>
 <dd><p>Niche optimum of species (environmental value that maximizes the reproductive number). Length must be one or equal to <code>n_species</code>. Default <code>NULL</code>.</p></dd>
+
+
 <dt>min_optim</dt>
 <dd><p>Minimum value of a uniform distribution that generates optimal environmental values of simulated species. Values are randomly assigned to species. Enabled if <code>niche_optim = NULL</code>.</p></dd>
+
+
 <dt>max_optim</dt>
 <dd><p>Maximum value of a uniform distribution that generates optimal environmental values of simulated species. Values are randomly assigned to species. Enabled if <code>niche_optim = NULL</code>.</p></dd>
+
+
 <dt>sd_niche_width</dt>
 <dd><p>Niche width of species. Higher values indicate greater niche width. Length must be one or equal to <code>n_species</code>.</p></dd>
+
+
 <dt>min_niche_width</dt>
 <dd><p>Minimum value of a uniform distribution that generates niche width values of simulated species. Values are randomly assigned to species. Enabled if <code>sd_niche_width = NULL</code>.</p></dd>
+
+
 <dt>max_niche_width</dt>
 <dd><p>Maximum value of a uniform distribution that generates niche width values of simulated species. Values are randomly assigned to species. Enabled if <code>sd_niche_width = NULL</code>.</p></dd>
+
+
 <dt>niche_cost</dt>
 <dd><p>Determine the cost of wide niche (smaller values imply greater costs of wider niche). Default <code>1</code>.</p></dd>
+
+
 <dt>xy_coord</dt>
 <dd><p>Site coordinates. Must be provided as a data frame in which each row corresponds to an individual site with x and y coordinates (columns). Defualt <code>NULL</code>.</p></dd>
+
+
 <dt>distance_matrix</dt>
 <dd><p>Distance matrix indicating distance between habitat patches. If provided, the distance matrix will be used to generate dispersal matrix and to calculate distance decay of environmental correlations. Default <code>NULL</code>.</p></dd>
+
+
 <dt>dispersal_matrix</dt>
 <dd><p>Dispersal matrix to be used to simulate dispersal process. Override distance_matrix. Default <code>NULL</code>.</p></dd>
+
+
 <dt>p_disturb</dt>
 <dd><p>Disturbance probability.</p></dd>
+
+
 <dt>i_disturb</dt>
 <dd><p>Disturbance intensity expressed as proportional mortality (0 to 1). Length must be one or equal to <code>n_patch</code>.</p></dd>
+
+
 <dt>landscape_size</dt>
 <dd><p>Length of a landscape on a side. Enabled if <code>dispersal_matrix = NULL</code>.</p></dd>
+
+
 <dt>mean_env</dt>
 <dd><p>Mean environmental values of patches. Length must be one or equal to <code>n_patch</code>.</p></dd>
+
+
 <dt>sd_env</dt>
 <dd><p>Standard deviation of temporal environmental variation at each patch.</p></dd>
+
+
 <dt>spatial_env_cor</dt>
 <dd><p>If <code>TRUE</code>, spatial autocorrelation in temporal environmental fluctuation is considered. Default <code>FALSE</code>.</p></dd>
+
+
 <dt>phi</dt>
 <dd><p>Parameter describing the distance decay of spatial autocorrelation in temporal environmental fluctuation. Enabled if <code>spatial_env_cor = TRUE</code>.</p></dd>
+
+
 <dt>p_dispersal</dt>
 <dd><p>Dispersal probability. Length must be one or equal to <code>n_species</code>.</p></dd>
+
+
 <dt>theta</dt>
 <dd><p>Rate parameter of exponential dispersal kernel.</p></dd>
+
+
 <dt>zeta</dt>
 <dd><p>Species sensitivity to environmental pollutants.</p></dd>
+
+
 <dt>q</dt>
 <dd><p>Concentration of environmental pollutants.</p></dd>
+
+
 <dt>plot</dt>
 <dd><p>If <code>TRUE</code>, five sample patches and species of <code>df_dynamics</code> are plotted.</p></dd>
+
 </dl></div>
     <div id="reference">
     <h2>Reference</h2>
@@ -195,11 +266,11 @@
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in"><span class="co"># not run</span></span>
-<span class="r-in"><span class="fu">mcsim</span><span class="op">(</span>n_patch <span class="op">=</span> <span class="fl">5</span>, n_species <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">}</span></span>
-<span class="r-in"></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span><span class="co"># not run</span></span></span>
+<span class="r-in"><span><span class="fu">mcsim</span><span class="op">(</span>n_patch <span class="op">=</span> <span class="fl">5</span>, n_species <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -214,8 +285,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

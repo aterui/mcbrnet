@@ -87,7 +87,7 @@
       <h1 data-toc-skip>mcsim</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/aterui/mcbrnet/blob/HEAD/../../github/mcbrnet/vignettes/mcsim.Rmd" class="external-link"><code>../../github/mcbrnet/vignettes/mcsim.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/aterui/mcbrnet/blob/HEAD/vignettes/mcsim.Rmd" class="external-link"><code>vignettes/mcsim.Rmd</code></a></small>
       <div class="hidden name"><code>mcsim.Rmd</code></div>
 
     </div>
@@ -192,83 +192,84 @@ burn-in (burn-in period with no species introductions:
 <code>n_burnin</code>), and 1000 time-steps for records
 (<code>n_timestep</code>).</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">mc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mcsim.html">mcsim</a></span><span class="op">(</span>n_patch <span class="op">=</span> <span class="fl">5</span>, n_species <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">mc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mcsim.html">mcsim</a></span><span class="op">(</span>n_patch <span class="op">=</span> <span class="fl">5</span>, n_species <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></code></pre></div>
 <p>Users can visualize the simulated dynamics using
 <code>plot = TRUE</code>, which will show five sample patches and
 species that are randomly chosen:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">mc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mcsim.html">mcsim</a></span><span class="op">(</span>n_patch <span class="op">=</span> <span class="fl">5</span>, n_species <span class="op">=</span> <span class="fl">5</span>, plot <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">mc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mcsim.html">mcsim</a></span><span class="op">(</span>n_patch <span class="op">=</span> <span class="fl">5</span>, n_species <span class="op">=</span> <span class="fl">5</span>, plot <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="mcsim_files/figure-html/unnamed-chunk-3-1.png" width="1056"></p>
 <p>A named list of return values:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">mc</span>
-<span class="co">#&gt; $df_dynamics</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 25,000 x 9</span></span>
-<span class="co">#&gt;    timestep patch_id mean_env    env carrying_capacity species niche_optim</span>
-<span class="co">#&gt;       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span>        1        1        0 0.031<span style="text-decoration: underline;">4</span>               100       1       0.526</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span>        1        1        0 0.031<span style="text-decoration: underline;">4</span>               100       2       0.437</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span>        1        1        0 0.031<span style="text-decoration: underline;">4</span>               100       3       0.158</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span>        1        1        0 0.031<span style="text-decoration: underline;">4</span>               100       4      -<span style="color: #BB0000;">0.142</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span>        1        1        0 0.031<span style="text-decoration: underline;">4</span>               100       5      -<span style="color: #BB0000;">0.262</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span>        1        2        0 0.149                100       1       0.526</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span>        1        2        0 0.149                100       2       0.437</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span>        1        2        0 0.149                100       3       0.158</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>        1        2        0 0.149                100       4      -<span style="color: #BB0000;">0.142</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">10</span>        1        2        0 0.149                100       5      -<span style="color: #BB0000;">0.262</span></span>
-<span class="co">#&gt; <span style="color: #949494;"># ... with 24,990 more rows, and 2 more variables: r_xt &lt;dbl&gt;, abundance &lt;dbl&gt;</span></span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $df_species</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 x 6</span></span>
-<span class="co">#&gt;   species mean_abundance    r0 niche_optim sd_niche_width p_dispersal</span>
-<span class="co">#&gt;     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">1</span>       1           39.3     4       0.526          0.573         0.1</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">2</span>       2            0       4       0.437          0.112         0.1</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">3</span>       3           76.6     4       0.158          0.475         0.1</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">4</span>       4           48.1     4      -<span style="color: #BB0000;">0.142</span>          0.964         0.1</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">5</span>       5           50.0     4      -<span style="color: #BB0000;">0.262</span>          0.915         0.1</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $df_patch</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 x 5</span></span>
-<span class="co">#&gt;   patch_id alpha_div mean_env carrying_capacity disturbance</span>
-<span class="co">#&gt;      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">1</span>        1         4        0               100           0</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">2</span>        2         4        0               100           0</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">3</span>        3         4        0               100           0</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">4</span>        4         4        0               100           0</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">5</span>        5         4        0               100           0</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $df_diversity</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 x 3</span></span>
-<span class="co">#&gt;   alpha_div beta_div gamma_div</span>
-<span class="co">#&gt;       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">1</span>         4        1         4</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $df_xy_coord</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 x 2</span></span>
-<span class="co">#&gt;   x_coord y_coord</span>
-<span class="co">#&gt;     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">1</span>   8.12     3.53</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">2</span>   1.67     1.18</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">3</span>   0.123    3.74</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">4</span>   2.97     1.28</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">5</span>   8.88     6.15</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $distance_matrix</span>
-<span class="co">#&gt;          1        2        3        4        5</span>
-<span class="co">#&gt; 1 0.000000 6.867894 8.001105 5.616935 2.735859</span>
-<span class="co">#&gt; 2 6.867894 0.000000 2.989704 1.309113 8.762926</span>
-<span class="co">#&gt; 3 8.001105 2.989704 0.000000 3.761916 9.084224</span>
-<span class="co">#&gt; 4 5.616935 1.309113 3.761916 0.000000 7.658076</span>
-<span class="co">#&gt; 5 2.735859 8.762926 9.084224 7.658076 0.000000</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $interaction_matrix</span>
-<span class="co">#&gt;      [,1] [,2] [,3] [,4] [,5]</span>
-<span class="co">#&gt; [1,]    1    0    0    0    0</span>
-<span class="co">#&gt; [2,]    0    1    0    0    0</span>
-<span class="co">#&gt; [3,]    0    0    1    0    0</span>
-<span class="co">#&gt; [4,]    0    0    0    1    0</span>
-<span class="co">#&gt; [5,]    0    0    0    0    1</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">mc</span></span>
+<span><span class="co">#&gt; $df_dynamics</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 25,000 × 9</span></span></span>
+<span><span class="co">#&gt;    timestep patch_id mean_env    env carrying_c…¹ species niche…²   r_xt abund…³</span></span>
+<span><span class="co">#&gt;       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span>        1        1        0 0.034<span style="text-decoration: underline;">9</span>          100       1   0.762 0.015<span style="text-decoration: underline;">9</span>       0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span>        1        1        0 0.034<span style="text-decoration: underline;">9</span>          100       2   0.726 1.53        14</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span>        1        1        0 0.034<span style="text-decoration: underline;">9</span>          100       3   0.824 1.81        26</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span>        1        1        0 0.034<span style="text-decoration: underline;">9</span>          100       4  -<span style="color: #BB0000;">0.631</span> 1.76        44</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span>        1        1        0 0.034<span style="text-decoration: underline;">9</span>          100       5   0.258 3.19        73</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span>        1        2        0 0.116           100       1   0.762 0.050<span style="text-decoration: underline;">7</span>       0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span>        1        2        0 0.116           100       2   0.726 1.83        11</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span>        1        2        0 0.116           100       3   0.824 1.94        19</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>        1        2        0 0.116           100       4  -<span style="color: #BB0000;">0.631</span> 1.49        12</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span>        1        2        0 0.116           100       5   0.258 3.38        73</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># … with 24,990 more rows, and abbreviated variable names ¹​carrying_capacity,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   ²​niche_optim, ³​abundance</span></span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $df_species</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 6</span></span></span>
+<span><span class="co">#&gt;   species mean_abundance    r0 niche_optim sd_niche_width p_dispersal</span></span>
+<span><span class="co">#&gt;     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>       1           0        4       0.762          0.219         0.1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>       2           8.60     4       0.726          0.542         0.1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>       3          23.1      4       0.824          0.938         0.1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span>       4          27.6      4      -<span style="color: #BB0000;">0.631</span>          0.584         0.1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span>       5          67.2      4       0.258          0.508         0.1</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $df_patch</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 5</span></span></span>
+<span><span class="co">#&gt;   patch_id alpha_div mean_env carrying_capacity disturbance</span></span>
+<span><span class="co">#&gt;      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>        1      4           0               100           0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>        2      3.47        0               100           0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>        3      3.48        0               100           0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span>        4      3.74        0               100           0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span>        5      4           0               100           0</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $df_diversity</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 3</span></span></span>
+<span><span class="co">#&gt;   alpha_div beta_div gamma_div</span></span>
+<span><span class="co">#&gt;       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>      3.74     1.07         4</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $df_xy_coord</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 2</span></span></span>
+<span><span class="co">#&gt;   x_coord y_coord</span></span>
+<span><span class="co">#&gt;     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>   0.542    1.37</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>   8.32     2.32</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>   8.26     6.48</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span>   2.49     5.79</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span>   0.379    2.63</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $distance_matrix</span></span>
+<span><span class="co">#&gt;          1        2        3        4        5</span></span>
+<span><span class="co">#&gt; 1 0.000000 7.834781 9.254816 4.832292 1.275235</span></span>
+<span><span class="co">#&gt; 2 7.834781 0.000000 4.152895 6.778440 7.944992</span></span>
+<span><span class="co">#&gt; 3 9.254816 4.152895 0.000000 5.807559 8.767402</span></span>
+<span><span class="co">#&gt; 4 4.832292 6.778440 5.807559 0.000000 3.798457</span></span>
+<span><span class="co">#&gt; 5 1.275235 7.944992 8.767402 3.798457 0.000000</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $interaction_matrix</span></span>
+<span><span class="co">#&gt;      [,1] [,2] [,3] [,4] [,5]</span></span>
+<span><span class="co">#&gt; [1,]    1    0    0    0    0</span></span>
+<span><span class="co">#&gt; [2,]    0    1    0    0    0</span></span>
+<span><span class="co">#&gt; [3,]    0    0    1    0    0</span></span>
+<span><span class="co">#&gt; [4,]    0    0    0    1    0</span></span>
+<span><span class="co">#&gt; [5,]    0    0    0    0    1</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="customize-brnet-mcsim">Customize: <code>brnet()</code> + <code>mcsim()</code><a class="anchor" aria-label="anchor" href="#customize-brnet-mcsim"></a>
@@ -279,13 +280,13 @@ species that are randomly chosen:</p>
 <code>df_patch$distance_matrix</code> may be used to inform parameters
 of <code><a href="../reference/mcsim.html">mcsim()</a></code>:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">patch</span> <span class="op">&lt;-</span> <span class="fl">100</span>
-<span class="va">net</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/brnet.html">brnet</a></span><span class="op">(</span>n_patch <span class="op">=</span> <span class="va">patch</span>, p_branch <span class="op">=</span> <span class="fl">0.5</span>, plot <span class="op">=</span> <span class="cn">F</span><span class="op">)</span>
-<span class="va">mc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mcsim.html">mcsim</a></span><span class="op">(</span>n_patch <span class="op">=</span> <span class="va">patch</span>, n_species <span class="op">=</span> <span class="fl">5</span>,
-            mean_env <span class="op">=</span> <span class="va">net</span><span class="op">$</span><span class="va">df_patch</span><span class="op">$</span><span class="va">environment</span>,
-            carrying_capacity <span class="op">=</span> <span class="va">net</span><span class="op">$</span><span class="va">df_patch</span><span class="op">$</span><span class="va">n_patch_upstream</span><span class="op">*</span><span class="fl">10</span>,
-            distance_matrix <span class="op">=</span> <span class="va">net</span><span class="op">$</span><span class="va">distance_matrix</span>,
-            plot <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">patch</span> <span class="op">&lt;-</span> <span class="fl">100</span></span>
+<span><span class="va">net</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/brnet.html">brnet</a></span><span class="op">(</span>n_patch <span class="op">=</span> <span class="va">patch</span>, p_branch <span class="op">=</span> <span class="fl">0.5</span>, plot <span class="op">=</span> <span class="cn">F</span><span class="op">)</span></span>
+<span><span class="va">mc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mcsim.html">mcsim</a></span><span class="op">(</span>n_patch <span class="op">=</span> <span class="va">patch</span>, n_species <span class="op">=</span> <span class="fl">5</span>,</span>
+<span>            mean_env <span class="op">=</span> <span class="va">net</span><span class="op">$</span><span class="va">df_patch</span><span class="op">$</span><span class="va">environment</span>,</span>
+<span>            carrying_capacity <span class="op">=</span> <span class="va">net</span><span class="op">$</span><span class="va">df_patch</span><span class="op">$</span><span class="va">n_patch_upstream</span><span class="op">*</span><span class="fl">10</span>,</span>
+<span>            distance_matrix <span class="op">=</span> <span class="va">net</span><span class="op">$</span><span class="va">distance_matrix</span>,</span>
+<span>            plot <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span></code></pre></div>
 <p><img src="mcsim_files/figure-html/unnamed-chunk-5-1.png" width="1056"></p>
 </div>
 <div class="section level2">
@@ -339,9 +340,9 @@ length must be one or equal to <code>n_species</code>. Default values
 are <code>r0 = 4</code>, <code>sd_niche_width = 1</code>, and
 <code>p_dispersal = 0.1</code>.</p>
 <p>The argument <code>zeta</code> determines the sensitivity to
-environmental pollutants as <span class="math inline">\(exp(-\zeta
-q)\)</span>, which will be multiplied with the patch-specific population
-growth to represent negative impacts of pollutants. <span class="math inline">\(q\)</span> represents the concentration of
+environmental pollutants as <span class="math inline">\(exp(-\zeta~impact)\)</span>, which will be
+multiplied with the patch-specific population growth to represent
+negative impacts of pollutants. <span class="math inline">\(impact\)</span> represents the concentration of
 hypothetical environmental pollutants (see <code>q</code> in patch
 attributes). The parameter <span class="math inline">\(\zeta\)</span>
 determines the sensitivity to environmental pollutants, and larger
@@ -379,7 +380,7 @@ interspecific competition relative to that of intraspecific competition
 <p><strong>Arguments:</strong> <code>carrying_capacity</code>,
 <code>mean_env</code>, <code>sd_env</code>,
 <code>spatial_auto_cor</code>, <code>phi</code>, <code>p_disturb</code>,
-<code>i_disturb</code> , <code>q</code></p>
+<code>i_disturb</code> , <code>impact</code></p>
 <p>The arguments <code>carrying_capacity</code> (default:
 <code>carrying_capacity = 100</code>) and <code>mean_env</code>
 (default: <code>mean_env = 0</code>) determines mean environmental
@@ -401,11 +402,11 @@ strength of distance decay in spatial autocorrelation.</p>
 disturbance occurs, all habitat patches are reduced by
 <code>i_disturb</code>. <code>i_disturb</code> can be identical or
 different across habitat patches.</p>
-<p>Lastly, the argument <code>q</code> defines concentration of
+<p>Lastly, the argument <code>impact</code> defines concentration of
 hypothetical environmental pollutants. The values will be converted as
-<span class="math inline">\(exp(-\zeta q)\)</span>, which will be
-multiplied with the patch-specific population growth. The parameter
-<span class="math inline">\(\zeta\)</span> determines the sensitivity to
+<span class="math inline">\(exp(-\zeta~impact)\)</span>, which will be
+multiplied with the patch-specific population growth. Thus, a greater
+reduction factor will be applied as the value of <span class="math inline">\(impact\)</span> increases. The parameter <span class="math inline">\(\zeta\)</span> determines the sensitivity to
 environmental pollutants (see argument <code>zeta</code> in species
 attributes).</p>
 </div>
@@ -485,8 +486,7 @@ during <code>n_timestep</code>.</p>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer>

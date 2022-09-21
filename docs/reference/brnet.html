@@ -69,60 +69,91 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">brnet</span><span class="op">(</span>
-  n_patch <span class="op">=</span> <span class="fl">50</span>,
-  p_branch <span class="op">=</span> <span class="fl">0.5</span>,
-  mean_env_source <span class="op">=</span> <span class="fl">0</span>,
-  sd_env_source <span class="op">=</span> <span class="fl">1</span>,
-  rho <span class="op">=</span> <span class="fl">1</span>,
-  sd_env_lon <span class="op">=</span> <span class="fl">0.1</span>,
-  mean_disturb_source <span class="op">=</span> <span class="fl">0.9</span>,
-  sd_disturb_source <span class="op">=</span> <span class="fl">1</span>,
-  sd_disturb_lon <span class="op">=</span> <span class="fl">0.1</span>,
-  randomize_patch <span class="op">=</span> <span class="cn">TRUE</span>,
-  plot <span class="op">=</span> <span class="cn">FALSE</span>,
-  patch_color <span class="op">=</span> <span class="st">"env"</span>,
-  patch_label <span class="op">=</span> <span class="st">"none"</span>,
-  patch_size <span class="op">=</span> <span class="fl">3</span>,
-  n_patch_free <span class="op">=</span> <span class="cn">FALSE</span>,
-  <span class="va">...</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">brnet</span><span class="op">(</span></span>
+<span>  n_patch <span class="op">=</span> <span class="fl">50</span>,</span>
+<span>  p_branch <span class="op">=</span> <span class="fl">0.5</span>,</span>
+<span>  mean_env_source <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  sd_env_source <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  rho <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  sd_env_lon <span class="op">=</span> <span class="fl">0.1</span>,</span>
+<span>  mean_disturb_source <span class="op">=</span> <span class="fl">0.9</span>,</span>
+<span>  sd_disturb_source <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  sd_disturb_lon <span class="op">=</span> <span class="fl">0.1</span>,</span>
+<span>  randomize_patch <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  plot <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  patch_color <span class="op">=</span> <span class="st">"env"</span>,</span>
+<span>  patch_label <span class="op">=</span> <span class="st">"none"</span>,</span>
+<span>  patch_size <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>  n_patch_free <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>n_patch</dt>
 <dd><p>Number of patches in a network.</p></dd>
+
+
 <dt>p_branch</dt>
 <dd><p>Branching probability (success probability of a geometric distribution).</p></dd>
+
+
 <dt>mean_env_source</dt>
 <dd><p>Mean value of environmental condition at upstream terminals.</p></dd>
+
+
 <dt>sd_env_source</dt>
 <dd><p>SD of environmental condition at upstream terminals.</p></dd>
+
+
 <dt>rho</dt>
 <dd><p>Strength of spatial autocorrelation in environmental condition.</p></dd>
+
+
 <dt>sd_env_lon</dt>
 <dd><p>SD of longitudinal environmental noise.</p></dd>
+
+
 <dt>mean_disturb_source</dt>
 <dd><p>Mean disturbance strength at headwaters. The value is assumed to represent the proportional mortality (0 - 1.0) at the patch level.</p></dd>
+
+
 <dt>sd_disturb_source</dt>
 <dd><p>SD of disturbance strength at headwaters. The SD is defined in a logit scale with a normal distribution.</p></dd>
+
+
 <dt>sd_disturb_lon</dt>
 <dd><p>SD of longitudinal noise of disturbance strength. The SD is defined in a logit scale with a normal distribution.</p></dd>
+
+
 <dt>randomize_patch</dt>
 <dd><p>Whether randomize patches or not. If <code>FALSE</code>, the function may generate a biased network with ordered patches. Default <code>TRUE</code>.</p></dd>
+
+
 <dt>plot</dt>
 <dd><p>Whether a plot should be shown or not. If <code>FALSE</code>, a plot of the generated network will not be shown. Default <code>TRUE</code>.</p></dd>
+
+
 <dt>patch_color</dt>
 <dd><p>Type of patch (vertex) label (either <code>"env"</code>, <code>"disturbance"</code> or any color code). Default <code>"env"</code>.</p></dd>
+
+
 <dt>patch_label</dt>
 <dd><p>Type of patch (vertex) label (either <code>"patch", "branch", "n_upstream"</code>). <code>"patch"</code> shows patch ID, <code>"branch"</code> branch ID, and <code>"n_upstream"</code> the number of upstream contributing patches. If <code>"none"</code>, no label will be shown on patches in the plot. Default <code>"none"</code>.</p></dd>
+
+
 <dt>patch_size</dt>
 <dd><p>Patch (vertex) size in the plot.</p></dd>
+
+
 <dt>n_patch_free</dt>
 <dd><p>Whether imposing a constraint on <code>n_patch</code>. If <code>TRUE</code>, the number of patches a random variable following a negative binomial distribution.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>Arguments passed to <code><a href="https://ggraph.data-imaginist.com/reference/geom_node_text.html" class="external-link">ggraph::geom_node_label()</a></code>.</p></dd>
+
 </dl></div>
     <div id="reference">
     <h2>Reference</h2>
@@ -135,11 +166,11 @@
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in"><span class="co"># not run</span></span>
-<span class="r-in"><span class="fu">brnet</span><span class="op">(</span>n_patch <span class="op">=</span> <span class="fl">10</span>, p_branch <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">}</span></span>
-<span class="r-in"></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span><span class="co"># not run</span></span></span>
+<span class="r-in"><span><span class="fu">brnet</span><span class="op">(</span>n_patch <span class="op">=</span> <span class="fl">10</span>, p_branch <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -154,8 +185,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

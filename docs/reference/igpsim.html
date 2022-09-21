@@ -69,72 +69,111 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">igpsim</span><span class="op">(</span>
-  n_patch <span class="op">=</span> <span class="fl">5</span>,
-  n_warmup <span class="op">=</span> <span class="fl">200</span>,
-  n_burnin <span class="op">=</span> <span class="fl">200</span>,
-  n_timestep <span class="op">=</span> <span class="fl">1000</span>,
-  r_b <span class="op">=</span> <span class="fl">5</span>,
-  conv_eff <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fl">3</span><span class="op">)</span>,
-  attack_rate <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">3</span><span class="op">)</span>,
-  handling_time <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">3</span><span class="op">)</span>,
-  s0 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">0.8</span>, <span class="fl">3</span><span class="op">)</span>,
-  propagule_interval <span class="op">=</span> <span class="cn">NULL</span>,
-  carrying_capacity <span class="op">=</span> <span class="fl">100</span>,
-  xy_coord <span class="op">=</span> <span class="cn">NULL</span>,
-  distance_matrix <span class="op">=</span> <span class="cn">NULL</span>,
-  dispersal_matrix <span class="op">=</span> <span class="cn">NULL</span>,
-  p_disturb <span class="op">=</span> <span class="fl">0</span>,
-  m_disturb <span class="op">=</span> <span class="fl">0</span>,
-  landscape_size <span class="op">=</span> <span class="fl">10</span>,
-  p_dispersal <span class="op">=</span> <span class="fl">0.1</span>,
-  theta <span class="op">=</span> <span class="fl">1</span>,
-  plot <span class="op">=</span> <span class="cn">FALSE</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">igpsim</span><span class="op">(</span></span>
+<span>  n_patch <span class="op">=</span> <span class="fl">5</span>,</span>
+<span>  n_warmup <span class="op">=</span> <span class="fl">200</span>,</span>
+<span>  n_burnin <span class="op">=</span> <span class="fl">200</span>,</span>
+<span>  n_timestep <span class="op">=</span> <span class="fl">1000</span>,</span>
+<span>  r_b <span class="op">=</span> <span class="fl">5</span>,</span>
+<span>  conv_eff <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fl">3</span><span class="op">)</span>,</span>
+<span>  attack_rate <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">3</span><span class="op">)</span>,</span>
+<span>  handling_time <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">3</span><span class="op">)</span>,</span>
+<span>  s0 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">0.8</span>, <span class="fl">3</span><span class="op">)</span>,</span>
+<span>  propagule_interval <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  carrying_capacity <span class="op">=</span> <span class="fl">100</span>,</span>
+<span>  xy_coord <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  distance_matrix <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  dispersal_matrix <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  p_disturb <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  m_disturb <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  landscape_size <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>  p_dispersal <span class="op">=</span> <span class="fl">0.1</span>,</span>
+<span>  theta <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  plot <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>n_patch</dt>
 <dd><p>Number of patches in a metacommunity.</p></dd>
+
+
 <dt>n_warmup</dt>
 <dd><p>Number of time-steps for warm-up. Default <code>200</code>.</p></dd>
+
+
 <dt>n_burnin</dt>
 <dd><p>Number of time-steps for burn-in. Default <code>200</code>.</p></dd>
+
+
 <dt>n_timestep</dt>
 <dd><p>Number of time-steps to be saved. Default <code>1000</code>.</p></dd>
+
+
 <dt>r_b</dt>
 <dd><p>Maximum reproductive rate of basal species</p></dd>
+
+
 <dt>conv_eff</dt>
 <dd><p>Energetic conversion efficiency; must be given by the order of basal to ig-prey, basal to ig-predator, and ig-prey to ig-predator</p></dd>
+
+
 <dt>attack_rate</dt>
 <dd><p>Attack rate. Must be given by the order of basal to ig_prey, basal to ig-predator, and ig-prey to ig-predator</p></dd>
+
+
 <dt>handling_time</dt>
 <dd><p>Handling time. Must be given by the order of basal to ig_prey, basal to ig-predator, and ig-prey to ig-predator</p></dd>
+
+
 <dt>s0</dt>
 <dd><p>Background survival rate. Must be given by the order of basal, ig-prey, and ig-predator</p></dd>
+
+
 <dt>propagule_interval</dt>
 <dd><p>Time interval for propagule introduction during warm-up. If <code>NULL</code>, a value of <code>ceiling(n_warmup / 10)</code> will be used.</p></dd>
+
+
 <dt>carrying_capacity</dt>
 <dd><p>Carrying capacities of individual patches. Length must be one or equal to <code>n_patch</code>. Default <code>100</code>.</p></dd>
+
+
 <dt>xy_coord</dt>
 <dd><p>Data frame for site coordinates. Each row should correspond to an individual patch, with x and y coordinates (columns). Defualt <code>NULL</code>.</p></dd>
+
+
 <dt>distance_matrix</dt>
 <dd><p>Distance matrix indicating distance between habitat patches. If provided, the distance matrix will be used to generate dispersal matrix and to calculate distance decay of environmental correlations. Default <code>NULL</code>.</p></dd>
+
+
 <dt>dispersal_matrix</dt>
 <dd><p>Dispersal matrix to be used to simulate dispersal process. Override distance_matrix. Default <code>NULL</code>.</p></dd>
+
+
 <dt>p_disturb</dt>
 <dd><p>Disturbance probability.</p></dd>
+
+
 <dt>m_disturb</dt>
 <dd><p>Disturbance-induced proportional mortality.</p></dd>
+
+
 <dt>landscape_size</dt>
 <dd><p>Length of a landscape on a side. Enabled if <code>dispersal_matrix = NULL</code>.</p></dd>
+
+
 <dt>p_dispersal</dt>
 <dd><p>Probability of dispersal. Length must be one or equal to <code>n_species</code>.</p></dd>
+
+
 <dt>theta</dt>
 <dd><p>Dispersal parameter describing dispersal capability of species.</p></dd>
+
+
 <dt>plot</dt>
 <dd><p>If <code>TRUE</code>, five sample patches and species of <code>df_dynamics</code> are plotted.</p></dd>
+
 </dl></div>
     <div id="reference">
     <h2>Reference</h2>
@@ -157,8 +196,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>
