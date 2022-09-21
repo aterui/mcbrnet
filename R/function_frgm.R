@@ -77,16 +77,16 @@ frgm <- function(x,
         dplyr::left_join(x$df_patch,
                          by = c("to" = "patch_id")) %>%
         dplyr::rowwise() %>%
-        dplyr::summarise(n_patch_upstream = min(n_patch_upstream.x,
-                                                n_patch_upstream.y)) %>%
+        dplyr::summarise(n_patch_upstream = min(.data$n_patch_upstream.x,
+                                                .data$n_patch_upstream.y)) %>%
         dplyr::pull()
 
       z <- ifelse(pattern == "downstream", 1, 0)
       prob <- z * v_wa + (1 - z) * (1 / v_wa)
 
-      barrier <- sample(n_edge,
-                        size = n_barrier,
-                        prob = prob)
+      barrier <- resample(1:n_edge,
+                          size = n_barrier,
+                          prob = prob)
 
     } else {
 
