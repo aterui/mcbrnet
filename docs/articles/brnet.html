@@ -453,8 +453,7 @@ barriers; in this case, the user must specify the passabilities of
 individual barriers separately (as a vector with length
 <code>n_barrier</code>). The barrier effect is cumulative. For example,
 if one passes two barriers A (passability = <span class="math inline">\(p_A\)</span>) and B (passability <span class="math inline">\(p_B\)</span>) when moving from a given node node
-to another node, the original movement probability <span class="math inline">\(m\)</span> will be <span class="math inline">\(m
-p_Ap_B\)</span>.</p>
+to another node, the original movement probability <span class="math inline">\(m\)</span> will be reduced to <span class="math inline">\(m p_Ap_B\)</span>.</p>
 <p>Just like <code><a href="../reference/ptsource.html">ptsource()</a></code>, this function will take an output
 from <code><a href="../reference/brnet.html">brnet()</a></code> function but also accepts any adjacency
 matrix. <code><a href="../reference/ggbrnet.html">ggbrnet()</a></code> will help you visualize fragmented edges

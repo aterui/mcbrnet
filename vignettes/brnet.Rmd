@@ -288,7 +288,7 @@ brnet(n_patch = 30) %>%
 
 -   `n_barrier` number of barriers
 
-The arguments `p` and `n_barrier` define the probability of traversing across an edge with a barrier and the number of total barriers , respectively. Passability can be different among barriers; in this case, the user must specify the passabilities of individual barriers separately (as a vector with length `n_barrier`). The barrier effect is cumulative. For example, if one passes two barriers A (passability = $p_A$) and B (passability $p_B$) when moving from a given node node to another node, the original movement probability $m$ will be $m p_Ap_B$.
+The arguments `p` and `n_barrier` define the probability of traversing across an edge with a barrier and the number of total barriers , respectively. Passability can be different among barriers; in this case, the user must specify the passabilities of individual barriers separately (as a vector with length `n_barrier`). The barrier effect is cumulative. For example, if one passes two barriers A (passability = $p_A$) and B (passability $p_B$) when moving from a given node node to another node, the original movement probability $m$ will be reduced to $m p_Ap_B$.
 
 Just like `ptsource()`, this function will take an output from `brnet()` function but also accepts any adjacency matrix. `ggbrnet()` will help you visualize fragmented edges by specifying `edge_weight = "passability"`.
 
