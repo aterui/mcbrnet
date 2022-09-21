@@ -39,7 +39,7 @@ mcsim(
   p_dispersal = 0.1,
   theta = 1,
   zeta = 0,
-  q = 0,
+  impact = 0,
   plot = FALSE
 )
 }
@@ -112,7 +112,7 @@ mcsim(
 
 \item{zeta}{Species sensitivity to environmental pollutants.}
 
-\item{q}{Concentration of environmental pollutants.}
+\item{impact}{Concentration of environmental pollutants.}
 
 \item{plot}{If \code{TRUE}, five sample patches and species of \code{df_dynamics} are plotted.}
 }
