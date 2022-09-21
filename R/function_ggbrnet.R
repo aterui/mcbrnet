@@ -2,7 +2,8 @@
 #'
 #' @param x `brnet()` object
 #' @param patch_color Type of patch (vertex) label (either \code{"env"}, \code{"disturbance"}, \code{"other"} or any color). Default \code{"env"}.
-#' @param edge_color Type of edge label (\code{"passability"} or any color). Default \code{NULL}.
+#' @param edge_color Edge color
+#' @param edge_weight Type of edge weight (\code{"passability"}). Default \code{NULL}.
 #' @param value_col Patch values. Must be specified if \code{patch_color = "other"}.
 #' @param color_label Color legend title
 #' @param patch_label Type of patch (vertex) label (either \code{"patch", "branch", "n_upstream"}). \code{"patch"} shows patch ID, \code{"branch"} branch ID, and \code{"n_upstream"} the number of upstream contributing patches. If \code{"none"}, no label will be shown on patches in the plot. Default \code{"none"}.
@@ -18,7 +19,8 @@
 
 ggbrnet <- function(x,
                     patch_color = "env",
-                    edge_color = NULL,
+                    edge_color = "black",
+                    edge_weight = NULL,
                     value_col = NULL,
                     color_label = NULL,
                     patch_label = "none",
@@ -58,14 +60,10 @@ ggbrnet <- function(x,
   }
 
   ## edge color
-  if (edge_color == "passability") {
+  if (edge_weight == "passability") {
 
     edge_attr <- x$df_edge
-    igraph::E(adj)$weight <- patch_attr$passability
-
-  } else {
-
-    if (is.null(edge_color)) edge_color <- grey(0.5)
+    igraph::E(adj)$p <- edge_attr$passability
 
   }
 
@@ -120,7 +118,7 @@ ggbrnet <- function(x,
 
   } else {
 
-    if (is.null(edge_color)) {
+    if (!(edge_weight %in% c("passability"))) {
       ## variable patch color with single edge color
       g <- g +
         ggraph::geom_edge_link(color = edge_color) +
@@ -139,7 +137,8 @@ ggbrnet <- function(x,
     } else {
       ## variable patch & edge color
       g <- g +
-        ggraph::geom_edge_link(ggplot2::aes(color = .data$weight)) +
+        ggraph::geom_edge_link(ggplot2::aes(alpha = .data$p,
+                                            color = edge_color)) +
         ggraph::geom_node_point(ggplot2::aes(color = .data$patch_value),
                                 size = patch_size) +
         ggraph::geom_node_label(ggplot2::aes(label = .data$patch_id),
