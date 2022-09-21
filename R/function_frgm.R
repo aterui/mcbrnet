@@ -34,7 +34,7 @@ frgm <- function(x,
   if(dplyr::n_distinct(dim(m_adj)) != 1) stop("invalid dimension in the adjacency matrix")
 
   g0 <- m_adj %>%
-    igraph::graph_from_adjacency_matrix("undirected")
+    igraph::graph.adjacency("undirected")
 
   if(inherits(x, what = "brnet")) {
     m_dist <- x$distance_matrix
