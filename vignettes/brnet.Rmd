@@ -274,15 +274,15 @@ brnet(n_patch = 30) %>%
 
 ## Customize: fragmentation
 
-**Arguments:** `x`, `n_source`, `p`, `q`, `pattern`
+**Arguments:** `x`, `rate`, `pattern`, `p`, `n_barrier`
 
-From v.1.3.0, mcbrnet offers `ptsource()` function to simulate propagation of environmental pollutants in a branching network. `ptsource()` can specify:
+`frgm()` will impose fragmentation to a network. The function can specify:
 
 -   `x` 'brnet' object or adjacency matrix
 
 -   `rate` rate parameter of exponential dispersal kernel (i.e., species attribute). This parameter defines the result dispersal matrix.
 
--   `pattern` fragmentation pattern; either "random" (random location of fragmentation), "clustered" (clustered around the initial fragmentation that is randomly placed), "upstream" (upstream edges are more likely to be fragmented), or "downstream" (downstream edges are more likely to be fragmented).
+-   `pattern` fragmentation pattern; either "random" (random location of fragmentation), "upstream" (upstream edges are more likely to be fragmented), or "downstream" (downstream edges are more likely to be fragmented).
 
 -   `p` passability of fragmented edges (probability)
 
