@@ -65,7 +65,7 @@ ptsource <- function(x,
     s <- resample(seq_len(n_patch), size = 1)
     distance <- m_dist[s, ]
     distance[distance == 0] <- 2
-    prob <- 1 / dis
+    prob <- 1 / distance
     pts <- resample(seq_len(n_patch),
                     size = n_source,
                     prob = prob)
