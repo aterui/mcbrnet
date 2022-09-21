@@ -61,33 +61,39 @@ frgm <- function(x,
   if (n_barrier > n_edge) stop("n_barrier exceeds the number of edges in the graph")
 
   if (pattern == "random") {
+
     barrier <- resample(seq_len(n_edge), size = n_barrier)
+
+  } else {
+
+    if (pattern == "downstream"|pattern == "upstream") {
+
+      if (!inherits(x, what = "brnet")) stop("x must be class 'brnet'")
+
+      v_wa <- df_g0 %>%
+        dplyr::as_tibble() %>%
+        dplyr::left_join(x$df_patch,
+                         by = c("from" = "patch_id")) %>%
+        dplyr::left_join(x$df_patch,
+                         by = c("to" = "patch_id")) %>%
+        dplyr::rowwise() %>%
+        dplyr::summarise(n_patch_upstream = min(n_patch_upstream.x,
+                                                n_patch_upstream.y)) %>%
+        pull()
+
+      z <- ifelse(pattern == "downstream", 1, 0)
+      prob <- z * v_wa + (1 - z) * (1 / v_wa)
+
+      barrier <- sample(n_edge,
+                        size = n_barrier,
+                        prob = prob)
+
+    } else {
+
+      stop("pattern must be either 'random', 'upstream', or 'downstream'")
+
+    }
   }
-
-  if (pattern == "downstream"|pattern == "upstream") {
-
-    if (!inherits(x, what = "brnet")) stop("x must be class 'brnet'")
-
-    v_wa <- df_g0 %>%
-      dplyr::as_tibble() %>%
-      dplyr::left_join(x$df_patch,
-                       by = c("from" = "patch_id")) %>%
-      dplyr::left_join(x$df_patch,
-                       by = c("to" = "patch_id")) %>%
-      dplyr::rowwise() %>%
-      dplyr::summarise(n_patch_upstream = min(n_patch_upstream.x,
-                                              n_patch_upstream.y)) %>%
-      pull()
-
-    z <- ifelse(pattern == "downstream", 1, 0)
-    prob <- z * v_wa + (1 - z) * (1 / v_wa)
-
-    barrier <- sample(n_edge,
-                      size = n_barrier,
-                      prob = prob)
-
-  }
-
 
   # cumulative fragmentation effect -----------------------------------------
 

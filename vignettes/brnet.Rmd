@@ -303,17 +303,6 @@ brnet(n_patch = 30) %>%
   ggbrnet(edge_weight = "passability")
 ```
 
-Example: `cluster` pattern:
-
-```{r frgm2}
-brnet(n_patch = 30) %>%
-  frgm(rate = 0.1,
-       p = 0.1,
-       n_barrier = 5,
-       pattern = "cluster") %>%
-  ggbrnet(edge_weight = "passability")
-```
-
 Example: `upstream` pattern:
 
 ```{r frgm3}
