@@ -34,7 +34,7 @@
 #' @param p_dispersal Dispersal probability. Length must be one or equal to \code{n_species}.
 #' @param theta Rate parameter of exponential dispersal kernel.
 #' @param zeta Species sensitivity to environmental pollutants.
-#' @param q Concentration of environmental pollutants.
+#' @param impact Concentration of environmental pollutants.
 #' @param plot If \code{TRUE}, five sample patches and species of \code{df_dynamics} are plotted.
 #'
 #' @importFrom dplyr %>% filter
@@ -89,7 +89,7 @@ mcsim <- function(n_species = 5,
                   p_dispersal = 0.1,
                   theta = 1,
                   zeta = 0,
-                  q = 0,
+                  impact = 0,
                   plot = FALSE
 ) {
 
@@ -223,7 +223,7 @@ mcsim <- function(n_species = 5,
   v_zeta <- fun_to_v(x = zeta,
                      n = n_species)
 
-  v_q <- fun_to_v(x = q,
+  v_imp <- fun_to_v(x = impact,
                   n = n_patch)
 
   # dynamics ----------------------------------------------------------------
@@ -325,7 +325,7 @@ mcsim <- function(n_species = 5,
                     sd = m_sd_niche_width,
                     nu = niche_cost)
 
-    m_r_xt <- m_r_xt * exp(-outer(v_zeta, v_q))
+    m_r_xt <- m_r_xt * exp(-outer(v_zeta, v_imp))
 
     ## internal community dynamics with competition
     m_n_hat <- (m_n * m_r_xt) / (1 + (m_r0 - 1) * ((m_interaction %*% m_n) / m_k)^xi)
