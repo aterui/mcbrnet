@@ -112,7 +112,7 @@ The argument `niche_cost` determines the cost of having wider niche. Smaller val
 
 For other parameters, users may specify species attributes by giving a scalar (assume identical among species) or a vector of values whose length must be one or equal to `n_species`. Default values are `r0 = 4`, `sd_niche_width = 1`, and `p_dispersal = 0.1`.
 
-The argument `zeta` determines the sensitivity to environmental pollutants as $exp(-\zeta q)$, which will be multiplied with the patch-specific population growth to represent negative impacts of pollutants. $q$ represents the concentration of hypothetical environmental pollutants (see `q` in patch attributes). The parameter $\zeta$ determines the sensitivity to environmental pollutants, and larger values indicate greater species sensitivity. No pollutant effect if $\zeta = 0$.
+The argument `zeta` determines the sensitivity to environmental pollutants as $exp(-\zeta~impact)$, which will be multiplied with the patch-specific population growth to represent negative impacts of pollutants. $impact$ represents the concentration of hypothetical environmental pollutants (see `q` in patch attributes). The parameter $\zeta$ determines the sensitivity to environmental pollutants, and larger values indicate greater species sensitivity. No pollutant effect if $\zeta = 0$.
 
 ### Competition
 
@@ -122,7 +122,7 @@ The argument `interaction_type` determines whether interaction coefficient `alph
 
 ### Patch attributes
 
-**Arguments:** `carrying_capacity`, `mean_env`, `sd_env`, `spatial_auto_cor`, `phi`, `p_disturb`, `i_disturb` , `q`
+**Arguments:** `carrying_capacity`, `mean_env`, `sd_env`, `spatial_auto_cor`, `phi`, `p_disturb`, `i_disturb` , `impact`
 
 The arguments `carrying_capacity` (default: `carrying_capacity = 100`) and `mean_env` (default: `mean_env = 0`) determines mean environmental values of habitat patches, which can be a scalar (assume identical among patches) or a vector (length must be equal to `n_patch`).
 
@@ -130,7 +130,7 @@ The arguments `sd_env` (default: `sd_env = 0.1`), `spatial_auto_cor` (default: `
 
 Users can also define disturbance probability (`p_disturb`) and mortality (`i_disturb`). When disturbance occurs, all habitat patches are reduced by `i_disturb`. `i_disturb` can be identical or different across habitat patches.
 
-Lastly, the argument `q` defines concentration of hypothetical environmental pollutants. The values will be converted as $exp(-\zeta q)$, which will be multiplied with the patch-specific population growth. The parameter $\zeta$ determines the sensitivity to environmental pollutants (see argument `zeta` in species attributes).
+Lastly, the argument `impact` defines concentration of hypothetical environmental pollutants. The values will be converted as $exp(-\zeta~impact)$, which will be multiplied with the patch-specific population growth. Thus, a greater reduction factor will be applied as the value of $impact$ increases. The parameter $\zeta$ determines the sensitivity to environmental pollutants (see argument `zeta` in species attributes).
 
 ### Landscape structure
 

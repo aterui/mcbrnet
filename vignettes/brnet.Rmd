@@ -216,7 +216,9 @@ For example, the following script will add a new column `impact` that represents
 
 ```{r pollute1}
 y <- brnet(n_patch = 10) %>% 
-  ptsource(n_source = 3, p = 0.8, q = 0) 
+  ptsource(n_source = 3,
+           p = 0.8,
+           q = 0) 
 
 y$df_patch
 ```
@@ -269,3 +271,23 @@ brnet(n_patch = 30) %>%
   ggbrnet(patch_color = "other", 
           value_col = "impact")
 ```
+
+## Customize: fragmentation
+
+**Arguments:** `x`, `n_source`, `p`, `q`, `pattern`
+
+From v.1.3.0, mcbrnet offers `ptsource()` function to simulate propagation of environmental pollutants in a branching network. `ptsource()` can specify:
+
+-   `x` 'brnet' object or adjacency matrix
+
+-   `rate` rate parameter of exponential dispersal kernel
+
+-   `pattern`	fragmentation pattern; either "random" (random location of fragmentation), "clustered" (clustered around the initial fragmentation that is randomly placed), "upstream" (upstream edges are more likely to be fragmented), or "downstream" (downstream edges are more likely to be fragmented).
+
+-   `p` passability of fragmented edges (probability)
+
+-   `n_barrier` number of barriers
+
+The arguments `p` and `n_barrier` define the probability of traversing across an edge with a barrier and the number of total barriers , respectively. Passability can be different among barriers; in this case, the user must specify the passabilities of individual barriers separately (as a vector with length `n_barrier`). The barrier effect is cumulative. For example, if one passes two barriers A (passability = $p_A$) and B (passability $p_B$) when moving from a given node node to another node, the original movement probability $m$ will be $m p_Ap_B$.
+
+Just like `ptsource()`, this function can be used with an output from `brnet()` function but also accepts any adjacency matrix.
