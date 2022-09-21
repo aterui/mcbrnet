@@ -74,7 +74,9 @@ brnet <- function(n_patch = 50,
   # distance matrix ---------------------------------------------------------
 
   ## internal function: see "function_adjtodist.R"
-  m_distance <- adjtodist(m_adj)
+  m_distance <- m_adj %>%
+    igraph::graph_from_adjacency_matrix("undirected") %>%
+    igraph::distances()
 
 
   # upstream watershed area ------------------------------------------------
