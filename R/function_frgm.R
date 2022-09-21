@@ -79,7 +79,7 @@ frgm <- function(x,
         dplyr::rowwise() %>%
         dplyr::summarise(n_patch_upstream = min(n_patch_upstream.x,
                                                 n_patch_upstream.y)) %>%
-        pull()
+        dplyr::pull()
 
       z <- ifelse(pattern == "downstream", 1, 0)
       prob <- z * v_wa + (1 - z) * (1 / v_wa)
