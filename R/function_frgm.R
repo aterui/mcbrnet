@@ -86,11 +86,12 @@ frgm <- function(x,
   if (!(length(p) == 1 | length(p) == n_barrier)) stop(paste("invalid length in p;
                                                        length must be one or
                                                        match n_barrier,",
-                                                       n_barrier))
+                                                             n_barrier))
 
   v_p <- rep(1, n_edge)
   v_p[barrier] <- p
 
+  ## negative log passability; igraph does not allow negative values for E()$weight
   igraph::E(g0)$weight <- -log(v_p)
   m_frgm <- exp(-igraph::distances(g0))
 
@@ -99,6 +100,9 @@ frgm <- function(x,
 
   if (inherits(x, what = "brnet")) {
 
+    x$df_edge <- dplyr::tibble(patch_x = seq_len(n_patch)[1:(n_patch - 1)],
+                               patch_y = seq_len(n_patch)[2:n_patch],
+                               passability = v_p)
     x$frgm_matrix <- m_frgm
     x$dispersal_matrix_frgm <- m_disp * m_frgm
 
@@ -109,7 +113,10 @@ frgm <- function(x,
     if (is.null(m_disp)) stop("dispersal matrix must be provided")
     m_disp_frgm <- m_disp * m_frgm
 
-    return(list(frgm_matrix = m_frgm,
+    return(list(df_edge <- dplyr::tibble(patch_x = seq_len(n_patch)[1:(n_patch - 1)],
+                                         patch_y = seq_len(n_patch)[2:n_patch],
+                                         passability = v_p),
+                frgm_matrix = m_frgm,
                 dispersal_matrix_frgm = m_disp_frgm))
 
   }
