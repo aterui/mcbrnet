@@ -7,6 +7,8 @@
 ggbrnet(
   x,
   patch_color = "env",
+  edge_color = "black",
+  edge_weight = "none",
   value_col = NULL,
   color_label = NULL,
   patch_label = "none",
@@ -18,6 +20,10 @@ ggbrnet(
 \item{x}{\code{brnet()} object}
 
 \item{patch_color}{Type of patch (vertex) label (either \code{"env"}, \code{"disturbance"}, \code{"other"} or any color). Default \code{"env"}.}
+
+\item{edge_color}{Edge color}
+
+\item{edge_weight}{Type of edge weight (\code{"passability"}). Default \code{NULL}.}
 
 \item{value_col}{Patch values. Must be specified if \code{patch_color = "other"}.}
 
