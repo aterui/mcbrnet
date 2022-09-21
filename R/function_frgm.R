@@ -36,6 +36,8 @@ frgm <- function(x,
   g0 <- m_adj %>%
     igraph::graph.adjacency("undirected")
 
+  df_g0 <- igraph::as_data_frame(g0)
+
   if(inherits(x, what = "brnet")) {
     m_dist <- x$distance_matrix
   } else {
@@ -62,21 +64,25 @@ frgm <- function(x,
     barrier <- resample(seq_len(n_edge), size = n_barrier)
   }
 
-  if (pattern == "cluster") {
-    s <- resample(seq_len(n_edge), size = 1)
-    barrier <- order(m_dist[s, ])[seq_len(n_barrier)]
-  }
-
   if (pattern == "downstream"|pattern == "upstream") {
 
     if (!inherits(x, what = "brnet")) stop("x must be class 'brnet'")
 
-    v_wa <- x$df_patch$n_patch_upstream
-    prob <- ifelse(pattern == "downstream",
-                   v_wa,
-                   1 / v_wa)
+    v_wa <- df_g0 %>%
+      dplyr::as_tibble() %>%
+      dplyr::left_join(x$df_patch,
+                       by = c("from" = "patch_id")) %>%
+      dplyr::left_join(x$df_patch,
+                       by = c("to" = "patch_id")) %>%
+      dplyr::rowwise() %>%
+      dplyr::summarise(n_patch_upstream = min(n_patch_upstream.x,
+                                              n_patch_upstream.y)) %>%
+      pull()
 
-    barrier <- sample(n_patch,
+    z <- ifelse(pattern == "downstream", 1, 0)
+    prob <- z * v_wa + (1 - z) * (1 / v_wa)
+
+    barrier <- sample(n_edge,
                       size = n_barrier,
                       prob = prob)
 
