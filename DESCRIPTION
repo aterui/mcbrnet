@@ -2,7 +2,7 @@ Package: mcbrnet
 Type: Package
 Title: Metacommunity simulation in branching networks
 Version: 1.3.0
-Author: Akira Terui
+Author: Akira Terui, Justin F. Pomeranz
 Maintainer: Akira Terui <hanabi0111@gmail.com>
 Description: Metacommunity simulation in branching networks.
 License: MIT + file LICENSE
