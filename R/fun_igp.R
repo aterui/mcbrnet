@@ -3,10 +3,10 @@
 #' @param x Community matrix for basal, intraguild prey (ig-prey), and intraguild predator (ig-predator)
 #' @param r_b Maximum reproductive rate of basal species
 #' @param e Energetic conversion efficiency; must be given by the order of basal to ig-prey, basal to ig-predator, and ig-prey to ig-predator
-#' @param k Carrying capacity
+#' @param k Carrying capacity of basal species
 #' @param a Attack rate. Must be given by the order of basal to ig_prey, basal to ig-predator, and ig-prey to ig-predator
 #' @param h Handling time. Must be given by the order of basal to ig_prey, basal to ig-predator, and ig-prey to ig-predator
-#' @param s0 Background survival rate. Must be given by the order of basal, ig-prey, and ig-predator
+#' @param s Strength of prey switching from ig-prey to basal
 #'
 #' @author Akira Terui, \email{hanabi0111@gmail.com}
 #'
@@ -16,27 +16,23 @@
 fun_igp <- function(x,
                     r_b = 5,
                     k = 100,
-                    e = c(5, 5, 5),
-                    a = c(0.5, 0.5, 0.5),
-                    h = c(1, 1, 1),
-                    s0 = rep(0.8, 3)
+                    e = c(0.8, 0.8, 0.8),
+                    a = c(2, 2, 2),
+                    h = c(0.1, 0.1, 0.1),
+                    s = 1
 ) {
 
   # check inputs ------------------------------------------------------------
 
   if (!is.matrix(x)) stop("error in x; x must be matrix")
   if (dim(x)[1] != 3) stop("error in x; dim(x)[1] must be 3")
-  if (any(a > 1)) warning("a > 1; may yield negative density")
-  if (a[1] + a[2] > 1) warning("a[1] + a[2] > 1; may yield negative density")
   if (any(x < 0) |
       any(r_b < 0) |
       any(k < 0) |
       any(a < 0) |
       any(e < 0) |
-      any(h < 0) |
-      any(s0 < 0) |
-      any(s0 > 1)
-      ) stop("negative values detected in parameters or community matrix")
+      any(h < 0)
+  ) stop("negative values detected in parameters or community matrix")
 
   # define parameters -------------------------------------------------------
 
@@ -55,80 +51,47 @@ fun_igp <- function(x,
   a_bp <- a[2]
   a_cp <- a[3]
 
-  ## handling time
-  h_bc <- h[1]
-  h_bp <- h[2]
-  h_cp <- h[3]
-
-  ## background survival
-  s0_b <- s0[1]
-  s0_c <- s0[2]
-  s0_p <- s0[3]
+  ## attack rate x handling time
+  h_bc <- a[1] * h[1]
+  h_bp <- a[2] * h[2]
+  h_cp <- a[3] * h[3]
 
 
   # trophic relationship ----------------------------------------------------
 
   # functional response ####
-  ## v_w_xx: total number of prey eaten by predators
-  ### denominator
-  den_bc <- (v_n_c + a_bc * h_bc * v_n_b)
-  den_bp <- (v_n_p + a_bp * h_bp * v_n_b)
-  den_cp <- (v_n_p + a_cp * h_cp * v_n_c)
+  ## v_p_bc: fraction of prey survived after predation by consumer
+  v_p_bc <- exp(-((a_bc * v_n_c) / (1 + h_bc * v_n_b)))
 
-  v_w_bc <- ifelse(den_bc > 0, (a_bc * v_n_b * v_n_c) / den_bc, 0)
-  v_w_bp <- ifelse(den_bp > 0, (a_bp * v_n_b * v_n_p) / den_bp, 0)
-  v_w_cp <- ifelse(den_cp > 0, (a_cp * v_n_c * v_n_p) / den_cp, 0)
-
-  ## v_f_xx: number of prey eaten per predator
-  v_f_bp <- (a_bp * v_n_b) / (1 + a_bp * h_bp * v_n_b)
-  v_f_cp <- (a_cp * v_n_c) / (1 + a_cp * h_cp * v_n_c)
-
-  ## v_delta: preference to basal over intraguild prey
-  zeta <- e_bp * v_f_bp + e_cp * v_f_cp
-  den_delta <- ifelse(zeta > 0, zeta, 1)
-  v_delta <- (e_bp * v_f_bp) / den_delta
-
-  ## v_z_xx: total proportional loss = preference X proportion eaten
-  ## xi_xx: indicator
-  v_w_bcp <- v_w_bc + v_delta * v_w_bp
-  xi_bcp <- ifelse(v_w_bcp > v_n_b, 1, 0)
-
-  v_z_bc <- xi_bcp * (v_w_bc / v_w_bcp) + (1 - xi_bcp) * (v_w_bc / v_n_b)
-  v_z_bp <- xi_bcp * ((v_delta * v_w_bp) / v_w_bcp) + (1 - xi_bcp) * ((v_delta * v_w_bp) / v_n_b)
-  v_z_cp <- (1 - v_delta) * (v_w_cp / v_n_c)
-
-  v_z_bc[is.nan(v_z_bc)] <- 0
-  v_z_bp[is.nan(v_z_bp)] <- 0
-  v_z_cp[is.nan(v_z_cp)] <- 0
+  ## v_p_xp: fraction of prey survived after predation by predator
+  ## phi: switching function
+  ## s: strength of switching
+  phi <- s * (v_n_b - v_n_c) / (v_n_b + v_n_c)
+  phi <- ifelse(is.nan(phi), 0, phi) # NaN produced when n_b = n_c = 0
+  delta <- 1 + phi # preference to basal over ig-prey
+  omega <- 1 - phi # preference to ig-prey over basal
+  v_p_bp <- exp(-((delta * a_bp * v_n_p) / (1 + h_bp * v_n_b)))
+  v_p_cp <- exp(-((omega * a_cp * v_n_p) / (1 + h_cp * v_n_c)))
 
 
-  # trophic dynamics --------------------------------------------------------
-
-  ## v_n_x_bar: density after background + predation-induced mortality
-  ## v_n_x_hat: density after reproduction
+  # # trophic dynamics --------------------------------------------------------
 
   # basal species v_n_b ####
-  ## survived = basal survival x predation-induced mortality
+  ## beverton-holt x predation-induced mortality
   nu <- (r_b - 1) / k
-  v_n_b_bar <- s0_b * (1 - v_z_bc - v_z_bp) * v_n_b
-  v_n_b_hat <- (v_n_b_bar * r_b) / (1 + nu * v_n_b_bar)
+  v_n_b_hat <- v_n_b * (r_b / (1 + nu * v_n_b)) * v_p_bc * v_p_bp
 
   # intraguild prey v_n_c ####
-  ## survived = basal survival x predation-induced mortality
-  v_n_c_hat <- e_bc * (s0_c * (1 - v_z_cp) * (v_z_bc * v_n_b))
+  ## conversion eff x basal n x fraction captured
+  v_n_c_hat <- e_bc * v_n_b * (1 - v_p_bc)
 
   # intraguild predator v_n_p ####
-  v_n_p_hat <- s0_p * (v_delta * e_bp * (v_z_bp * v_n_b) + (1 - v_delta) * e_cp * v_w_cp)
-  v_n_p_hat[is.nan(v_n_p_hat)] <- 0
+  ## conversion eff x basal n x fraction remained x fraction captured
+  ## conversion eff x consumer n x fraction captured
+  v_n_p_hat <- e_bp * v_n_b * v_p_bc * (1 - v_p_bp) + e_cp * v_n_c * (1 - v_p_cp)
 
 
   # export ------------------------------------------------------------------
-
-  m_z <- rbind(v_z_bc,
-               v_z_bp,
-               v_z_cp)
-
-  dimnames(m_z) <- NULL
 
   m_n_hat <- rbind(v_n_b_hat,
                    v_n_c_hat,
@@ -136,9 +99,6 @@ fun_igp <- function(x,
 
   dimnames(m_n_hat) <- NULL
 
-  return(list(delta = v_delta,
-              z = m_z,
-              m_n_hat = m_n_hat)
-  )
+  return(m_n_hat)
 
 }
