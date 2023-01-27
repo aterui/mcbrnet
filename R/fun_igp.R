@@ -19,13 +19,16 @@ fun_igp <- function(x,
                     e = c(0.8, 0.8, 0.8),
                     a = c(2, 2, 2),
                     h = c(0.1, 0.1, 0.1),
-                    s = 1
+                    s = 0
 ) {
 
   # check inputs ------------------------------------------------------------
 
   if (!is.matrix(x)) stop("error in x; x must be matrix")
   if (dim(x)[1] != 3) stop("error in x; dim(x)[1] must be 3")
+  if (length(s) != 1) stop("error in s; s must be a scalar")
+  if (s < 0 | s > 1) stop("error in s; s must be 0 - 1")
+
   if (any(x < 0) |
       any(r_b < 0) |
       any(k < 0) |
@@ -68,10 +71,10 @@ fun_igp <- function(x,
   ## s: strength of switching
   phi <- s * (v_n_b - v_n_c) / (v_n_b + v_n_c)
   phi <- ifelse(is.nan(phi), 0, phi) # NaN produced when n_b = n_c = 0
-  delta <- 1 + phi # preference to basal over ig-prey
-  omega <- 1 - phi # preference to ig-prey over basal
-  v_p_bp <- exp(-((delta * a_bp * v_n_p) / (1 + h_bp * v_n_b)))
-  v_p_cp <- exp(-((omega * a_cp * v_n_p) / (1 + h_cp * v_n_c)))
+  om_b <- 1 + phi # preference to basal over ig-prey
+  om_c <- 1 - phi # preference to ig-prey over basal
+  v_p_bp <- exp(-((om_b * a_bp * v_n_p) / (1 + h_bp * v_n_b)))
+  v_p_cp <- exp(-((om_c * a_cp * v_n_p) / (1 + h_cp * v_n_c)))
 
 
   # # trophic dynamics --------------------------------------------------------
@@ -90,6 +93,9 @@ fun_igp <- function(x,
   ## conversion eff x consumer n x fraction captured
   v_n_p_hat <- e_bp * v_n_b * v_p_bc * (1 - v_p_bp) + e_cp * v_n_c * (1 - v_p_cp)
 
+  # omnivory level
+  v_delta <- (e_bp * v_n_b * v_p_bc * (1 - v_p_bp)) / v_n_p_hat
+  v_delta[is.nan(v_delta)] <- 0
 
   # export ------------------------------------------------------------------
 
@@ -99,6 +105,7 @@ fun_igp <- function(x,
 
   dimnames(m_n_hat) <- NULL
 
-  return(m_n_hat)
+  return(list(m_n_hat = m_n_hat,
+              delta = v_delta))
 
 }

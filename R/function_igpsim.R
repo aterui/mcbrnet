@@ -8,7 +8,7 @@
 #' @param conv_eff Energetic conversion efficiency; must be given by the order of basal to ig-prey, basal to ig-predator, and ig-prey to ig-predator
 #' @param attack_rate Attack rate. Must be given by the order of basal to ig_prey, basal to ig-predator, and ig-prey to ig-predator
 #' @param handling_time Handling time. Must be given by the order of basal to ig_prey, basal to ig-predator, and ig-prey to ig-predator
-#' @param s0 Background survival rate. Must be given by the order of basal, ig-prey, and ig-predator
+#' @param s Strength of switching between basal and ig-prey
 #' @param propagule_interval Time interval for propagule introduction during warm-up. If \code{NULL}, a value of \code{ceiling(n_warmup / 10)} will be used.
 #' @param carrying_capacity Carrying capacities of individual patches. Length must be one or equal to \code{n_patch}. Default \code{100}.
 #' @param xy_coord Data frame for site coordinates. Each row should correspond to an individual patch, with x and y coordinates (columns). Defualt \code{NULL}.
@@ -42,7 +42,7 @@ igpsim <- function(n_patch = 5,
                    conv_eff = rep(5, 3),
                    attack_rate = rep(0.5, 3),
                    handling_time = rep(1, 3),
-                   s0 = rep(0.8, 3),
+                   s = 0,
                    propagule_interval = NULL,
                    carrying_capacity = 100,
                    xy_coord = NULL,
@@ -173,7 +173,7 @@ igpsim <- function(n_patch = 5,
                           e = v_e,
                           a = v_a,
                           h = v_h,
-                          s0 = v_s0)
+                          s = s)
 
     ## disturbance
     m_n_hat <- t(t(list_n_hat$m_n_hat) * (1 - psi[n] * v_disturb))

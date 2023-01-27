@@ -13,7 +13,7 @@ igpsim(
   conv_eff = rep(5, 3),
   attack_rate = rep(0.5, 3),
   handling_time = rep(1, 3),
-  s0 = rep(0.8, 3),
+  s = 0,
   propagule_interval = NULL,
   carrying_capacity = 100,
   xy_coord = NULL,
@@ -44,7 +44,7 @@ igpsim(
 
 \item{handling_time}{Handling time. Must be given by the order of basal to ig_prey, basal to ig-predator, and ig-prey to ig-predator}
 
-\item{s0}{Background survival rate. Must be given by the order of basal, ig-prey, and ig-predator}
+\item{s}{Strength of switching between basal and ig-prey}
 
 \item{propagule_interval}{Time interval for propagule introduction during warm-up. If \code{NULL}, a value of \code{ceiling(n_warmup / 10)} will be used.}
 

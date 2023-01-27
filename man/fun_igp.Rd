@@ -8,10 +8,10 @@ fun_igp(
   x,
   r_b = 5,
   k = 100,
-  e = c(5, 5, 5),
-  a = c(0.5, 0.5, 0.5),
-  h = c(1, 1, 1),
-  s0 = rep(0.8, 3)
+  e = c(0.8, 0.8, 0.8),
+  a = c(2, 2, 2),
+  h = c(0.1, 0.1, 0.1),
+  s = 0
 )
 }
 \arguments{
@@ -19,7 +19,7 @@ fun_igp(
 
 \item{r_b}{Maximum reproductive rate of basal species}
 
-\item{k}{Carrying capacity}
+\item{k}{Carrying capacity of basal species}
 
 \item{e}{Energetic conversion efficiency; must be given by the order of basal to ig-prey, basal to ig-predator, and ig-prey to ig-predator}
 
@@ -27,7 +27,7 @@ fun_igp(
 
 \item{h}{Handling time. Must be given by the order of basal to ig_prey, basal to ig-predator, and ig-prey to ig-predator}
 
-\item{s0}{Background survival rate. Must be given by the order of basal, ig-prey, and ig-predator}
+\item{s}{Strength of prey switching from ig-prey to basal}
 }
 \description{
 Internal function: igp function
