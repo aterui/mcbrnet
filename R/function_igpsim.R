@@ -39,9 +39,9 @@ igpsim <- function(n_patch = 5,
                    n_burnin = 200,
                    n_timestep = 1000,
                    r_b = 5,
-                   conv_eff = rep(5, 3),
-                   attack_rate = rep(0.5, 3),
-                   handling_time = rep(1, 3),
+                   conv_eff = rep(0.5, 3),
+                   attack_rate = rep(1, 3),
+                   handling_time = rep(0, 3),
                    s = 0,
                    propagule_interval = NULL,
                    carrying_capacity = 100,
@@ -74,10 +74,6 @@ igpsim <- function(n_patch = 5,
   ## carrying capacity ####
   v_k <- fun_to_v(x = carrying_capacity,
                   n = n_patch)
-
-  ## background survival ####
-  v_s0 <- fun_to_v(x = s0,
-                   n = n_species)
 
   ## dispersal matrix ####
   list_dispersal <- fun_disp_mat(n_patch = n_patch,
@@ -266,7 +262,6 @@ igpsim <- function(n_patch = 5,
     dplyr::group_by(.data$species) %>%
     dplyr::summarise(mean_abundance = mean(.data$abundance)) %>%
     dplyr::right_join(dplyr::tibble(species = seq_len(n_species),
-                                    s0 = s0,
                                     p_dispersal = v_p_dispersal),
                       by = "species") %>%
     dplyr::mutate(species = dplyr::case_when(.data$species == 1 ~ "basal",
