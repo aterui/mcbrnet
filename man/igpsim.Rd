@@ -10,11 +10,12 @@ igpsim(
   n_burnin = 200,
   n_timestep = 1000,
   r_b = 5,
-  conv_eff = rep(5, 3),
-  attack_rate = rep(0.5, 3),
-  handling_time = rep(1, 3),
+  conv_eff = rep(0.5, 3),
+  attack_rate = rep(1, 3),
+  handling_time = rep(0, 3),
   s = 0,
   propagule_interval = NULL,
+  propagule_seed = 0.5,
   carrying_capacity = 100,
   xy_coord = NULL,
   distance_matrix = NULL,
@@ -47,6 +48,8 @@ igpsim(
 \item{s}{Strength of switching between basal and ig-prey}
 
 \item{propagule_interval}{Time interval for propagule introduction during warm-up. If \code{NULL}, a value of \code{ceiling(n_warmup / 10)} will be used.}
+
+\item{propagule_seed}{Propagule mean density (intensity parameter in a Poisson distribution). Default \code{0.5}.}
 
 \item{carrying_capacity}{Carrying capacities of individual patches. Length must be one or equal to \code{n_patch}. Default \code{100}.}
 
