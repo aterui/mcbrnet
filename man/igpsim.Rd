@@ -15,7 +15,7 @@ igpsim(
   handling_time = rep(0, 3),
   s = 0,
   propagule_interval = NULL,
-  propagule_seed = 0.5,
+  propagule_seed = c(100, 10, 1),
   carrying_capacity = 100,
   xy_coord = NULL,
   distance_matrix = NULL,
