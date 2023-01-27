@@ -45,7 +45,7 @@ igpsim <- function(n_patch = 5,
                    handling_time = rep(0, 3),
                    s = 0,
                    propagule_interval = NULL,
-                   propagule_seed = 0.5,
+                   propagule_seed = c(100, 10, 1),
                    carrying_capacity = 100,
                    xy_coord = NULL,
                    distance_matrix = NULL,
@@ -76,6 +76,10 @@ igpsim <- function(n_patch = 5,
   ## carrying capacity ####
   v_k <- fun_to_v(x = carrying_capacity,
                   n = n_patch)
+
+  ## propagule ####
+  v_seed <- fun_to_v(x = propagule_seed,
+                     n = n_species)
 
   ## dispersal matrix ####
   list_dispersal <- fun_disp_mat(n_patch = n_patch,
@@ -144,7 +148,7 @@ igpsim <- function(n_patch = 5,
 
   ## initial values
   m_n <- matrix(rpois(n = n_species * n_patch,
-                      lambda = propagule_seed),
+                      lambda = v_seed),
                 nrow = n_species,
                 ncol = n_patch)
 
@@ -157,7 +161,7 @@ igpsim <- function(n_patch = 5,
 
       if (n %in% propagule) {
         m_n <- m_n + matrix(rpois(n = n_species * n_patch,
-                                  lambda = propagule_seed),
+                                  lambda = v_seed),
                             nrow = n_species,
                             ncol = n_patch)
       }
