@@ -17,6 +17,7 @@
 #' @param dispersal_matrix Dispersal matrix to be used to simulate dispersal process. Override distance_matrix. Default \code{NULL}.
 #' @param p_disturb Disturbance probability.
 #' @param m_disturb Disturbance-induced proportional mortality.
+#' @param phi_disturb Precision of disturbance-induced proportional mortality.
 #' @param landscape_size Length of a landscape on a side. Enabled if \code{dispersal_matrix = NULL}.
 #' @param p_dispersal Probability of dispersal. Length must be one or equal to \code{n_species}.
 #' @param theta Dispersal parameter describing dispersal capability of species.
@@ -52,6 +53,7 @@ igpsim <- function(n_patch = 5,
                    dispersal_matrix = NULL,
                    p_disturb = 0,
                    m_disturb = 0,
+                   phi_disturb = 100,
                    landscape_size = 10,
                    p_dispersal = 0.1,
                    theta = 1,
@@ -146,6 +148,16 @@ igpsim <- function(n_patch = 5,
                 prob = p_disturb)
   psi[1:n_warmup] <- 0
 
+  ## spatio-temporal variation in disturbance
+  shape1 <- phi_disturb * v_disturb
+  shape2 <- phi_disturb * (1 - v_disturb)
+
+  t_disturb <- matrix(rbeta(n_sim * n_patch,
+                            shape1,
+                            shape2),
+                      nrow = n_patch,
+                      ncol = n_sim)
+
   ## initial values
   m_n <- matrix(rpois(n = n_species * n_patch,
                       lambda = v_seed),
@@ -178,7 +190,7 @@ igpsim <- function(n_patch = 5,
                           s = s)
 
     ## disturbance
-    m_n_hat <- t(t(list_n_hat$m_n_hat) * (1 - psi[n] * v_disturb))
+    m_n_hat <- t(t(list_n_hat$m_n_hat) * (1 - psi[n] * t_disturb[, n]))
 
     ## dispersal, internal function: see "fun_dispersal.R"
     m_n_prime <- fun_dispersal(x = m_n_hat,
