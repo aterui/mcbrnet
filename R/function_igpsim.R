@@ -152,9 +152,9 @@ igpsim <- function(n_patch = 5,
   shape1 <- phi_disturb * v_disturb
   shape2 <- phi_disturb * (1 - v_disturb)
 
-  t_disturb <- matrix(rbeta(n_sim * n_patch,
-                            shape1,
-                            shape2),
+  t_disturb <- matrix(stats::rbeta(n_sim * n_patch,
+                                   shape1,
+                                   shape2),
                       nrow = n_patch,
                       ncol = n_sim)
 
@@ -214,17 +214,17 @@ igpsim <- function(n_patch = 5,
                     by = 1)
 
       m_dynamics[row_id, ] <- cbind(# timestep
-                                    I(n - n_discard),
-                                    # patch id
-                                    rep(x = seq_len(n_patch), each = n_species),
-                                    # carrying capacity
-                                    c(v_k),
-                                    # species id
-                                    rep(x = seq_len(n_species), times = n_patch),
-                                    # abundance
-                                    c(m_n),
-                                    # food chain length
-                                    rep(x = v_fcl, each = n_species))
+        I(n - n_discard),
+        # patch id
+        rep(x = seq_len(n_patch), each = n_species),
+        # carrying capacity
+        c(v_k),
+        # species id
+        rep(x = seq_len(n_species), times = n_patch),
+        # abundance
+        c(m_n),
+        # food chain length
+        rep(x = v_fcl, each = n_species))
 
     }
 

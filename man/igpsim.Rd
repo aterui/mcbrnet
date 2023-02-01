@@ -9,10 +9,10 @@ igpsim(
   n_warmup = 200,
   n_burnin = 200,
   n_timestep = 1000,
-  r_b = 5,
-  conv_eff = rep(0.5, 3),
-  attack_rate = rep(1, 3),
-  handling_time = rep(0, 3),
+  r_b = 10,
+  conv_eff = 0.9,
+  attack_rate = 0.05,
+  handling_time = 0.5,
   s = 0,
   propagule_interval = NULL,
   propagule_seed = c(100, 10, 1),
@@ -22,6 +22,7 @@ igpsim(
   dispersal_matrix = NULL,
   p_disturb = 0,
   m_disturb = 0,
+  phi_disturb = 100,
   landscape_size = 10,
   p_dispersal = 0.1,
   theta = 1,
@@ -62,6 +63,8 @@ igpsim(
 \item{p_disturb}{Disturbance probability.}
 
 \item{m_disturb}{Disturbance-induced proportional mortality.}
+
+\item{phi_disturb}{Precision of disturbance-induced proportional mortality.}
 
 \item{landscape_size}{Length of a landscape on a side. Enabled if \code{dispersal_matrix = NULL}.}
 
