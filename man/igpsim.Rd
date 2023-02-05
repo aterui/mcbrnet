@@ -21,8 +21,8 @@ igpsim(
   distance_matrix = NULL,
   dispersal_matrix = NULL,
   p_disturb = 0,
-  m_disturb = 0,
-  phi_disturb = 100,
+  i_disturb = 0,
+  phi_disturb = Inf,
   landscape_size = 10,
   p_dispersal = 0.1,
   theta = 1,
@@ -62,9 +62,9 @@ igpsim(
 
 \item{p_disturb}{Disturbance probability.}
 
-\item{m_disturb}{Disturbance-induced proportional mortality.}
+\item{i_disturb}{Disturbance-induced proportional mortality.}
 
-\item{phi_disturb}{Precision of disturbance-induced proportional mortality.}
+\item{phi_disturb}{Temporal precision of disturbance-induced proportional mortality. Set \code{Inf} to assume no temporal variability.}
 
 \item{landscape_size}{Length of a landscape on a side. Enabled if \code{dispersal_matrix = NULL}.}
 

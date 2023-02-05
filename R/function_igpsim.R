@@ -16,8 +16,8 @@
 #' @param distance_matrix Distance matrix indicating distance between habitat patches. If provided, the distance matrix will be used to generate dispersal matrix and to calculate distance decay of environmental correlations. Default \code{NULL}.
 #' @param dispersal_matrix Dispersal matrix to be used to simulate dispersal process. Override distance_matrix. Default \code{NULL}.
 #' @param p_disturb Disturbance probability.
-#' @param m_disturb Disturbance-induced proportional mortality.
-#' @param phi_disturb Precision of disturbance-induced proportional mortality.
+#' @param i_disturb Disturbance-induced proportional mortality.
+#' @param phi_disturb Temporal precision of disturbance-induced proportional mortality. Set \code{Inf} to assume no temporal variability.
 #' @param landscape_size Length of a landscape on a side. Enabled if \code{dispersal_matrix = NULL}.
 #' @param p_dispersal Probability of dispersal. Length must be one or equal to \code{n_species}.
 #' @param theta Dispersal parameter describing dispersal capability of species.
@@ -52,8 +52,8 @@ igpsim <- function(n_patch = 5,
                    distance_matrix = NULL,
                    dispersal_matrix = NULL,
                    p_disturb = 0,
-                   m_disturb = 0,
-                   phi_disturb = 100,
+                   i_disturb = 0,
+                   phi_disturb = Inf,
                    landscape_size = 10,
                    p_dispersal = 0.1,
                    theta = 1,
@@ -100,9 +100,10 @@ igpsim <- function(n_patch = 5,
 
   ## disturbance ####
   if (p_disturb > 1 | p_disturb < 0) stop("p_disturb must be 0 to 1")
-  if (any(m_disturb > 1) | any(m_disturb < 0)) stop("m_disturb must be 0 to 1")
+  if (any(i_disturb > 1) | any(i_disturb < 0)) stop("i_disturb must be 0 to 1")
+  if (phi_disturb <= 0) stop("phi_disturb must be positive")
 
-  v_disturb <- fun_to_v(x = m_disturb,
+  v_disturb <- fun_to_v(x = i_disturb,
                         n = n_patch)
 
   # dynamics ----------------------------------------------------------------
@@ -117,6 +118,7 @@ igpsim <- function(n_patch = 5,
   colname <- c("timestep",
                "patch_id",
                "carrying_capacity",
+               "disturbance",
                "species",
                "abundance",
                "fcl")
@@ -152,11 +154,17 @@ igpsim <- function(n_patch = 5,
   shape1 <- phi_disturb * v_disturb
   shape2 <- phi_disturb * (1 - v_disturb)
 
-  t_disturb <- matrix(stats::rbeta(n_sim * n_patch,
-                                   shape1,
-                                   shape2),
-                      nrow = n_patch,
-                      ncol = n_sim)
+  if (phi_disturb == Inf) {
+    t_disturb <- matrix(v_disturb,
+                        nrow = n_patch,
+                        ncol = n_sim)
+  } else {
+    t_disturb <- matrix(stats::rbeta(n_sim * n_patch,
+                                     shape1,
+                                     shape2),
+                        nrow = n_patch,
+                        ncol = n_sim)
+  }
 
   ## initial values
   m_n <- matrix(rpois(n = n_species * n_patch,
@@ -213,12 +221,15 @@ igpsim <- function(n_patch = 5,
                     to = st_row[n - n_discard] + n_species * n_patch - 1,
                     by = 1)
 
-      m_dynamics[row_id, ] <- cbind(# timestep
+      m_dynamics[row_id, ] <- cbind(
+        # timestep
         I(n - n_discard),
         # patch id
         rep(x = seq_len(n_patch), each = n_species),
         # carrying capacity
         c(v_k),
+        # disturbance
+        rep(x = psi[n] * t_disturb[, n], each = n_species),
         # species id
         rep(x = seq_len(n_species), times = n_patch),
         # abundance
