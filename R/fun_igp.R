@@ -62,39 +62,45 @@ fun_igp <- function(x,
 
   # trophic relationship ----------------------------------------------------
 
-  # functional response ####
   ## v_p_bc: fraction of prey survived after predation by consumer
   v_p_bc <- exp(-((a_bc * v_n_c) / (1 + h_bc * v_n_b)))
+  v_p_cp <- exp(-((om_c * a_cp * v_n_p) / (1 + h_cp * v_n_c)))
 
-  ## v_p_xp: fraction of prey survived after predation by predator
+  ## predaion C on B
+  v_n_b_minus_c <- v_n_b * v_p_bc
+
+  ## predation function P on B & C
   ## phi: switching function
   ## s: strength of switching
-  phi <- s * (v_n_b - v_n_c) / (v_n_b + v_n_c)
+  phi <- s * (v_n_b_minus_c - v_n_c) / (v_n_b_minus_c + v_n_c)
   phi <- ifelse(is.nan(phi), 0, phi) # NaN produced when n_b = n_c = 0
   om_b <- 1 + phi # preference to basal over ig-prey
   om_c <- 1 - phi # preference to ig-prey over basal
-  v_p_bp <- exp(-((om_b * a_bp * v_n_p) / (1 + h_bp * v_n_b)))
-  v_p_cp <- exp(-((om_c * a_cp * v_n_p) / (1 + h_cp * v_n_c)))
+  v_p_bp <- exp(-((om_b * a_bp * v_n_p) / (1 + h_bp * v_n_b_minus_c)))
+  v_p_cp <- exp(-((om_c * a_cp * v_n_p) / (1 + h_bp * v_n_c)))
 
 
-  # # trophic dynamics --------------------------------------------------------
+  # trophic dynamics --------------------------------------------------------
 
-  # basal species v_n_b ####
-  ## beverton-holt x predation-induced mortality
+  ## Basal species
+  ### predation P on B
+  v_n_b_minus_cp <- v_n_b_minus_c * v_p_bp
+
+  ### beverton-holt growth
   nu <- (r_b - 1) / k
-  v_n_b_hat <- v_n_b * (r_b / (1 + nu * v_n_b)) * v_p_bc * v_p_bp
+  v_n_b_hat <- v_n_b_minus_cp * (r_b / (1 + nu * v_n_b_minus_cp))
 
-  # intraguild prey v_n_c ####
-  ## conversion eff x basal n x fraction captured
-  v_n_c_hat <- e_bc * v_n_b * (1 - v_p_bc)
+  ## IG prey
+  ### conversion x basal n x faction captured x predation P on C
+  v_n_c_hat <- e_bc * v_n_b * (1 - v_p_bc) * v_p_cp
 
-  # intraguild predator v_n_p ####
-  ## conversion eff x basal n x fraction remained x fraction captured
-  ## conversion eff x consumer n x fraction captured
-  v_n_p_hat <- e_bp * v_n_b * v_p_bc * (1 - v_p_bp) + e_cp * v_n_c * (1 - v_p_cp)
+  ## IG predator
+  ### conversion x (basal n x fraction remained) x fraction captured
+  ### conversion x consumer n x fraction captured
+  v_n_p_hat <- e_bp * v_n_b_minus_c * (1 - v_p_bp) + e_cp * v_n_c * (1 - v_p_cp)
 
   # omnivory level
-  v_delta <- (e_bp * v_n_b * v_p_bc * (1 - v_p_bp)) / v_n_p_hat
+  v_delta <- (e_bp * v_n_b_minus_c * (1 - v_p_bp)) / v_n_p_hat
   v_delta[is.nan(v_delta)] <- 0
 
   # export ------------------------------------------------------------------
