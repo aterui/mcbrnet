@@ -14,11 +14,11 @@ fun_get_fcl <- function(x, delta) {
   # raw fcl - 1, 2, 3
   v_fcl_raw <- apply(X = x,
                      MARGIN = 2,
-                     FUN = function(y) ifelse(any(y > 0),
-                                              yes = max(which(y > 0)),
-                                              no = 0)
-  )
-
+                     FUN = function(y) {
+                         fcl <- ifelse(y[1] > 0,
+                                       yes = max(which(y > 0)),
+                                       no = 0)
+                     })
   # omnivory
   omn <- ifelse(v_fcl_raw == 3,
                 yes = 1,

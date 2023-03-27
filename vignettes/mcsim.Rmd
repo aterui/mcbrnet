@@ -122,11 +122,11 @@ The argument `interaction_type` determines whether interaction coefficient `alph
 
 ### Patch attributes
 
-**Arguments:** `carrying_capacity`, `mean_env`, `sd_env`, `spatial_auto_cor`, `phi`, `p_disturb`, `i_disturb` , `impact`
+**Arguments:** `carrying_capacity`, `mean_env`, `sd_env`, `spatial_env_cor`, `phi`, `p_disturb`, `i_disturb` , `impact`
 
 The arguments `carrying_capacity` (default: `carrying_capacity = 100`) and `mean_env` (default: `mean_env = 0`) determines mean environmental values of habitat patches, which can be a scalar (assume identical among patches) or a vector (length must be equal to `n_patch`).
 
-The arguments `sd_env` (default: `sd_env = 0.1`), `spatial_auto_cor` (default: `spatial_auto_cor = FALSE`) and `phi` (default: `phi = 1`) determine spatio-temporal dynamics of environmental values. `sd_env` determines the magnitude of temporal environmental fluctuations. If `spatial_auto_cor = TRUE`, the function models spatial autocorrelation of temporal environmental fluctuation based on a multi-variate normal distribution. The degree of spatial autocorrelation would be determined by `phi`, the parameter describing the strength of distance decay in spatial autocorrelation.
+The arguments `sd_env` (default: `sd_env = 0.1`), `spatial_env_cor` (default: `spatial_env_cor = FALSE`) and `phi` (default: `phi = 1`) determine spatio-temporal dynamics of environmental values. `sd_env` determines the magnitude of temporal environmental fluctuations. If `spatial_env_cor = TRUE`, the function models spatial autocorrelation of temporal environmental fluctuation based on a multi-variate normal distribution. The degree of spatial autocorrelation would be determined by `phi`, the parameter describing the strength of distance decay in spatial autocorrelation.
 
 Users can also define disturbance probability (`p_disturb`) and mortality (`i_disturb`). When disturbance occurs, all habitat patches are reduced by `i_disturb`. `i_disturb` can be identical or different across habitat patches.
 
