@@ -6,36 +6,31 @@ mcbrnet
 `mcbrnet` is a collection of functions to perform metacommunity
 simulation in branching networks. Main functions include:
 
--   `brnet()` generates a random branching network with the specified
-    number of patches and probability of branching. The function returns
-    adjacency and distance matrices, hypothetical
-    environmental/disturbance values at each patch, and the number of
-    patches upstream (akin to the watershed area in river networks). The
-    output may be used in function `mcsim()` to simulate metacommunity
-    dynamics in a branching network.
+- `brnet()` generates a random branching network with the specified
+  number of patches and probability of branching. The function returns
+  adjacency and distance matrices, hypothetical
+  environmental/disturbance values at each patch, and the number of
+  patches upstream (akin to the watershed area in river networks).
 
--   `mcsim()` simulates metacommunity dynamics. By default, it produces
-    a square-shaped landscape with randomly distributed habitat patches
-    (x- and y-coordinates are drawn from a uniform distribution). If a
-    distance matrix is given, the function simulates metacommunity
-    dynamics in the specified landscape. Function `mcsim()` follows a
-    general framework proposed by [Thompson et
-    al. (2020)](https://doi.org/10.1111/ele.13568). However, it has
-    several unique features that are detailed in [Terui et al
-    (2021)](https://doi.org/10.1073/pnas.2105574118).
+- `mcsim()` simulates metacommunity dynamics. This function follows a
+  general framework proposed by [Thompson et
+  al. (2020)](https://doi.org/10.1111/ele.13568). However, it has
+  several unique features that are detailed in [Terui et al
+  (2021)](https://doi.org/10.1073/pnas.2105574118).
 
--   `igpsim()` simulates three-species meta-food web dynamics with
-    intraguild predation. This function shares many features with
-    `mcsim()`. Currently under development.
+- `igpsim()` simulates three-species meta-food web dynamics with
+  intraguild predation. This function shares many features with
+  `mcsim()`. Currently under development.
 
--   `ggbrnet()` is a wrapper of `ggraph` functions for easy
-    visualization of a network produced by `brnet()` .
+- `ggbrnet()` is a wrapper of `ggraph` functions for easy visualization
+  of a network produced by `brnet()` .
 
--   `ptsource()` is a function to simulate propagation of environmental
-    pollutants in a river network. Produced values may be plugged into
-    `q` argument in `mcsim()`.
+- `ptsource()` is a function to simulate propagation of environmental
+  pollutants in a river network.
 
--   `adjtodist()` converts an adjacency matrix to a distance matrix.
+- `frgm()` is a function to simulate fragmentation in a river network.
+
+- `adjtodist()` converts an adjacency matrix to a distance matrix.
 
 See Articles for instruction.
 
@@ -59,54 +54,59 @@ library(mcbrnet)
 
 # Change-log
 
+#### v.1.3.1 (07/10/23)
+
+- add a new function `frgm()`
+
+- update `igpsim()`: full description coming soon
+
 #### v.1.3.0 (06/15/22)
 
--   add a new function `ptsource()`
+- add a new function `ptsource()`
 
--   add new arguments to `mcsim()`
+- add new arguments to `mcsim()`
 
--   update `ggbrnet()` to be compatible with piping
+- update `ggbrnet()` to be compatible with piping
 
 #### v.1.2.3 (04/13/22)
 
--   fix a bug in `fun_disp_mat()`
+- fix a bug in `fun_disp_mat()`
 
--   add `ggbrnet()`
+- add `ggbrnet()`
 
--   add disturbance arguments to `mcsim()` (`p_disturb` & `m_disturb`)
+- add disturbance arguments to `mcsim()` (`p_disturb` & `m_disturb`)
 
 #### v.1.2.2 (03/24/22)
 
--   fix a bug in `fun_igp()`
+- fix a bug in `fun_igp()`
 
 #### v.1.2.1 (03/09/22)
 
--   implement internal functions to `mcsim()` and `brnet()`
+- implement internal functions to `mcsim()` and `brnet()`
 
--   remove argument weighted_distance_matrix from `mcsim()` and
-    `brnet()`
+- remove argument weighted_distance_matrix from `mcsim()` and `brnet()`
 
--   add argument dispersal_matrix to `mcsim()`
+- add argument dispersal_matrix to `mcsim()`
 
 #### v.1.2.0 (03/09/22)
 
--   add a major function `igpsim()`
+- add a major function `igpsim()`
 
--   simplified `brnet()` and `mcsim()` by introducing internal
-    sub-functions
+- simplified `brnet()` and `mcsim()` by introducing internal
+  sub-functions
 
 #### v.1.1.1 (12/07/21)
 
--   add a local noise parameter for disturbance values to `brnet()`
-    (argument `sd_disturb_lon`)
+- add a local noise parameter for disturbance values to `brnet()`
+  (argument `sd_disturb_lon`)
 
 #### v.1.1.0 (08/02/21)
 
--   add disturbance arguments to `brnet()` added function `adjtodist()`
+- add disturbance arguments to `brnet()` added function `adjtodist()`
 
 #### v.1.0.0 (05/03/21)
 
--   initial release
+- initial release
 
 # Funding
 
