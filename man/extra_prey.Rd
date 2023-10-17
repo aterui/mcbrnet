@@ -9,18 +9,21 @@ extra_prey(A, j, i0, tp, theta, kappa, cannibal = FALSE)
 \arguments{
 \item{A}{Intreaction matrix}
 
-\item{j}{Consumer's index}
+\item{j}{Integer. Consumer's index}
 
-\item{i0}{First prey's index}
+\item{i0}{Integer. Index for the first prey}
 
-\item{tp}{Initial trophic positions}
+\item{tp}{Numeric. Initial trophic positions}
 
 \item{theta}{Numeric. Scale parameter of an exponential distribution. Smaller values indicate greater trophic specialization.}
 
-\item{kappa}{Number of extra prey items}
+\item{kappa}{Integer. Number of extra prey items}
 
 \item{cannibal}{Logical. If \code{TRUE}, cannibalism allowed}
 }
 \description{
 Extra prey function
+}
+\author{
+Akira Terui, \email{hanabi0111@gmail.com}
 }

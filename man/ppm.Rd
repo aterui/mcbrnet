@@ -20,3 +20,6 @@ ppm(n_species, n_basal, l, theta, cannibal = FALSE)
 \description{
 Preferential prey model
 }
+\author{
+Akira Terui, \email{hanabi0111@gmail.com}
+}

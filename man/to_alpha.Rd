@@ -23,3 +23,6 @@ to_alpha(
 \description{
 Apply conversion efficiency and attack rate
 }
+\author{
+Akira Terui, \email{hanabi0111@gmail.com}
+}

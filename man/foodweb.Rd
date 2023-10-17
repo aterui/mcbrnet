@@ -35,3 +35,6 @@ foodweb(
 \description{
 Generate a food web based on the preferential prey model
 }
+\author{
+Akira Terui, \email{hanabi0111@gmail.com}
+}

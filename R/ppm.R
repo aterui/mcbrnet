@@ -6,6 +6,8 @@
 #' @param theta Numeric. Scale parameter of an exponential distribution. Smaller values indicate greater trophic specialization.
 #' @param cannibal Logical. If \code{TRUE}, cannibalism allowed
 #'
+#' @author Akira Terui, \email{hanabi0111@gmail.com}
+#'
 #' @export
 
 ppm <- function(n_species,
@@ -115,14 +117,22 @@ ppm <- function(n_species,
 #'
 #' @inheritParams ppm
 #' @param A Intreaction matrix
-#' @param j Consumer's index
-#' @param i0 First prey's index
-#' @param tp Initial trophic positions
-#' @param kappa Number of extra prey items
+#' @param j Integer. Consumer's index
+#' @param i0 Integer. Index for the first prey
+#' @param tp Numeric. Initial trophic positions
+#' @param kappa Integer. Number of extra prey items
+#'
+#' @author Akira Terui, \email{hanabi0111@gmail.com}
 #'
 #' @export
 
-extra_prey <- function(A, j, i0, tp, theta, kappa, cannibal = FALSE) {
+extra_prey <- function(A,
+                       j,
+                       i0,
+                       tp,
+                       theta,
+                       kappa,
+                       cannibal = FALSE) {
   # A:      adjacency matrix defining trophic interactions
   # j:      consumer's index (j - 1 is the number of possible prey)
   # i0:     index of the first prey chosen (1 =< i0 < j)
@@ -180,6 +190,8 @@ extra_prey <- function(A, j, i0, tp, theta, kappa, cannibal = FALSE) {
 #' @param convert List for conversion efficiency. Specify minimum and maximum values for a uniform distribution.
 #' @param mortal List for mortality (or intraspecific competition). Specify minimum and maximum values for a uniform distribution.
 #'
+#' @author Akira Terui, \email{hanabi0111@gmail.com}
+#'
 #' @export
 
 to_alpha <- function(A,
@@ -226,6 +238,8 @@ to_alpha <- function(A,
 #' @inheritParams ppm
 #' @inheritParams to_alpha
 #'
+#' @author Akira Terui, \email{hanabi0111@gmail.com}
+#'
 #' @export
 
 foodweb <- function(n_species,
@@ -253,16 +267,3 @@ foodweb <- function(n_species,
 
   return(alpha)
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
