@@ -36,6 +36,3 @@ fun_patch_attr(
 \description{
 Weighted-mean patch attributes
 }
-\author{
-Akira Terui, \email{hanabi0111@gmail.com}
-}

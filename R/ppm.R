@@ -243,6 +243,7 @@ foodweb <- function(n_species,
   A <- ppm(n_species = n_species,
            n_basal = n_basal,
            theta = theta,
+           l = l,
            cannibal = cannibal)
 
   alpha <- to_alpha(A = A,
