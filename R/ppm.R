@@ -220,3 +220,48 @@ to_alpha <- function(A,
 
   return(alpha)
 }
+
+#' Generate a food web based on the preferential prey model
+#'
+#' @inheritParams ppm
+#' @inheritParams to_alpha
+#'
+#' @export
+
+foodweb <- function(n_species,
+                    n_basal,
+                    l,
+                    theta,
+                    cannibal = FALSE,
+                    attack = list(min = 0,
+                                  max = 1),
+                    convert = list(min = 0,
+                                   max = 1),
+                    mortal = list(min = 0,
+                                  max = 1)) {
+
+  A <- ppm(n_species = n_species,
+           n_basal = n_basal,
+           theta = theta,
+           cannibal = cannibal)
+
+  alpha <- to_alpha(A = A,
+                    attack = attack,
+                    convert = convert,
+                    mortal = mortal)
+
+  return(alpha)
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
