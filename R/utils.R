@@ -527,8 +527,6 @@ fun_m_adj <- function(n_patch,
 #' @param v_wa Vector of watershed area
 #' @param logit Logit transformation of mean source attribute
 #'
-#' @author Akira Terui, \email{hanabi0111@gmail.com}
-#'
 #' @export
 
 fun_patch_attr <- function(x,
@@ -738,3 +736,4 @@ fun_wa <- function(x) {
 
   return(m_wa)
 }
+
