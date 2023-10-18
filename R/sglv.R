@@ -83,12 +83,23 @@ sglv <- function(n_species,
 
   # intrinsic growth --------------------------------------------------------
 
-  Rt <- fun_to_m(r,
-                 n_species = n_species,
-                 n_patch = n_patch,
-                 param_attr = "species")
+  if (inherits(r, "matrix")) {
 
-  R <- t(Rt$m_x)
+    if (all(dim(r) == c(n_patch, n_species)))
+      stop("Dimension mismatch in r; r must be a n_patch x n_species matrix")
+
+    R <- r
+
+  } else {
+
+    Rt <- fun_to_m(r,
+                   n_species = n_species,
+                   n_patch = n_patch,
+                   param_attr = "species")
+
+    R <- t(Rt$m_x)
+
+  }
 
   # ode ---------------------------------------------------------------------
 
