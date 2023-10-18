@@ -14,7 +14,7 @@ v_p_dispersal <- runif(n_species, 0, 1)
 
 net <- brnet(n_patch = n_patch,
              p_branch = 0.5,
-             plot = F)
+             plot = FALSE)
 
 m_dispersal <- exp(-alpha * net$distance_matrix)
 diag(m_dispersal) <- 0

@@ -68,8 +68,7 @@ ppm <- function(n_species,
   # vector for initial prey choice for all consumers
   v_i0 <- c(rep(-1, n_basal),
             sapply(X = (n_basal + 1):n_species,
-                   FUN = function(j) resample(seq_len(j - 1),
-                                              size = 1)))
+                   FUN = function(j) resample(seq_len(j - 1), size = 1)))
 
   # realized number of prey nodes for all consumers
   # kappa follows a beta-binomial distribution
@@ -86,37 +85,37 @@ ppm <- function(n_species,
                                prob = v_xi))
   }
 
-  # A: S x S interaction binary matrix
+  # alpha0: S x S interaction binary matrix
   # initialized with all zero
   # update the initial consumer's first prey
-  A <- matrix(0, n_species, n_species)
-  A[v_i0[n_basal + 1], n_basal + 1] <- 1
+  alpha0 <- matrix(0, n_species, n_species)
+  alpha0[v_i0[n_basal + 1], n_basal + 1] <- 1
 
   for (j in (n_basal + 1):n_species) {
-    A <- extra_prey(A = A,
-                    j = j,
-                    i0 = v_i0[j],
-                    tp = tp,
-                    kappa = v_kappa[j],
-                    theta = theta,
-                    cannibal = cannibal)
+    alpha0 <- extra_prey(alpha0 = alpha0,
+                         j = j,
+                         i0 = v_i0[j],
+                         tp = tp,
+                         kappa = v_kappa[j],
+                         theta = theta,
+                         cannibal = cannibal)
 
-    v_n_prey <- colSums(A)
+    v_n_prey <- colSums(alpha0)
     v_n_prey[v_n_prey == 0] <- 1
 
-    tp_new <- (tp %*% A) / v_n_prey + 1
+    tp_new <- (tp %*% alpha0) / v_n_prey + 1
     tp[j] <- tp_new[j]
   }
 
-  attr(A, "tp") <- tp
+  attr(alpha0, "tp") <- tp
 
-  return(A)
+  return(alpha0)
 }
 
 #' Extra prey function
 #'
 #' @inheritParams ppm
-#' @param A Interaction matrix
+#' @param alpha0 Interaction matrix
 #' @param j Integer. Consumer's index
 #' @param i0 Integer. Index for the first prey
 #' @param tp Numeric. Initial trophic positions
@@ -126,14 +125,14 @@ ppm <- function(n_species,
 #'
 #' @export
 
-extra_prey <- function(A,
+extra_prey <- function(alpha0,
                        j,
                        i0,
                        tp,
                        theta,
                        kappa,
                        cannibal = FALSE) {
-  # A:      adjacency matrix defining trophic interactions
+  # alpha0:      adjacency matrix defining trophic interactions
   # j:      consumer's index (j - 1 is the number of possible prey)
   # i0:     index of the first prey chosen (1 =< i0 < j)
   # tp:     vector of trophic positions for possible prey nodes (length = S)
@@ -141,9 +140,9 @@ extra_prey <- function(A,
   # theta:  scale parameter for an exponential decay of prey preference
 
   # verify inputs
-  if (length(tp) != ncol(A)) stop(paste("'tp' length seems incorrect;",
-                                        "the length must be",
-                                        ncol(A)))
+  if (length(tp) != ncol(alpha0)) stop(paste("'tp' length seems incorrect;",
+                                             "the length must be",
+                                             ncol(alpha0)))
 
   if (!(i0 < j && 1 <= i0)) stop("i0 must be a non-zero intger smaller than j")
 
@@ -178,9 +177,9 @@ extra_prey <- function(A,
     i <- i0
   }
 
-  A[i, j] <- 1
+  alpha0[i, j] <- 1
 
-  return(A)
+  return(alpha0)
 }
 
 #' Apply conversion efficiency and attack rate
@@ -194,7 +193,7 @@ extra_prey <- function(A,
 #'
 #' @export
 
-to_alpha <- function(A,
+to_alpha <- function(alpha0,
                      attack = list(min = 0,
                                    max = 1),
                      convert = list(min = 0,
@@ -203,29 +202,29 @@ to_alpha <- function(A,
                                    max = 1)) {
 
   # identify basal species
-  uA <- A
-  basal <- which(colSums(A) == 0)
+  u_alpha0 <- alpha0
+  basal <- which(colSums(alpha0) == 0)
 
   # scale by # of resources
-  suA <- t(t(A[, -basal]) / colSums(A)[-basal])
+  su_alpha0 <- t(t(alpha0[, -basal]) / colSums(alpha0)[-basal])
 
   # generate random parameters
   ## matrix for attack rates
-  a <- with(attack, matrix(stats::runif(ncol(A)^2, min = min, max = max),
-                           nrow = nrow(A),
-                           ncol = ncol(A)))
+  a <- with(attack, matrix(stats::runif(ncol(alpha0)^2, min = min, max = max),
+                           nrow = nrow(alpha0),
+                           ncol = ncol(alpha0)))
 
   ## matrix for conversion efficiency
-  b <- with(convert, matrix(stats::runif(ncol(A)^2, min = min, max = max),
-                            nrow = nrow(A),
-                            ncol = ncol(A)))
+  b <- with(convert, matrix(stats::runif(ncol(alpha0)^2, min = min, max = max),
+                            nrow = nrow(alpha0),
+                            ncol = ncol(alpha0)))
 
   ## vector for intraspecific competition
-  m <- with(mortal, stats::runif(ncol(A), min = min, max = max))
+  m <- with(mortal, stats::runif(ncol(alpha0), min = min, max = max))
 
   # interaction matrix
-  uA[, -basal] <- a[, -basal] * suA
-  alpha <- b * uA - t(uA)
+  u_alpha0[, -basal] <- a[, -basal] * su_alpha0
+  alpha <- b * u_alpha0 - t(u_alpha0)
 
   # intraspecific interaction
   diag(alpha) <- -m
@@ -254,13 +253,13 @@ foodweb <- function(n_species,
                     mortal = list(min = 0,
                                   max = 1)) {
 
-  A <- ppm(n_species = n_species,
-           n_basal = n_basal,
-           theta = theta,
-           l = l,
-           cannibal = cannibal)
+  alpha0 <- ppm(n_species = n_species,
+                n_basal = n_basal,
+                theta = theta,
+                l = l,
+                cannibal = cannibal)
 
-  alpha <- to_alpha(A = A,
+  alpha <- to_alpha(alpha0 = alpha0,
                     attack = attack,
                     convert = convert,
                     mortal = mortal)

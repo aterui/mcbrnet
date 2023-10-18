@@ -211,8 +211,8 @@ mcsim <- function(n_species = 5,
                             n = n_species)
 
   ## disturbance ####
-  if (p_disturb > 1 | p_disturb < 0) stop("p_disturb must be 0 to 1")
-  if (any(i_disturb > 1) | any(i_disturb < 0)) stop("i_disturb must be 0 to 1")
+  if (p_disturb > 1 || p_disturb < 0) stop("p_disturb must be 0 to 1")
+  if (any(i_disturb > 1) || any(i_disturb < 0)) stop("i_disturb must be 0 to 1")
 
   v_i_disturb <- fun_to_v(x = i_disturb,
                           n = n_patch)
@@ -242,7 +242,7 @@ mcsim <- function(n_species = 5,
     if (is.null(m_distance)) stop("Provide distance matrix to model spatial environmental autocorrelation")
     m_sigma <- var_env * exp(-phi * m_distance)
 
-  }else{
+  } else {
 
     m_sigma <- var_env * diag(x = 1, nrow = n_patch, ncol = n_patch)
 
@@ -445,7 +445,7 @@ mcsim <- function(n_species = 5,
     dplyr::pull(.data$gamma_t) %>%
     mean()
 
-  if (gamma_div == 0 | alpha_div == 0) {
+  if (gamma_div == 0 || alpha_div == 0) {
     beta_div <- NA
   } else {
     beta_div <- gamma_div / alpha_div

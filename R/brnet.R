@@ -102,7 +102,7 @@ brnet <- function(n_patch = 50,
 
   # disturbance -------------------------------------------------------------
 
-  if (!(mean_disturb_source <= 1 & mean_disturb_source >= 0)) {
+  if (!(mean_disturb_source <= 1 && mean_disturb_source >= 0)) {
 
     stop("mean_disturb_source must be between 0 and 1")
 

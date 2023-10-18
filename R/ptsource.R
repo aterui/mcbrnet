@@ -25,7 +25,7 @@ ptsource <- function(x,
 
   # parameter check ---------------------------------------------------------
 
-  if (p < 0 | p > 1 | q < 0 | q > 1) stop("p & q must be 0 - 1")
+  if (p < 0 || p > 1 || q < 0 || q > 1) stop("p & q must be 0 - 1")
   if (nrow(x$distance_matrix) < n_source) stop("n_source must be < n_patch")
   if (!inherits(x, what = "brnet")) stop("x must be a 'brnet' object")
 

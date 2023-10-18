@@ -25,20 +25,20 @@ frgm <- function(x,
 
   # adjacency graph & distance matrix ---------------------------------------
 
-  if(inherits(x, what = "brnet")) {
+  if (inherits(x, what = "brnet")) {
     m_adj <- x$adjacency_matrix
   } else {
     m_adj <- x
   }
 
-  if(dplyr::n_distinct(dim(m_adj)) != 1) stop("invalid dimension in the adjacency matrix")
+  if (dplyr::n_distinct(dim(m_adj)) != 1) stop("invalid dimension in the adjacency matrix")
 
   g0 <- m_adj %>%
     igraph::graph.adjacency("undirected")
 
   df_g0 <- igraph::as_data_frame(g0)
 
-  if(inherits(x, what = "brnet")) {
+  if (inherits(x, what = "brnet")) {
     m_dist <- x$distance_matrix
   } else {
     m_dist <- igraph::distances(g0)
@@ -66,7 +66,7 @@ frgm <- function(x,
 
   } else {
 
-    if (pattern == "downstream"|pattern == "upstream") {
+    if (pattern == "downstream" || pattern == "upstream") {
 
       if (!inherits(x, what = "brnet")) stop("x must be class 'brnet'")
 
@@ -97,10 +97,9 @@ frgm <- function(x,
 
   # cumulative fragmentation effect -----------------------------------------
 
-  if (!(length(p) == 1 | length(p) == n_barrier)) stop(paste("invalid length in p;
-                                                       length must be one or
-                                                       match n_barrier,",
-                                                             n_barrier))
+  if (!(length(p) == 1 || length(p) == n_barrier))
+    stop(paste("invalid length in p; length must be one or match n_barrier,",
+               n_barrier))
 
   v_p <- rep(1, n_edge)
   v_p[barrier] <- p
@@ -127,9 +126,9 @@ frgm <- function(x,
     if (is.null(m_disp)) stop("dispersal matrix must be provided")
     m_disp_frgm <- m_disp * m_frgm
 
-    return(list(df_edge <- dplyr::tibble(patch_x = seq_len(n_patch)[1:(n_patch - 1)],
-                                         patch_y = seq_len(n_patch)[2:n_patch],
-                                         passability = v_p),
+    return(list(df_edge = dplyr::tibble(patch_x = seq_len(n_patch)[1:(n_patch - 1)],
+                                        patch_y = seq_len(n_patch)[2:n_patch],
+                                        passability = v_p),
                 frgm_matrix = m_frgm,
                 dispersal_matrix_frgm = m_disp_frgm))
 

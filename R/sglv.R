@@ -56,8 +56,7 @@ sglv <- function(n_species,
   # n possible disturbance points
   # + 100 to ensure cumsum(x) > n_timestep
   # remove points > n_timestep
-  psi <- with(disturb,
-              cumsum(rexp(n = ceiling((1 / rate) + 100), rate)))
+  psi <- with(disturb, cumsum(rexp(n = ceiling((1 / rate) + 100), rate)))
   psi <- psi[psi <= n_timestep]
 
   # pseudo time steps
@@ -113,7 +112,7 @@ sglv <- function(n_species,
 
   # define absorbing condition
   ## root function
-  rootfun <- function (t, n, parms) {
+  rootfun <- function(t, n, parms) {
     return(n - threshold)
   }
 
@@ -151,4 +150,3 @@ sglv <- function(n_species,
 
   return(cout)
 }
-

@@ -99,8 +99,8 @@ igpsim <- function(n_patch = 5,
                             n = n_species)
 
   ## disturbance ####
-  if (p_disturb > 1 | p_disturb < 0) stop("p_disturb must be 0 to 1")
-  if (any(i_disturb > 1) | any(i_disturb < 0)) stop("i_disturb must be 0 to 1")
+  if (p_disturb > 1 || p_disturb < 0) stop("p_disturb must be 0 to 1")
+  if (any(i_disturb > 1) || any(i_disturb < 0)) stop("i_disturb must be 0 to 1")
   if (phi_disturb <= 0) stop("phi_disturb must be positive")
 
   v_disturb <- fun_to_v(x = i_disturb,
@@ -263,10 +263,6 @@ igpsim <- function(n_patch = 5,
     sample_patch <- sample(seq_len(n_patch),
                            size = min(c(n_patch, 5)),
                            replace = FALSE)
-
-    sample_species <- sample(seq_len(n_species),
-                             size = min(c(n_species, 5)),
-                             replace = FALSE)
 
     g <- df_dyn %>%
       dplyr::filter(.data$patch_id %in% sample_patch) %>%

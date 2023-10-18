@@ -40,8 +40,8 @@ fun_disp_mat <- function(n_patch,
                          dispersal_matrix = NULL) {
 
   # with no landscape information
-  if (is.null(xy_coord) &
-      is.null(distance_matrix) &
+  if (is.null(xy_coord) &&
+      is.null(distance_matrix) &&
       is.null(dispersal_matrix)) {
 
     message("neither xy_coord nor distance_matrix is given: generate a square landscape with landscape_size (default: 10) on a side")
@@ -66,8 +66,8 @@ fun_disp_mat <- function(n_patch,
   }
 
   # with xy coordinates
-  if (!is.null(xy_coord) &
-      is.null(distance_matrix) &
+  if (!is.null(xy_coord) &&
+      is.null(distance_matrix) &&
       is.null(dispersal_matrix)) {
 
     if (nrow(xy_coord) != n_patch) stop("row numbers must match n_patch")
@@ -86,7 +86,7 @@ fun_disp_mat <- function(n_patch,
   }
 
   # with distance matrix
-  if (!is.null(distance_matrix) &
+  if (!is.null(distance_matrix) &&
       is.null(dispersal_matrix)) {
 
     message("distance_matrix is provided: distance_matrix is used to simulate dispersal process")
@@ -180,9 +180,9 @@ fun_get_fcl <- function(x, delta) {
   v_fcl_raw <- apply(X = x,
                      MARGIN = 2,
                      FUN = function(y) {
-                       fcl <- ifelse(y[1] > 0,
-                                     yes = max(which(y > 0)),
-                                     no = 0)
+                       ifelse(y[1] > 0,
+                              yes = max(which(y > 0)),
+                              no = 0)
                      })
   # omnivory
   omn <- ifelse(v_fcl_raw == 3,
@@ -203,7 +203,7 @@ fun_get_fcl <- function(x, delta) {
 fun_get_n_branch <- function(n_patch,
                              p_branch) {
 
-  if (p_branch > 0 & p_branch < 1) {
+  if (p_branch > 0 && p_branch < 1) {
 
     repeat {
 
@@ -256,13 +256,13 @@ fun_igp <- function(x,
   if (!is.matrix(x)) stop("error in x; x must be matrix")
   if (dim(x)[1] != 3) stop("error in x; dim(x)[1] must be 3")
   if (length(s) != 1) stop("error in s; s must be a scalar")
-  if (s < 0 | s > 1) stop("error in s; s must be 0 - 1")
+  if (s < 0 || s > 1) stop("error in s; s must be 0 - 1")
 
-  if (any(x < 0) |
-      any(r_b < 0) |
-      any(k < 0) |
-      any(a < 0) |
-      any(e < 0) |
+  if (any(x < 0) ||
+      any(r_b < 0) ||
+      any(k < 0) ||
+      any(a < 0) ||
+      any(e < 0) ||
       any(h < 0)
   ) stop("negative values detected in parameters or community matrix")
 
@@ -364,7 +364,7 @@ fun_int_mat <- function(n_species,
 
   if (interaction_type == "constant") {
 
-    if (alpha < 0 | length(alpha) != 1) stop("invalid value of alpha - the value must be a positive scalar")
+    if (alpha < 0 || length(alpha) != 1) stop("invalid value of alpha - the value must be a positive scalar")
 
     m_interaction <- matrix(alpha,
                             nrow = n_species,
@@ -373,8 +373,8 @@ fun_int_mat <- function(n_species,
   } else {
 
     if (interaction_type != "random") stop("invalid interaction_type")
-    if (is.null(min_alpha) | is.null(max_alpha)) stop("provide min_alpha and max_alpha")
-    if (min_alpha < 0 | max_alpha < 0) stop("invalid values of min_alpha and/or max_alpha - values must be positive values")
+    if (is.null(min_alpha) || is.null(max_alpha)) stop("provide min_alpha and max_alpha")
+    if (min_alpha < 0 || max_alpha < 0) stop("invalid values of min_alpha and/or max_alpha - values must be positive values")
     if (min_alpha > max_alpha) stop("max_alpha must exceed min_alpha")
 
     alpha <- runif(n = n_species * n_species,
@@ -407,7 +407,7 @@ fun_m_adj <- function(n_patch,
 
   # adjacency matrix: linear network ----------------------------------------
 
-  if (p_branch == 0 | n_branch == 1) {
+  if (p_branch == 0 || n_branch == 1) {
 
     v_n_patch_branch <- n_patch
     m_adj <- matrix(0, nrow = n_patch, ncol = n_patch)
@@ -421,13 +421,13 @@ fun_m_adj <- function(n_patch,
 
   # adjacency matrix: branched network --------------------------------------
 
-  if (p_branch > 0 & n_branch > 1) {
+  if (p_branch > 0 && n_branch > 1) {
 
     # vector of the number of patches in each branch
     if (n_patch_free == FALSE) {
-      repeat{
+      repeat {
 
-        repeat{
+        repeat {
 
           v_n_patch_branch <- rgeom(n = n_branch, prob = p_branch) + 1
           if (sum(v_n_patch_branch) >= n_patch) break
@@ -465,8 +465,7 @@ fun_m_adj <- function(n_patch,
       m_po <- cbind(parent, offspg)
 
       list_confluence <- lapply(seq_len(nrow(m_po)),
-                                function(x) cbind(v_end_id[m_po[x, 1]],
-                                                  v_start_id[m_po[x, 2]]))
+                                function(x) cbind(v_end_id[m_po[x, 1]], v_start_id[m_po[x, 2]]))
 
       m_confluence <- do.call(rbind, list_confluence)
       m_confluence <- rbind(m_confluence, m_confluence[, c(2, 1)])
@@ -495,8 +494,7 @@ fun_m_adj <- function(n_patch,
       m_po <- cbind(parent, offspg)
 
       list_confluence <- lapply(seq_len(nrow(m_po)),
-                                function(x) cbind(v_end_id[m_po[x, 1]],
-                                                  v_start_id[m_po[x, 2]]))
+                                function(x) cbind(v_end_id[m_po[x, 1]], v_start_id[m_po[x, 2]]))
 
       m_confluence <- do.call(rbind, list_confluence)
       m_confluence <- rbind(m_confluence, m_confluence[, c(2, 1)])
@@ -566,7 +564,7 @@ fun_patch_attr <- function(x,
                                          sd = sd_source)
   v_z_dummy[source] <- 1
 
-  if (!(rho <= 1 & rho >= 0)) stop("rho must be between 0 and 1")
+  if (!(rho <= 1 && rho >= 0)) stop("rho must be between 0 and 1")
 
   for (i in seq_len(max(m_distance[1, ]))) {
 
@@ -736,4 +734,3 @@ fun_wa <- function(x) {
 
   return(m_wa)
 }
-
