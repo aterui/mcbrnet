@@ -5,14 +5,14 @@
 \title{Apply conversion efficiency and attack rate}
 \usage{
 to_alpha(
-  A,
+  alpha0,
   attack = list(min = 0, max = 1),
   convert = list(min = 0, max = 1),
   mortal = list(min = 0, max = 1)
 )
 }
 \arguments{
-\item{A}{Interaction matrix}
+\item{alpha0}{Interaction matrix}
 
 \item{attack}{List for attack rates. Specify minimum and maximum values for a uniform distribution.}
 

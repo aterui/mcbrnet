@@ -515,7 +515,7 @@ fun_m_adj <- function(n_patch,
 
 #' Weighted-mean patch attributes
 #'
-#' @inheritParams brnet
+#' @param n_branch Number of branches
 #' @param x Adjacency matrix to be converted
 #' @param mean_source Mean value of source attribute
 #' @param sd_source SD of source attribute

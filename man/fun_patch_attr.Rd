@@ -19,6 +19,8 @@ fun_patch_attr(
 \arguments{
 \item{x}{Adjacency matrix to be converted}
 
+\item{n_branch}{Number of branches}
+
 \item{mean_source}{Mean value of source attribute}
 
 \item{sd_source}{SD of source attribute}

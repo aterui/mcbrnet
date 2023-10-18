@@ -4,10 +4,10 @@
 \alias{extra_prey}
 \title{Extra prey function}
 \usage{
-extra_prey(A, j, i0, tp, theta, kappa, cannibal = FALSE)
+extra_prey(alpha0, j, i0, tp, theta, kappa, cannibal = FALSE)
 }
 \arguments{
-\item{A}{Interaction matrix}
+\item{alpha0}{Interaction matrix}
 
 \item{j}{Integer. Consumer's index}
 
