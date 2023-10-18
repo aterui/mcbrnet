@@ -12,7 +12,7 @@ to_alpha(
 )
 }
 \arguments{
-\item{A}{Intreaction matrix}
+\item{A}{Interaction matrix}
 
 \item{attack}{List for attack rates. Specify minimum and maximum values for a uniform distribution.}
 

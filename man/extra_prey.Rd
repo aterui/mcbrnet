@@ -7,7 +7,7 @@
 extra_prey(A, j, i0, tp, theta, kappa, cannibal = FALSE)
 }
 \arguments{
-\item{A}{Intreaction matrix}
+\item{A}{Interaction matrix}
 
 \item{j}{Integer. Consumer's index}
 
