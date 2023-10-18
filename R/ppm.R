@@ -44,8 +44,8 @@ ppm <- function(n_species,
     if (l > max_l)
       stop(paste("maximum l is", max_l))
 
-    if (n_species + n_basal <= 1)
-      stop("n_species + n_basal must be greater than 1")
+    if (n_species + n_basal < 1)
+      stop("n_species + n_basal must be equal to or greater than 1")
 
     b <- ((n_species + n_basal - 1) * n_c) / (2 * (l - n_c)) - 1
   } else {
@@ -54,8 +54,8 @@ ppm <- function(n_species,
     if (l > max_l)
       stop(paste("maximum l is", max_l))
 
-    if (n_species + n_basal <= 3)
-      stop("n_species + n_basal must be greater than 3")
+    if (n_species + n_basal < 3)
+      stop("n_species + n_basal must be equal to or greater than 3")
 
     b <- ((n_species + n_basal - 3) * n_c) / (2 * (l - n_c)) - 1
   }
@@ -68,8 +68,8 @@ ppm <- function(n_species,
   # vector for initial prey choice for all consumers
   v_i0 <- c(rep(-1, n_basal),
             sapply(X = (n_basal + 1):n_species,
-                   FUN = function(i0) resample(seq_len(i0 - 1),
-                                               size = 1)))
+                   FUN = function(j) resample(seq_len(j - 1),
+                                              size = 1)))
 
   # realized number of prey nodes for all consumers
   # kappa follows a beta-binomial distribution
