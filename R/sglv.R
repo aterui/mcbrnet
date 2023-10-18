@@ -36,8 +36,10 @@ sglv <- function(n_species,
   # verify inputs -----------------------------------------------------------
 
   # r input
-  if (length(r) != 1 && length(r) != n_species)
-    stop("r must have length one or n_species")
+  if (!inherits(r, "matrix")) {
+    if (length(r) != 1 && length(r) != n_species)
+      stop("r must have length one or n_species")
+  }
 
   # alpha input
   if (!all(dim(alpha) == n_species))
@@ -85,7 +87,7 @@ sglv <- function(n_species,
 
   if (inherits(r, "matrix")) {
 
-    if (all(dim(r) == c(n_patch, n_species)))
+    if (!all(dim(r) == c(n_patch, n_species)))
       stop("Dimension mismatch in r; r must be a n_patch x n_species matrix")
 
     R <- r
