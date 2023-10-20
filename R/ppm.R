@@ -223,11 +223,13 @@ to_alpha <- function(alpha0,
   m <- with(mortal, stats::runif(ncol(alpha0), min = min, max = max))
 
   # interaction matrix
+  # diag(alpha) represent net effects of cannibalism
   u_alpha0[, -basal] <- a[, -basal] * su_alpha0
   alpha <- b * u_alpha0 - t(u_alpha0)
 
   # intraspecific interaction
-  diag(alpha) <- -m
+  # added to net effects of cannibalism as "diag(alpha) - m"
+  diag(alpha) <- diag(alpha) - m
 
   return(alpha)
 }
