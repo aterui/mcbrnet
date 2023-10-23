@@ -40,8 +40,6 @@ sglv(
 \item{threshold}{Numeric. Extinction threshold. Species will be removed from a simulation if species density goes below this value}
 
 \item{...}{Additional arguments passed to \code{\link{ode}}}
-
-\item{phi}{Numeric. Dispersal rate parameter}
 }
 \description{
 Spatial generalized Lotka-Volterra model
