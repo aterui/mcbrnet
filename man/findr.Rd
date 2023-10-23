@@ -4,7 +4,7 @@
 \alias{findr}
 \title{Find suitable intrinsic growth rates}
 \usage{
-findr(alpha, k0, lambda0, interval = 0.01)
+findr(alpha, k0, lambda0 = 0.001, interval = 0.01)
 }
 \arguments{
 \item{alpha}{Numeric. n_species x n_species interaction matrix}

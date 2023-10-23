@@ -228,7 +228,7 @@ sglv <- function(n_species,
 
 findr <- function(alpha,
                   k0,
-                  lambda0,
+                  lambda0 = 1E-3,
                   interval = 0.01) {
 
   # half interaction matrix
