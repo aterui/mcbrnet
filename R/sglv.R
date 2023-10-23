@@ -133,21 +133,26 @@ sglv <- function(n_species,
   # dispersal ---------------------------------------------------------------
 
   # pick id of non-zero columns
-  C0 <- with(dispersal, adj)
+  C1 <- C0 <- with(dispersal, adj)
   id_nz <- which(colSums(C0) != 0)
 
   # scale adjacency matrix
-  if (length(id_nz) != 0) {
-    C0[, id_nz] <- t(t(C0[, id_nz]) / colSums(C0[, id_nz]))
+  if (length(id_nz) > 0) {
+
+    if (length(id_nz) == 1) {
+      x <- sum(C0[, id_nz])
+    } else {
+      x <- colSums(C0[, id_nz])
+    }
+
+    C1[, id_nz] <- t(t(C0[, id_nz]) / x)
   }
 
   # apply dispersal rate and mortality
   ## C <- (phi - m) * C0: immigration, accounting for disp. mortality by m
   ## diag(C) <- -phi: emigration
-  with(dispersal, {
-    C <- (phi - m) * C0
-    diag(C) <- -phi
-  })
+  C <- with(dispersal, (phi - m) * C1)
+  diag(C) <- with(dispersal, -phi)
 
   # ode ---------------------------------------------------------------------
 
