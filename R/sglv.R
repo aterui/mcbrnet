@@ -72,7 +72,7 @@ sglv <- function(n_species,
   })
 
   # n0 input
-  if (!all( sort(names(n0)) == sort(c("min", "max"))))
+  if (!all(sort(names(n0)) == sort(c("min", "max"))))
     stop("Elements in the n0 list must be 'min' and 'max'")
 
   with(n0, {

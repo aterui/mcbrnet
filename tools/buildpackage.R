@@ -11,7 +11,7 @@ devtools::check(vignettes=FALSE)
 
 # check syntax ------------------------------------------------------------
 
-# lintr::lint_package()
+lintr::lint_package()
 
 #usethis::use_coverage()
 # devtools::build(path='.')

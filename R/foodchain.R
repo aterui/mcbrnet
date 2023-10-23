@@ -41,7 +41,7 @@ max_tp <- function(n_species, n, alpha) {
     frac <- cbind(matrix(0, nrow = nrow(frac), ncol = n_basal), frac)
 
     # update trophic positions recursively
-    for(i in (n_basal + 1):n_species) {
+    for (i in (n_basal + 1):n_species) {
       value <- tp %*% frac + 1
       tp[i] <- value[i]
     }
@@ -140,4 +140,3 @@ foodchain <- function(n,
 
   return(fcl)
 }
-
