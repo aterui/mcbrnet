@@ -3,6 +3,7 @@
 export(adjtodist)
 export(brnet)
 export(extra_prey)
+export(findr)
 export(foodchain)
 export(foodweb)
 export(frgm)

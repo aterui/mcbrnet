@@ -214,3 +214,58 @@ sglv <- function(n_species,
 
   return(cout)
 }
+
+#' Find suitable intrinsic growth rates
+#'
+#' @param alpha Numeric. n_species x n_species interaction matrix
+#' @param k0 Numeric. Total carrying capacity for basal species combined
+#' @param lambda0 Numeric. Initial lambda value for the expential decay of equilibrium densities with trophic position
+#' @param interval Numeric. Increment of lambda value.
+#'
+#' @author Akira Terui, \email{hanabi0111@gmail.com}
+#'
+#' @export
+
+findr <- function(alpha,
+                  k0,
+                  lambda0,
+                  interval = 0.01) {
+
+  # half interaction matrix
+  alpha0 <- alpha
+  alpha0[lower.tri(alpha0, diag = TRUE)] <- 0
+  alpha0[alpha0 != 0] <- 1
+
+  # basal species id
+  id_basal <- which(colSums(alpha0) == 0)
+  n_basal <- length(id_basal)
+
+  # trophic position
+  v_k <- runif(length(id_basal))
+  f_k <- k0 * (v_k / sum(v_k))
+
+  tp <- attr(alpha, "tp")
+
+  w_k0 <- colMeans(f_k * alpha0[seq_len(n_basal),])
+  w_k0[1:n_basal] <- f_k
+
+  # initialize lambda and r
+  lambda <- lambda0
+  x <- w_k0 * exp(-lambda * (tp - 1))
+  r <- drop(- x %*% alpha)
+
+  # loop until all consumer's r < 0
+  while(any(r[-id_basal] >= 0)) {
+    lambda <- lambda + interval
+    x <- w_k0 * exp(-lambda * (tp - 1))
+    r <- drop(- x %*% alpha)
+  }
+
+  cout <- cbind(r, x)
+  rownames(cout) <- 1:ncol(alpha)
+  colnames(cout) <- c("r", "equilibrium")
+  attr(cout, "lambda") <- lambda
+
+  return(cout)
+}
+

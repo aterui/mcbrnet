@@ -9,11 +9,9 @@ theta <- runif(1, min = 0, max = 10)
 A <- ppm(s, b, l, theta)
 alpha <- to_alpha(A)
 
-# equilibrium density
-x <- matrix(runif(s * patch), nrow = patch, ncol = s)
-
-# intrinsic growth
-r <- -x %*% alpha
+R <- findr(alpha, k0 = 10, lambda0 = 0.01)
+r <- t(fun_to_m(R[, 1], n_species = s, n_patch = patch, param_attr = "species")$m_x)
+x <- t(fun_to_m(R[, 2], n_species = s, n_patch = patch, param_attr = "species")$m_x)
 
 cout <- sglv(n_species = s,
              n_patch = patch,
@@ -29,9 +27,9 @@ x_prime <- round(c(x), 3)
 x0 <- round(cout[nrow(cout), -1], 3)
 rho <- cor(x_prime, x0)
 
-
 # test --------------------------------------------------------------------
 
 test_that("sglv", {
   expect_gt(rho, 0.99)
 })
+
