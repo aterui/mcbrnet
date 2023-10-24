@@ -14,6 +14,8 @@ findr(alpha, k0, lambda0 = 0.001, interval = 0.01, sigma = 0.01)
 \item{lambda0}{Numeric. Initial lambda value for the exponential decay of equilibrium densities with trophic position}
 
 \item{interval}{Numeric. Increment of lambda value.}
+
+\item{sigma}{Numeric. Degree of noise added to equilibrium densities}
 }
 \description{
 Find suitable intrinsic growth rates

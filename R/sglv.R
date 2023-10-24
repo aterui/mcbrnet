@@ -221,6 +221,7 @@ sglv <- function(n_species,
 #' @param k0 Numeric. Total carrying capacity for basal species combined
 #' @param lambda0 Numeric. Initial lambda value for the exponential decay of equilibrium densities with trophic position
 #' @param interval Numeric. Increment of lambda value.
+#' @param sigma Numeric. Degree of noise added to equilibrium densities
 #'
 #' @author Akira Terui, \email{hanabi0111@gmail.com}
 #'
