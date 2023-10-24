@@ -1,8 +1,8 @@
 
 # setup -------------------------------------------------------------------
 
-s <- round(runif(1, min = 5, max = 20))
-b <- round(runif(1, min = 1, max = s - 1))
+s <- round(runif(1, min = 15, max = 20))
+b <- round(runif(1, min = 1, max = round(s / 2)))
 l <- round(runif(1, min = s - b, max = sum(b:(s - 1))))
 patch <- round(runif(1, min = 1, max = 10))
 theta <- runif(1, min = 0, max = 10)
@@ -10,8 +10,14 @@ A <- ppm(s, b, l, theta)
 alpha <- to_alpha(A)
 
 R <- findr(alpha, k0 = 10, lambda0 = 0.01)
-r <- t(fun_to_m(R[, 1], n_species = s, n_patch = patch, param_attr = "species")$m_x)
-x <- t(fun_to_m(R[, 2], n_species = s, n_patch = patch, param_attr = "species")$m_x)
+r <- t(fun_to_m(R[, 1],
+                n_species = s,
+                n_patch = patch,
+                param_attr = "species")$m_x)
+x <- t(fun_to_m(R[, 2],
+                n_species = s,
+                n_patch = patch,
+                param_attr = "species")$m_x)
 
 cout <- sglv(n_species = s,
              n_patch = patch,
