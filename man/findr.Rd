@@ -4,14 +4,14 @@
 \alias{findr}
 \title{Find suitable intrinsic growth rates}
 \usage{
-findr(alpha, k0, lambda0 = 0.001, interval = 0.01)
+findr(alpha, k0, lambda0 = 0.001, interval = 0.01, sigma = 0.01)
 }
 \arguments{
 \item{alpha}{Numeric. n_species x n_species interaction matrix}
 
 \item{k0}{Numeric. Total carrying capacity for basal species combined}
 
-\item{lambda0}{Numeric. Initial lambda value for the expential decay of equilibrium densities with trophic position}
+\item{lambda0}{Numeric. Initial lambda value for the exponential decay of equilibrium densities with trophic position}
 
 \item{interval}{Numeric. Increment of lambda value.}
 }

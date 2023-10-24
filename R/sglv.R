@@ -219,7 +219,7 @@ sglv <- function(n_species,
 #'
 #' @param alpha Numeric. n_species x n_species interaction matrix
 #' @param k0 Numeric. Total carrying capacity for basal species combined
-#' @param lambda0 Numeric. Initial lambda value for the expential decay of equilibrium densities with trophic position
+#' @param lambda0 Numeric. Initial lambda value for the exponential decay of equilibrium densities with trophic position
 #' @param interval Numeric. Increment of lambda value.
 #'
 #' @author Akira Terui, \email{hanabi0111@gmail.com}
@@ -229,7 +229,8 @@ sglv <- function(n_species,
 findr <- function(alpha,
                   k0,
                   lambda0 = 1E-3,
-                  interval = 0.01) {
+                  interval = 0.01,
+                  sigma = 0.01) {
 
   # half interaction matrix
   alpha0 <- alpha
@@ -239,31 +240,38 @@ findr <- function(alpha,
   # basal species id
   id_basal <- which(colSums(alpha0) == 0)
   n_basal <- length(id_basal)
+  n_c <- ncol(alpha) - n_basal
 
   # trophic position
   v_k <- runif(length(id_basal))
   f_k <- k0 * (v_k / sum(v_k))
-
   tp <- attr(alpha, "tp")
 
-  w_k0 <- colMeans(f_k * alpha0[seq_len(n_basal),])
+  ## k0 varies by basal species
+  ## for basal species, use f_k
+  ## for consumers, use mean k0 (`mean(f_k)`)
+  w_k0 <- rep(mean(f_k), ncol(alpha))
   w_k0[1:n_basal] <- f_k
 
   # initialize lambda and r
   lambda <- lambda0
+  eps <- exp(rnorm(n_c, mean = 0, sd = sigma))
+
   x <- w_k0 * exp(-lambda * (tp - 1))
+  x[-id_basal] <- x[-id_basal] * eps
   r <- drop(- x %*% alpha)
 
   # loop until all consumer's r < 0
   while(any(r[-id_basal] >= 0)) {
     lambda <- lambda + interval
     x <- w_k0 * exp(-lambda * (tp - 1))
+    x[-id_basal] <- x[-id_basal] * eps
     r <- drop(- x %*% alpha)
   }
 
-  cout <- cbind(r, x)
+  cout <- cbind(r, x, tp)
   rownames(cout) <- 1:ncol(alpha)
-  colnames(cout) <- c("r", "equilibrium")
+  colnames(cout) <- c("r", "equilibrium", "tp")
   attr(cout, "lambda") <- lambda
 
   return(cout)
