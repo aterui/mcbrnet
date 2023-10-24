@@ -5,3 +5,30 @@ navbar:
   structure:
     left:  [intro, reference, articles, news]
     right: [search, github]
+reference:
+- title: "Network generation"
+  desc: "Functions for spatial networks"
+  contents:
+  - brnet
+  - adjtodist
+  - ptsource
+  - frgm
+  - ggbrnet
+- title: "Simulation"
+  desc: "Functions for metacommunity/food web simulations"
+  contents:
+  - mcsim
+  - igpsim
+  - sglv
+  - foodweb
+  - foodchain
+  - findr
+- title: "Utils"
+  desc: "Utility functions for internal use"
+  contents:
+  - starts_with("fun_")
+  - resample
+  - extra_prey
+  - ppm
+  - to_alpha
+  - max_tp

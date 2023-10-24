@@ -49,6 +49,6 @@
 
 - add disturbance arguments to `brnet()` added function `adjtodist()`
 
-# Version 1.0.0 (05/03/21)
+## Version 1.0.0 (05/03/21)
 
 - initial release

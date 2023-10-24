@@ -69,9 +69,9 @@
     </div>
 
     <div class="section level2">
-      <h2 id="all-functions">All functions<a class="anchor" aria-label="anchor" href="#all-functions"></a></h2>
+      <h2 id="network-generation">Network generation<a class="anchor" aria-label="anchor" href="#network-generation"></a></h2>
       
-      
+      <p class="section-desc"></p><p>Functions for spatial networks</p>
 
       
     </div><div id="" class="section level2">
@@ -81,29 +81,55 @@
 
       <dl><dt>
           
-          <code><a href="adjtodist.html">adjtodist()</a></code> 
-        </dt>
-        <dd>Convert an adjacency matrix to a distance matrix</dd>
-      </dl><dl><dt>
-          
           <code><a href="brnet.html">brnet()</a></code> 
         </dt>
         <dd>Generate a random branching network</dd>
       </dl><dl><dt>
           
-          <code><a href="extra_prey.html">extra_prey()</a></code> 
+          <code><a href="adjtodist.html">adjtodist()</a></code> 
         </dt>
-        <dd>Extra prey function</dd>
+        <dd>Convert an adjacency matrix to a distance matrix</dd>
       </dl><dl><dt>
           
-          <code><a href="findr.html">findr()</a></code> 
+          <code><a href="ptsource.html">ptsource()</a></code> 
         </dt>
-        <dd>Find suitable intrinsic growth rates</dd>
+        <dd>Create point source disturbance</dd>
       </dl><dl><dt>
           
-          <code><a href="foodchain.html">foodchain()</a></code> 
+          <code><a href="frgm.html">frgm()</a></code> 
         </dt>
-        <dd>Spatiotemporal average of maximum trophic positions using <code>sglv</code> output</dd>
+        <dd>Dispersal probability matrix after accounting for network fragmentation</dd>
+      </dl><dl><dt>
+          
+          <code><a href="ggbrnet.html">ggbrnet()</a></code> 
+        </dt>
+        <dd>Visualize a branching network</dd>
+      </dl></div><div class="section level2">
+      <h2 id="simulation">Simulation<a class="anchor" aria-label="anchor" href="#simulation"></a></h2>
+      
+      <p class="section-desc"></p><p>Functions for metacommunity/food web simulations</p>
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
+          <code><a href="mcsim.html">mcsim()</a></code> 
+        </dt>
+        <dd>Simulate metacommunity dynamics</dd>
+      </dl><dl><dt>
+          
+          <code><a href="igpsim.html">igpsim()</a></code> 
+        </dt>
+        <dd>Simulate meta-food web dynamics with intraguild predation</dd>
+      </dl><dl><dt>
+          
+          <code><a href="sglv.html">sglv()</a></code> 
+        </dt>
+        <dd>Spatial generalized Lotka-Volterra model</dd>
       </dl><dl><dt>
           
           <code><a href="foodweb.html">foodweb()</a></code> 
@@ -111,10 +137,26 @@
         <dd>Generate a food web based on the preferential prey model</dd>
       </dl><dl><dt>
           
-          <code><a href="frgm.html">frgm()</a></code> 
+          <code><a href="foodchain.html">foodchain()</a></code> 
         </dt>
-        <dd>Dispersal probability matrix after accounting for network fragmentation</dd>
+        <dd>Spatiotemporal average of maximum trophic positions using <code>sglv</code> output</dd>
       </dl><dl><dt>
+          
+          <code><a href="findr.html">findr()</a></code> 
+        </dt>
+        <dd>Find suitable intrinsic growth rates</dd>
+      </dl></div><div class="section level2">
+      <h2 id="utils">Utils<a class="anchor" aria-label="anchor" href="#utils"></a></h2>
+      
+      <p class="section-desc"></p><p>Utility functions for internal use</p>
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
           
           <code><a href="fun_adj.html">fun_adj()</a></code> 
         </dt>
@@ -176,24 +218,14 @@
         <dd>Watershed area</dd>
       </dl><dl><dt>
           
-          <code><a href="ggbrnet.html">ggbrnet()</a></code> 
+          <code><a href="resample.html">resample()</a></code> 
         </dt>
-        <dd>Visualize a branching network</dd>
+        <dd>Resample function</dd>
       </dl><dl><dt>
           
-          <code><a href="igpsim.html">igpsim()</a></code> 
+          <code><a href="extra_prey.html">extra_prey()</a></code> 
         </dt>
-        <dd>Simulate meta-food web dynamics with intraguild predation</dd>
-      </dl><dl><dt>
-          
-          <code><a href="max_tp.html">max_tp()</a></code> 
-        </dt>
-        <dd>Maximum trophic position</dd>
-      </dl><dl><dt>
-          
-          <code><a href="mcsim.html">mcsim()</a></code> 
-        </dt>
-        <dd>Simulate metacommunity dynamics</dd>
+        <dd>Extra prey function</dd>
       </dl><dl><dt>
           
           <code><a href="ppm.html">ppm()</a></code> 
@@ -201,26 +233,17 @@
         <dd>Preferential prey model</dd>
       </dl><dl><dt>
           
-          <code><a href="ptsource.html">ptsource()</a></code> 
-        </dt>
-        <dd>Create point source disturbance</dd>
-      </dl><dl><dt>
-          
-          <code><a href="resample.html">resample()</a></code> 
-        </dt>
-        <dd>Resample function</dd>
-      </dl><dl><dt>
-          
-          <code><a href="sglv.html">sglv()</a></code> 
-        </dt>
-        <dd>Spatial generalized Lotka-Volterra model</dd>
-      </dl><dl><dt>
-          
           <code><a href="to_alpha.html">to_alpha()</a></code> 
         </dt>
         <dd>Apply conversion efficiency and attack rate</dd>
+      </dl><dl><dt>
+          
+          <code><a href="max_tp.html">max_tp()</a></code> 
+        </dt>
+        <dd>Maximum trophic position</dd>
       </dl></div>
-  </main></div>
+  </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
+    </nav></aside></div>
 
 
     <footer><div class="copyright">
