@@ -18,7 +18,8 @@ Imports:
     boot,
     ggraph,
     MetBrewer,
-    deSolve
+    deSolve,
+    data.table
 Roxygen: list(markdown = TRUE)
 Suggests: 
     testthat (>= 3.0.0),
