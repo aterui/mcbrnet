@@ -1,4 +1,7 @@
+template:
+  package: preferably
+  bootstrap: 5
 navbar:
   structure:
-    left:  [intro, articles, news]
+    left:  [intro, reference, articles, news]
     right: [search, github]
