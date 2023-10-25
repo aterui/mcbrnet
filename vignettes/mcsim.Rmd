@@ -24,32 +24,32 @@ The function returns:
 
 -   `df_dynamics` data frame containing simulated metacommunity dynamics\*.
 
-    -   *timestep*: time-step.
-    -   *patch_id*: patch ID.
-    -   *mean_env*: mean environmental condition at each patch.
-    -   *env*: environmental condition at patch x and time-step t.
-    -   *carrying_capacity*: carrying capacity at each patch.
-    -   *species*: species ID.
-    -   *niche_optim*: optimal environmental value for species i.
-    -   *r_xt*: reproductive number of species i at patch x and time-step t.
-    -   *abundance*: abundance of species i at patch x.
+    -   `timestep`: time-step.
+    -   `patch_id`: patch ID.
+    -   `mean_env`: mean environmental condition at each patch.
+    -   `env`: environmental condition at patch x and time-step t.
+    -   `carrying_capacity`: carrying capacity at each patch.
+    -   `species`: species ID.
+    -   `niche_optim`: optimal environmental value for species i.
+    -   `r_xt`: reproductive number of species i at patch x and time-step t.
+    -   `abundance`: abundance of species i at patch x.
 
 -   `df_species` data frame containing species attributes.
 
-    -   *species*: species ID.
-    -   *mean_abundance*: mean abundance (arithmetic) of species i across sites and time-steps.
-    -   *r0*: maximum reproductive number of species i.
-    -   *niche_optim*: optimal environmental value for species i.
-    -   *sd_niche_width*: niche width for species i.
-    -   *p_dispersal*: dispersal probability of species i.
+    -   `species`: species ID.
+    -   `mean_abundance`: mean abundance (arithmetic) of species i across sites and time-steps.
+    -   `r0`: maximum reproductive number of species i.
+    -   `niche_optim`: optimal environmental value for species i.
+    -   `sd_niche_width`: niche width for species i.
+    -   `p_dispersal`: dispersal probability of species i.
 
 -   `df_patch` data frame containing patch attributes.
 
-    -   *patch*: patch ID.
-    -   *alpha_div*: alpha diversity averaged across time-steps.
-    -   *mean_env*: mean environmental condition at each patch.
-    -   *carrying_capacity*: carrying capacity at each patch.
-    -   *disturbance*: disturbance-induced mortality at each patch.
+    -   `patch_id`: patch ID.
+    -   `alpha_div`: alpha diversity averaged across time-steps.
+    -   `mean_env`: mean environmental condition at each patch.
+    -   `carrying_capacity`: carrying capacity at each patch.
+    -   `disturbance`: disturbance-induced mortality at each patch.
 
 -   `df_diversity` data frame containing diversity metrics (α, β, and γ).
 
