@@ -1,7 +1,7 @@
 Changelog
 ================
 
-# Version 1.4.0 (10/24/23)
+# mcbrnet 1.4.0 (10/24/23)
 
 - add new major functions `sglv()`, `foodweb()`, `foodchain()`,
   `findr()`; full documentation to follow
@@ -10,13 +10,13 @@ Changelog
 
 - moved utility functions to `utils.R`
 
-# Version 1.3.1 (07/10/23)
+# mcbrnet 1.3.1 (07/10/23)
 
 - add a new function `frgm()`
 
 - update `igpsim()`: full description coming soon
 
-# Version 1.3.0 (06/15/22)
+# mcbrnet 1.3.0 (06/15/22)
 
 - add a new function `ptsource()`
 
@@ -24,7 +24,7 @@ Changelog
 
 - update `ggbrnet()` to be compatible with piping
 
-# Version 1.2.3 (04/13/22)
+# mcbrnet 1.2.3 (04/13/22)
 
 - fix a bug in `fun_disp_mat()`
 
@@ -32,11 +32,11 @@ Changelog
 
 - add disturbance arguments to `mcsim()` (`p_disturb` & `m_disturb`)
 
-# Version 1.2.2 (03/24/22)
+# mcbrnet 1.2.2 (03/24/22)
 
 - fix a bug in `fun_igp()`
 
-# Version 1.2.1 (03/09/22)
+# mcbrnet 1.2.1 (03/09/22)
 
 - implement internal functions to `mcsim()` and `brnet()`
 
@@ -44,22 +44,22 @@ Changelog
 
 - add argument dispersal_matrix to `mcsim()`
 
-# Version 1.2.0 (03/09/22)
+# mcbrnet 1.2.0 (03/09/22)
 
 - add a major function `igpsim()`
 
 - simplified `brnet()` and `mcsim()` by introducing internal
   sub-functions
 
-# Version 1.1.1 (12/07/21)
+# mcbrnet 1.1.1 (12/07/21)
 
 - add a local noise parameter for disturbance values to `brnet()`
   (argument `sd_disturb_lon`)
 
-# Version 1.1.0 (08/02/21)
+# mcbrnet 1.1.0 (08/02/21)
 
 - add disturbance arguments to `brnet()` added function `adjtodist()`
 
-# Version 1.0.0 (05/03/21)
+# mcbrnet 1.0.0 (05/03/21)
 
 - initial release
