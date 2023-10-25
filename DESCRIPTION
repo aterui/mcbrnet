@@ -1,10 +1,10 @@
 Package: mcbrnet
 Type: Package
-Title: Metacommunity simulation in branching networks
-Version: 1.3.2
+Title: Ecological simulation in spatial networks
+Version: 1.4.0
 Author: Akira Terui, Justin F. Pomeranz, Shota Shibasaki
 Maintainer: Akira Terui <hanabi0111@gmail.com>
-Description: Metacommunity simulation in branching networks.
+Description: Ecological simulation in spatial networks.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true

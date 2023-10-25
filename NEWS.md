@@ -1,4 +1,13 @@
 
+## Version 1.4.0 (10/24/23)
+
+- add new major functions `sglv()`, `foodweb()`, `foodchain()`,
+  `findr()`; full documentation to follow
+
+- full description for `igpsim()` is now available; see **Articles**
+
+- moved utility functions to `utils.R`
+
 ## Version 1.3.1 (07/10/23)
 
 - add a new function `frgm()`

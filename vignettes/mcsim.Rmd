@@ -79,24 +79,30 @@ A named list of return values:
 mc
 ```
 
-## Customize: `brnet()` + `mcsim()`
+## Custom: `brnet()` + `mcsim()`
 
-Return values of `brnet()` are compatible with `mcsim()`. For example, `df_patch$environment`, `df_patch$n_patch_upstream`, and `df_patch$distance_matrix` may be used to inform parameters of `mcsim()`:
+`brnet()` outputs are compatible with `mcsim()`. For example, `df_patch$environment`, `df_patch$n_patch_upstream`, and `df_patch$distance_matrix` may be used to inform arguments in `mcsim()`:
 
 ```{r, results='hide', message = F, fig.width=11}
 patch <- 100
-net <- brnet(n_patch = patch, p_branch = 0.5, plot = F)
-mc <- mcsim(n_patch = patch, n_species = 5,
-            mean_env = net$df_patch$environment,
-            carrying_capacity = net$df_patch$n_patch_upstream*10,
-            distance_matrix = net$distance_matrix,
-            plot = T)
+net <- brnet(n_patch = patch,
+             p_branch = 0.5,
+             plot = F)
+
+mc <- with(net,
+           mcsim(n_patch = patch,
+                 n_species = 5,
+                 mean_env = df_patch$environment,
+                 carrying_capacity = df_patch$n_patch_upstream*10,
+                 distance_matrix = distance_matrix,
+                 plot = T)
+           )
 
 ```
 
-## Customize: detailed parameters
+## Custom: parameter detail
 
-Users may use the following arguments to custom metacommunity simulations regarding (1) species attributes, (2) competition, (3) patch attributes, and (4) landscape structure.
+Users can tweak (1) species attributes, (2) competition, (3) patch attributes, and (4) landscape structure.
 
 ### Species attributes
 
@@ -104,21 +110,21 @@ Users may use the following arguments to custom metacommunity simulations regard
 
 Species attributes are determined based on the maximum reproductive rate `r0`, optimal environmental value `niche_optim` (or `min_optim` and `max_optim` for random generation of `niche_optim`), niche width `sd_niche_width` (or `min_niche_width` and `max_niche_width` for random generation of `sd_niche_width`) and dispersal probability `p_dispersal` (see **Model description** for details).
 
-For optimal environmental values (niche optimum), the function by default assigns random values to species as: $\mu_i \sim Unif(\mu_{min}, \mu_{max})$, where users can set values of $\mu_{min}$ and $\mu_{max}$ using `min_optim` and `max_optim` arguments (default: `min_optim = -1` and `max_optim = 1`). Alternatively, users may specify species niche optimums using the argument `niche_optim` (scalar or vector). If a single value or a vector of `niche_optim` is provided, the function ignores `min_optim` and `max_optim` arguments.
+For optimal environmental values (niche optimum), the function by default assigns random values to species as: $\mu_i \sim \mbox{Unif}(\mu_{min}, \mu_{max})$, where users can set values of $\mu_{min}$ and $\mu_{max}$ using `min_optim` and `max_optim` arguments (default: `min_optim = -1` and `max_optim = 1`). Alternatively, users may specify species niche optimums using the argument `niche_optim` (scalar or vector). If a single value or a vector of `niche_optim` is provided, the function ignores `min_optim` and `max_optim` arguments.
 
-Similarly, the function by default assigns random values of $\sigma_{niche}$ to species as: $\sigma_{niche,i} \sim Unif(\sigma_{niche,min}, \sigma_{niche,max})$. Users can set values of $\sigma_{niche,min}$ and $\sigma_{niche,max}$ using `min_niche_width` and `max_niche_width` arguments (default: `min_niche_width = 0.1` and `max_niche_width = 1`). If a single value or a vector of `sd_niche_width` is provided, the function ignores `min_niche_width` and `max_niche_width` arguments.
+Similarly, the function by default assigns random values of $\sigma_{niche}$ to species as: $\sigma_{niche,i} \sim \mbox{Unif}(\sigma_{niche,min}, \sigma_{niche,max})$. Users can set values of $\sigma_{niche,min}$ and $\sigma_{niche,max}$ using `min_niche_width` and `max_niche_width` arguments (default: `min_niche_width = 0.1` and `max_niche_width = 1`). If a single value or a vector of `sd_niche_width` is provided, the function ignores `min_niche_width` and `max_niche_width` arguments.
 
 The argument `niche_cost` determines the cost of having wider niche. Smaller values imply greater costs of wider niche (i.e., decreased maximum reproductive rate; default: `niche_cost = 1`). To disable (no cost of wide niche), set `niche_cost = Inf`.
 
 For other parameters, users may specify species attributes by giving a scalar (assume identical among species) or a vector of values whose length must be one or equal to `n_species`. Default values are `r0 = 4`, `sd_niche_width = 1`, and `p_dispersal = 0.1`.
 
-The argument `zeta` determines the sensitivity to environmental pollutants as $exp(-\zeta~impact)$, which will be multiplied with the patch-specific population growth to represent negative impacts of pollutants. $impact$ represents the concentration of hypothetical environmental pollutants (see `q` in patch attributes). The parameter $\zeta$ determines the sensitivity to environmental pollutants, and larger values indicate greater species sensitivity. No pollutant effect if $\zeta = 0$.
+The argument `zeta` determines the sensitivity to environmental pollutants as $\exp(-\zeta~impact)$, which will be multiplied with the patch-specific population growth to represent negative impacts of pollutants. $impact$ represents the concentration of hypothetical environmental pollutants (see `q` in patch attributes). The parameter $\zeta$ determines the sensitivity to environmental pollutants, and larger values indicate greater species sensitivity. No pollutant effect if $\zeta = 0$.
 
 ### Competition
 
 **Arguments:** `interaction_type`, `alpha` OR `min_alpha` and `max_alpha`
 
-The argument `interaction_type` determines whether interaction coefficient `alpha` is a constant or random variable. If `interaction_type = "constant"`, then the interaction coefficients $\alpha_{ij, i \ne j}$ for any pairs of species will be set as a constant `alpha` (i.e., off-diagonal elements of the interaction matrix). If `interaction_type = "random"`, $\alpha_{ij, i \ne j}$ will be drawn from a uniform distribution as $\alpha_{ij, i \ne j} \sim Unif(\alpha_{min}, \alpha_{max})$ with corresponding arguments `min_alpha` and `max_alpha`. The argument `alpha` is ignored under the scenario of random interaction strength (i.e., `interaction_type = "random"`). Note that the diagonal elements of the interaction matrix ($\alpha_{ii}$) are always 1.0 regardless of `interaction_type`, as `alpha` is the strength of interspecific competition relative to that of intraspecific competition (see **Model description**). By default, `interaction_type = "constant"` and `alpha = 0`.
+The argument `interaction_type` determines whether interaction coefficient `alpha` is a constant or random variable. If `interaction_type = "constant"`, then the interaction coefficients $\alpha_{ij, i \ne j}$ for any pairs of species will be set as a constant `alpha` (i.e., off-diagonal elements of the interaction matrix). If `interaction_type = "random"`, $\alpha_{ij, i \ne j}$ will be drawn from a uniform distribution as $\alpha_{ij, i \ne j} \sim \mbox{Unif}(\alpha_{min}, \alpha_{max})$ with corresponding arguments `min_alpha` and `max_alpha`. The argument `alpha` is ignored under the scenario of random interaction strength (i.e., `interaction_type = "random"`). Note that the diagonal elements of the interaction matrix ($\alpha_{ii}$) are always 1.0 regardless of `interaction_type`, as `alpha` is the strength of interspecific competition relative to that of intraspecific competition (see **Model description**). By default, `interaction_type = "constant"` and `alpha = 0`.
 
 ### Patch attributes
 
@@ -130,7 +136,7 @@ The arguments `sd_env` (default: `sd_env = 0.1`), `spatial_env_cor` (default: `s
 
 Users can also define disturbance probability (`p_disturb`) and mortality (`i_disturb`). When disturbance occurs, all habitat patches are reduced by `i_disturb`. `i_disturb` can be identical or different across habitat patches.
 
-Lastly, the argument `impact` defines concentration of hypothetical environmental pollutants. The values will be converted as $exp(-\zeta~impact)$, which will be multiplied with the patch-specific population growth. Thus, a greater reduction factor will be applied as the value of $impact$ increases. The parameter $\zeta$ determines the sensitivity to environmental pollutants (see argument `zeta` in species attributes).
+Lastly, the argument `impact` defines concentration of hypothetical environmental pollutants. The values will be converted as $\exp(-\zeta~impact)$, which will be multiplied with the patch-specific population growth. Thus, a greater reduction factor will be applied as the value of $impact$ increases. The parameter $\zeta$ determines the sensitivity to environmental pollutants (see argument `zeta` in species attributes).
 
 ### Landscape structure
 
@@ -150,4 +156,4 @@ The argument `n_timestep` is the simulation peiord that is recorded in the retur
 
 ## Model description
 
-Full model descriptions are available at: <https://doi.org/10.1073/pnas.2105574118>
+Full model descriptions are available at [Terui et al. 2021, PNAS](https://doi.org/10.1073/pnas.2105574118).

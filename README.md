@@ -1,10 +1,10 @@
 
 # Overview
 
-`mcbrnet` is a collection of functions to perform ecological simulations
-in spatial networks. Main functions in this package can: (1) generate a
-random branching network with the specified number of patches and
-probability of branching (`brnet()`); and (2) simulate
+The R package `mcbrnet` provides functions to perform ecological
+simulations in spatial networks. Main functions in this package can: (1)
+generate a random branching network with the specified number of patches
+and probability of branching (`brnet()`); and (2) simulate
 metacommunity/foodweb dynamics in space (`mcsim()`, `igpsim()`,
 `sglv()`). See **Articles** for instruction.
 

@@ -305,7 +305,7 @@ brnet(n_patch = 30) %>%
 
 Example: `upstream` pattern:
 
-```{r frgm3}
+```{r frgm2}
 brnet(n_patch = 30) %>%
   frgm(rate = 0.1,
        p = 0.1,
@@ -314,9 +314,9 @@ brnet(n_patch = 30) %>%
   ggbrnet(edge_weight = "passability")
 ```
 
-Example: `upstream` pattern:
+Example: `downstream` pattern:
 
-```{r frgm4}
+```{r frgm3}
 brnet(n_patch = 30) %>%
   frgm(rate = 0.1,
        p = 0.1,

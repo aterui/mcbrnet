@@ -43,7 +43,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">mcbrnet</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.3.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.4.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -104,8 +104,316 @@
 
     
     
-<p>In preparation.</p>
-  </main>
+<div class="section level2">
+<h2 id="basic-usage">Basic usage<a class="anchor" aria-label="anchor" href="#basic-usage"></a>
+</h2>
+<p><code><a href="../reference/igpsim.html">igpsim()</a></code> simulates tri-trophic food web dynamics with
+intraguild predation in space. The function employs a discrete
+time-series model (an extension of the Nicholson-Bailey model), which is
+detailed in <a href="https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecs2.4648" class="external-link">Pomeranz
+et al. 2023</a>. The food web dynamics are simulated through (1) local
+predator-prey interactions within a habitat patch, (2) immigration, and
+(3) emigration.</p>
+<p>The function returns:</p>
+<ul>
+<li>
+<p><code>df_dynamics</code> data frame containing simulated food web
+dynamics*.</p>
+<ul>
+<li>
+<code>timestep</code>: time-step.</li>
+<li>
+<code>patch_id</code>: patch ID.</li>
+<li>
+<code>carrying_capacity</code>: carrying capacity at each
+patch.</li>
+<li>
+<code>disturbance</code>: disturbance-induced mortality at patch x
+and time-step t.</li>
+<li>
+<code>species</code>: species ID.</li>
+<li>
+<code>abundance</code>: abundance of species i at patch x.</li>
+<li>
+<code>fcl</code>: food chain length</li>
+</ul>
+</li>
+<li>
+<p><code>df_species</code> data frame containing species
+attributes.</p>
+<ul>
+<li>
+<code>species</code>: species ID.</li>
+<li>
+<code>mean_abundance</code>: mean abundance (arithmetic) of species
+i across sites and time-steps.</li>
+<li>
+<code>p_dispersal</code>: dispersal probability of species i.</li>
+</ul>
+</li>
+<li>
+<p><code>df_patch</code> data frame containing patch attributes.</p>
+<ul>
+<li>
+<code>patch_id</code>: patch ID.</li>
+<li>
+<code>fcl</code>: temporal average of food chain length.</li>
+<li>
+<code>carrying_capacity</code>: carrying capacity at each
+patch.</li>
+<li>
+<code>disturbance</code>: disturbance-induced mortality at each
+patch.</li>
+</ul>
+</li>
+<li>
+<p><code>df_int</code> data frame containing interaction
+parameters.</p>
+<ul>
+<li>
+<code>interaction</code>: column identifying interaction pairs</li>
+<li>
+<code>conv_eff</code>: conversion efficiency</li>
+<li>
+<code>attak_rate</code>: attack rate</li>
+<li>
+<code>handling_time</code>: handling time</li>
+</ul>
+</li>
+<li><p><code>df_xy_coord</code> xy coordinates for habitat patches
+(<code>NULL</code> when <code>distance_matrix</code> or
+<code>dispersal_matrix</code> is provided)</p></li>
+<li><p><code>distance_matrix</code> distance matrix used in the
+simulation.</p></li>
+</ul>
+</div>
+<div class="section level2">
+<h2 id="quick-start">Quick start<a class="anchor" aria-label="anchor" href="#quick-start"></a>
+</h2>
+<p>The following script simulates tri-trophic dynamics with
+<code>n_patch = 5</code>, which assumes five habitat patches randomly
+distributed over a square space. By default, <code><a href="../reference/igpsim.html">igpsim()</a></code>
+simulates food web dynamics with 200 warm-up (initialization with
+species introductions: <code>n_warmup</code>), 200 burn-in (burn-in
+period with no species introductions: <code>n_burnin</code>), and 1000
+time-steps for records (<code>n_timestep</code>).</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">igp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/igpsim.html">igpsim</a></span><span class="op">(</span>n_patch <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></code></pre></div>
+<p>As in <code><a href="../reference/mcsim.html">mcsim()</a></code>, the simulated dynamics can be visualized
+by <code>plot = TRUE</code>, which will show five sample patches:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">igp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/igpsim.html">igpsim</a></span><span class="op">(</span>n_patch <span class="op">=</span> <span class="fl">5</span>, plot <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<p><img src="igpsim_files/figure-html/unnamed-chunk-3-1.png" width="1056"></p>
+<p>A named list of return values:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">igp</span></span>
+<span><span class="co">#&gt; $df_dynamics</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 15,000 × 7</span></span></span>
+<span><span class="co">#&gt;    timestep patch_id carrying_capacity disturbance species     abundance   fcl</span></span>
+<span><span class="co">#&gt;       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span>        1        1               100           0 basal              48     2</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span>        1        1               100           0 ig-prey             0     2</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span>        1        1               100           0 ig-predator        46     2</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span>        1        2               100           0 basal              54     2</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span>        1        2               100           0 ig-prey             0     2</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span>        1        2               100           0 ig-predator        28     2</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span>        1        3               100           0 basal              57     2</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span>        1        3               100           0 ig-prey             0     2</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>        1        3               100           0 ig-predator        32     2</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span>        1        4               100           0 basal              49     2</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 14,990 more rows</span></span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $df_species</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 3</span></span></span>
+<span><span class="co">#&gt;   species     mean_abundance p_dispersal</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> basal                 59.9         0.1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> ig-prey                0           0.1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ig-predator           30.2         0.1</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $df_patch</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 4</span></span></span>
+<span><span class="co">#&gt;   patch_id   fcl carrying_capacity disturbance</span></span>
+<span><span class="co">#&gt;      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>        1     2               100           0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>        2     2               100           0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>        3     2               100           0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span>        4     2               100           0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span>        5     2               100           0</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $df_int</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 4</span></span></span>
+<span><span class="co">#&gt;   interaction            conv_eff attack_rate handling_time</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ig-prey on basal            0.9        0.05           0.5</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> ig-predator on basal        0.9        0.05           0.5</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ig-predator on ig-prey      0.9        0.05           0.5</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $df_xy_coord</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 2</span></span></span>
+<span><span class="co">#&gt;   x_coord y_coord</span></span>
+<span><span class="co">#&gt;     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>   7.00    2.48 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>   0.235   0.305</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>   3.87    3.24 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span>   8.27    3.57 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span>   1.84    0.831</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $distance_matrix</span></span>
+<span><span class="co">#&gt;          1        2        3        4        5</span></span>
+<span><span class="co">#&gt; 1 0.000000 7.108723 3.229040 1.671617 5.415148</span></span>
+<span><span class="co">#&gt; 2 7.108723 0.000000 4.667804 8.671236 1.693609</span></span>
+<span><span class="co">#&gt; 3 3.229040 4.667804 0.000000 4.414354 3.143126</span></span>
+<span><span class="co">#&gt; 4 1.671617 8.671236 4.414354 0.000000 6.982804</span></span>
+<span><span class="co">#&gt; 5 5.415148 1.693609 3.143126 6.982804 0.000000</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="custom-brnet-igpsim">Custom: <code>brnet()</code> + <code>igpsim()</code><a class="anchor" aria-label="anchor" href="#custom-brnet-igpsim"></a>
+</h2>
+<p><code><a href="../reference/brnet.html">brnet()</a></code> outputs are compatible with
+<code><a href="../reference/igpsim.html">igpsim()</a></code>. For example, <code>.$distance_matrix</code> may
+be used to inform arguments in <code><a href="../reference/igpsim.html">igpsim()</a></code>. By providing the
+distance matrix, the following script will simulate food web dynamics in
+a random branching network produced by <code><a href="../reference/brnet.html">brnet()</a></code>
+function:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">patch</span> <span class="op">&lt;-</span> <span class="fl">100</span></span>
+<span></span>
+<span><span class="va">net</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/brnet.html">brnet</a></span><span class="op">(</span>n_patch <span class="op">=</span> <span class="va">patch</span>,</span>
+<span>             p_branch <span class="op">=</span> <span class="fl">0.5</span>,</span>
+<span>             plot <span class="op">=</span> <span class="cn">F</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">igp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="va">net</span>,</span>
+<span>            <span class="fu"><a href="../reference/igpsim.html">igpsim</a></span><span class="op">(</span>n_patch <span class="op">=</span> <span class="va">patch</span>, </span>
+<span>                   distance_matrix <span class="op">=</span> <span class="va">distance_matrix</span>,</span>
+<span>                   plot <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span>            <span class="op">)</span></span></code></pre></div>
+<p><img src="igpsim_files/figure-html/unnamed-chunk-5-1.png" width="1056"></p>
+</div>
+<div class="section level2">
+<h2 id="custom-parameter-detail">Custom: parameter detail<a class="anchor" aria-label="anchor" href="#custom-parameter-detail"></a>
+</h2>
+<p>Users can tweak (1) food web attributes, (2) patch attributes, and
+(3) landscape structure.</p>
+<div class="section level3">
+<h3 id="food-web-attributes">Food web attributes<a class="anchor" aria-label="anchor" href="#food-web-attributes"></a>
+</h3>
+<p><strong>Arguments:</strong> <code>r_b</code>, <code>conv_eff</code>,
+<code>attack_rate</code>, <code>handling_time</code>, <code>s</code></p>
+<p>Food web attributes are determined based on the maximum reproductive
+rate of the basal species (<code>r_b</code>), conversion efficiency
+<code>conv_eff</code>, attack rate <code>attack_rate</code>, handling
+time <code>handling_time</code>, and switching parameter
+<code>s</code>.</p>
+<p><em>Basal species</em> – <code>r_b</code> is one of the parameters
+defining the population growth of the basal species, modeled as
+follows:</p>
+<p><span class="math display">\[
+B_{t} = \frac{B_{t-1}r_b}{1 + \frac{r_b - 1}{K}B_{t-1}},
+\]</span></p>
+<p>where <span class="math inline">\(B_t\)</span> is the abundance of
+the basal species at time <span class="math inline">\(t\)</span>, <span class="math inline">\(r_b\)</span> is the maximum growth rate (=
+<code>r_b</code>), and <span class="math inline">\(K\)</span> is the
+carrying capacity (= <code>carrying_capacity</code>; see <strong>Patch
+attributes</strong>). The parameters <span class="math inline">\(r_b\)</span> and <span class="math inline">\(K\)</span> may vary by habitat; to model such
+variations, users may supply vectors of <code>r_b</code> and
+<code>carrying_capacity</code>, whose length is equal to
+<code>n_patch</code>. The function assumes these values are supplied in
+order of patch 1, 2, 3, …, <code>n_patch</code>. Thus, care must be
+taken to match this order with those in, e.g.,
+<code>distance_matrix</code>.</p>
+<p><em>Consumers (intraguild prey and predator)</em> – The predator-prey
+interactions are modeled with the Nicholson-Bailey model, which was
+extended to account for intraguild predation (see <a href="https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecs2.4648" class="external-link">Pomeranz
+et al. 2023, Ecosphere; equations 5 – 9</a> for details). The function
+assumes the discrete version of the Holling’s Type-II functional
+response, in which attack rate (<code>atttack_rate</code>) and handling
+time (<code>handling_time</code>) define the survival function <span class="math inline">\(f(\cdot)\)</span> of the prey as follows:</p>
+<p><span class="math display">\[
+\begin{aligned}
+f(B, C) &amp;= \exp(-\frac{a_{BC}C}{1 + a_{BC}h_{BC}B})
+&amp;&amp;\text{C on B},\\
+f(B, P) &amp;= \exp(-\frac{(1 + \phi)a_{BP}P}{1 + a_{BP}h_{BP}B})
+&amp;&amp;\text{P on B},\\
+f(C, P) &amp;= \exp(-\frac{(1 - \phi)a_{CP}P}{1 + a_{CP}h_{CP}C})
+&amp;&amp;\text{P on C},\\
+\end{aligned}
+\]</span></p>
+<p>where <span class="math inline">\(C\)</span> and <span class="math inline">\(P\)</span> are the abundances of intraguild prey
+and predator, respectively, <span class="math inline">\(a_{ij}\)</span>
+the attack rate of consumer <span class="math inline">\(j\)</span> on
+prey <span class="math inline">\(i\)</span> (=
+<code>attack_rate</code>), and <span class="math inline">\(h_{ij}\)</span> the handling time (=
+<code>handling_time</code>). If these arguments are supplied as scalars,
+then the function assumes the constant values for all the interactions
+(i.e., <span class="math inline">\(a_{BC} = a_{BP} = a_{CP} =
+const.\)</span> and <span class="math inline">\(h_{BC} = h_{BP} = h_{CP}
+= const.\)</span>). Where appropriate, users may apply different values
+to these by supplying vectors; in this case, the function assumes the
+parameter values appear in order of <span class="math inline">\(a_{BC}\)</span> (<span class="math inline">\(h_{BC}\)</span>), <span class="math inline">\(a_{BP}\)</span> (<span class="math inline">\(h_{BC}\)</span>), and <span class="math inline">\(a_{CP}\)</span> (<span class="math inline">\(h_{CP}\)</span>). The parameter <span class="math inline">\(\phi\)</span> quantifies the switching tendency of
+the intraguild predator, defined as follows:</p>
+<p><span class="math display">\[
+\phi = \frac{s(B - C)}{B+C}
+\]</span></p>
+<p>The parameter <span class="math inline">\(s\)</span> (=
+<code>s</code>) determines the likelihood of switching to the basal
+species, with higher values of <span class="math inline">\(s\)</span>
+indicating the greater switching tendency to the basal species. Lastly,
+conversion efficiency (= <code>conv_eff</code>) quantifies the
+effectiveness of consumers transforming the capture prey into consumer’s
+abundance. <code>conv_eff</code> must be a scalar (supply identical
+values to all the interactions) or must be supplied in order of <span class="math inline">\(BC\)</span>, <span class="math inline">\(BP\)</span>, and <span class="math inline">\(CP\)</span>.</p>
+<p>Note that the function assumes the following order of ecological
+events: <span class="math inline">\(B\)</span>’s reproduction <span class="math inline">\(\rightarrow\)</span> <span class="math inline">\(C\)</span>’s predation on <span class="math inline">\(B\)</span> <span class="math inline">\(\rightarrow\)</span> <span class="math inline">\(C\)</span>’s reproduction <span class="math inline">\(\rightarrow\)</span> <span class="math inline">\(P\)</span>’s predation on <span class="math inline">\(B\)</span> and <span class="math inline">\(C\)</span> <span class="math inline">\(\rightarrow\)</span> <span class="math inline">\(P\)</span>’s reproduction.</p>
+</div>
+<div class="section level3">
+<h3 id="patch-attributes">Patch attributes<a class="anchor" aria-label="anchor" href="#patch-attributes"></a>
+</h3>
+<p><strong>Arguments:</strong> <code>carrying_capacity</code>
+<code>p_disturb</code>, <code>i_disturb</code>,
+<code>phi_disturb</code></p>
+<p>Patch attributes are characterized by carrying capacity (=
+<code>carrying_capacity</code>) and disturbance (probability of
+occurrence = <code>p_disturb</code>, disturbance intensity =
+<code>i_disturb</code>, temporal precision of disturbance intensity =
+<code>phi_disturb</code>). <code>carrying_capacity</code> and
+<code>i_disturb</code> can be supplied as patch specific values,
+provided that the vector lengths match <code>n_patch</code>. The other
+arguments <code>p_disturb</code> and <code>phi_disturb</code> should be
+given as scalars. <code>p_disturb</code> controls how often disturbance
+occurs, while <code>phi_disturb</code> regulates the temporal
+variability of the disturbance intensity when it occurs (greater values
+of <code>phi_disturb</code> indicating <strong><em>less</em></strong>
+temporal variability).</p>
+<p>Note that disturbance events in this function is designed to resemble
+regional disturbance, which affects all habitat patches when it occurs.
+Thus, disturbance heterogeneity within a landscape should be introduced
+through <code>i_disturbance</code> argument if desired.</p>
+</div>
+<div class="section level3">
+<h3 id="landscape-attributes">Landscape attributes<a class="anchor" aria-label="anchor" href="#landscape-attributes"></a>
+</h3>
+<p><strong>Arguments:</strong> <code>xy_coord</code>,
+<code>distance_matrix</code>, <code>landscape_size</code>,
+<code>theta</code></p>
+<p>See <strong>Article</strong> for <code><a href="../reference/mcsim.html">mcsim()</a></code></p>
+</div>
+<div class="section level3">
+<h3 id="others">Others<a class="anchor" aria-label="anchor" href="#others"></a>
+</h3>
+<p><strong>Arguments:</strong> <code>n_warmup</code>,
+<code>n_burnin</code>, <code>n_timestep</code></p>
+<p>See <strong>Article</strong> for <code><a href="../reference/mcsim.html">mcsim()</a></code></p>
+</div>
+</div>
+<div class="section level2">
+<h2 id="model-description">Model description<a class="anchor" aria-label="anchor" href="#model-description"></a>
+</h2>
+<p>Full model descriptions are available at <a href="https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecs2.4648" class="external-link">Pomeranz
+et al. 2023, Ecosphere</a>.</p>
+</div>
+  </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
+    </nav></aside>
 </div>
 
 
