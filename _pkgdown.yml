@@ -1,6 +1,8 @@
 url: aterui.github.io/mcbrnet/
+
 template:
   bootstrap: 5
+
 reference:
 - title: "Network generation"
   desc: "Functions for spatial networks"
