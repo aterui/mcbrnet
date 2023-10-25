@@ -4,9 +4,9 @@
 \name{mcbrnet-package}
 \alias{mcbrnet}
 \alias{mcbrnet-package}
-\title{mcbrnet: Metacommunity simulation in branching networks}
+\title{mcbrnet: Ecological simulation in spatial networks}
 \description{
-Metacommunity simulation in branching networks.
+Ecological simulation in spatial networks.
 }
 \seealso{
 Useful links:
