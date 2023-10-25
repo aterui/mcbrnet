@@ -212,64 +212,64 @@ species that are randomly chosen:</p>
 <code class="sourceCode R"><span><span class="va">mc</span></span>
 <span><span class="co">#&gt; $df_dynamics</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 25,000 × 9</span></span></span>
-<span><span class="co">#&gt;    timestep patch_id mean_env    env carrying_capacity species niche_optim</span></span>
-<span><span class="co">#&gt;       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span>        1        1        0  0.182               100       1      -<span style="color: #BB0000;">0.922</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span>        1        1        0  0.182               100       2      -<span style="color: #BB0000;">0.600</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span>        1        1        0  0.182               100       3      -<span style="color: #BB0000;">0.875</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span>        1        1        0  0.182               100       4      -<span style="color: #BB0000;">0.326</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span>        1        1        0  0.182               100       5      -<span style="color: #BB0000;">0.124</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span>        1        2        0 -<span style="color: #BB0000;">0.107</span>               100       1      -<span style="color: #BB0000;">0.922</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span>        1        2        0 -<span style="color: #BB0000;">0.107</span>               100       2      -<span style="color: #BB0000;">0.600</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span>        1        2        0 -<span style="color: #BB0000;">0.107</span>               100       3      -<span style="color: #BB0000;">0.875</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>        1        2        0 -<span style="color: #BB0000;">0.107</span>               100       4      -<span style="color: #BB0000;">0.326</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span>        1        2        0 -<span style="color: #BB0000;">0.107</span>               100       5      -<span style="color: #BB0000;">0.124</span></span></span>
+<span><span class="co">#&gt;    timestep patch_id mean_env    env carrying_capacity species niche_optim  r_xt</span></span>
+<span><span class="co">#&gt;       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span>        1        1        0 0.070<span style="text-decoration: underline;">3</span>               100       1      -<span style="color: #BB0000;">0.970</span> 0.618</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span>        1        1        0 0.070<span style="text-decoration: underline;">3</span>               100       2       0.615 2.30 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span>        1        1        0 0.070<span style="text-decoration: underline;">3</span>               100       3       0.248 3.12 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span>        1        1        0 0.070<span style="text-decoration: underline;">3</span>               100       4      -<span style="color: #BB0000;">0.139</span> 1.98 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span>        1        1        0 0.070<span style="text-decoration: underline;">3</span>               100       5      -<span style="color: #BB0000;">0.194</span> 2.93 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span>        1        2        0 0.045<span style="text-decoration: underline;">0</span>               100       1      -<span style="color: #BB0000;">0.970</span> 0.671</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span>        1        2        0 0.045<span style="text-decoration: underline;">0</span>               100       2       0.615 2.23 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span>        1        2        0 0.045<span style="text-decoration: underline;">0</span>               100       3       0.248 3.09 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>        1        2        0 0.045<span style="text-decoration: underline;">0</span>               100       4      -<span style="color: #BB0000;">0.139</span> 2.31 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span>        1        2        0 0.045<span style="text-decoration: underline;">0</span>               100       5      -<span style="color: #BB0000;">0.194</span> 2.97 </span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 24,990 more rows</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 2 more variables: r_xt &lt;dbl&gt;, abundance &lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 1 more variable: abundance &lt;dbl&gt;</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $df_species</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 6</span></span></span>
 <span><span class="co">#&gt;   species mean_abundance    r0 niche_optim sd_niche_width p_dispersal</span></span>
 <span><span class="co">#&gt;     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>       1          0         4      -<span style="color: #BB0000;">0.922</span>          0.117         0.1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>       2         16.7       4      -<span style="color: #BB0000;">0.600</span>          0.476         0.1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>       3          0.311     4      -<span style="color: #BB0000;">0.875</span>          0.635         0.1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span>       4         60.5       4      -<span style="color: #BB0000;">0.326</span>          0.626         0.1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span>       5         73.5       4      -<span style="color: #BB0000;">0.124</span>          0.594         0.1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>       1            0       4      -<span style="color: #BB0000;">0.970</span>          0.562         0.1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>       2           35.5     4       0.615          0.678         0.1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>       3           65.4     4       0.248          0.648         0.1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span>       4           52.6     4      -<span style="color: #BB0000;">0.139</span>          0.179         0.1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span>       5           66.0     4      -<span style="color: #BB0000;">0.194</span>          0.688         0.1</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $df_patch</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 5</span></span></span>
 <span><span class="co">#&gt;   patch_id alpha_div mean_env carrying_capacity disturbance</span></span>
 <span><span class="co">#&gt;      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>        1      3.10        0               100           0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>        2      2.82        0               100           0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>        3      3.10        0               100           0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span>        4      2.98        0               100           0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span>        5      2.95        0               100           0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>        1      4           0               100           0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>        2      4           0               100           0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>        3      4           0               100           0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span>        4      4           0               100           0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span>        5      4.00        0               100           0</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $df_diversity</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 3</span></span></span>
 <span><span class="co">#&gt;   alpha_div beta_div gamma_div</span></span>
 <span><span class="co">#&gt;       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>      2.99     1.04      3.10</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>      4.00     1.00         4</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $df_xy_coord</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 2</span></span></span>
 <span><span class="co">#&gt;   x_coord y_coord</span></span>
 <span><span class="co">#&gt;     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>   5.84    0.719</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>   0.879   9.37 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>   5.44    1.35 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span>   1.58    1.96 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span>   5.09    8.55 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>    4.61   3.89 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>    7.73   3.81 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>    1.79   9.28 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span>    9.06   2.29 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span>    2.04   0.581</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $distance_matrix</span></span>
-<span><span class="co">#&gt;           1        2         3        4        5</span></span>
-<span><span class="co">#&gt; 1 0.0000000 9.967805 0.7487931 4.430851 7.863087</span></span>
-<span><span class="co">#&gt; 2 9.9678051 0.000000 9.2195664 7.437501 4.293887</span></span>
-<span><span class="co">#&gt; 3 0.7487931 9.219566 0.0000000 3.904233 7.200890</span></span>
-<span><span class="co">#&gt; 4 4.4308514 7.437501 3.9042331 0.000000 7.461649</span></span>
-<span><span class="co">#&gt; 5 7.8630868 4.293887 7.2008905 7.461649 0.000000</span></span>
+<span><span class="co">#&gt;          1        2         3         4        5</span></span>
+<span><span class="co">#&gt; 1 0.000000 3.116507  6.079637  4.730300 4.195217</span></span>
+<span><span class="co">#&gt; 2 3.116507 0.000000  8.069575  2.025074 6.544620</span></span>
+<span><span class="co">#&gt; 3 6.079637 8.069575  0.000000 10.085397 8.700044</span></span>
+<span><span class="co">#&gt; 4 4.730300 2.025074 10.085397  0.000000 7.231054</span></span>
+<span><span class="co">#&gt; 5 4.195217 6.544620  8.700044  7.231054 0.000000</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $interaction_matrix</span></span>
 <span><span class="co">#&gt;      [,1] [,2] [,3] [,4] [,5]</span></span>
