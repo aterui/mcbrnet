@@ -46,11 +46,11 @@ igpsim(
 
 \item{handling_time}{Handling time. Must be given by the order of basal to ig_prey, basal to ig-predator, and ig-prey to ig-predator}
 
-\item{s}{Strength of switching between basal and ig-prey}
+\item{s}{Strength of switching between basal and ig-prey (confined to 0 - 1). Switching to basal species is more likely to occur with higher values.}
 
 \item{propagule_interval}{Time interval for propagule introduction during warm-up. If \code{NULL}, a value of \code{ceiling(n_warmup / 10)} will be used.}
 
-\item{propagule_seed}{Propagule mean density (intensity parameter in a Poisson distribution). Default \code{0.5}.}
+\item{propagule_seed}{Propagule mean density (intensity parameter in a Poisson distribution). Should be given as a scalar or vector. If given as a vector, the elements should appear in order of basal, intra-guild prey, and intra-guild predator.}
 
 \item{carrying_capacity}{Carrying capacities of individual patches. Length must be one or equal to \code{n_patch}. Default \code{100}.}
 

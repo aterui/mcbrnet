@@ -8,9 +8,9 @@
 #' @param conv_eff Energetic conversion efficiency; must be given by the order of basal to ig-prey, basal to ig-predator, and ig-prey to ig-predator
 #' @param attack_rate Attack rate. Must be given by the order of basal to ig_prey, basal to ig-predator, and ig-prey to ig-predator
 #' @param handling_time Handling time. Must be given by the order of basal to ig_prey, basal to ig-predator, and ig-prey to ig-predator
-#' @param s Strength of switching between basal and ig-prey
+#' @param s Strength of switching between basal and ig-prey (confined to 0 - 1). Switching to basal species is more likely to occur with higher values.
 #' @param propagule_interval Time interval for propagule introduction during warm-up. If \code{NULL}, a value of \code{ceiling(n_warmup / 10)} will be used.
-#' @param propagule_seed Propagule mean density (intensity parameter in a Poisson distribution). Default \code{0.5}.
+#' @param propagule_seed Propagule mean density (intensity parameter in a Poisson distribution). Should be given as a scalar or vector. If given as a vector, the elements should appear in order of basal, intra-guild prey, and intra-guild predator.
 #' @param carrying_capacity Carrying capacities of individual patches. Length must be one or equal to \code{n_patch}. Default \code{100}.
 #' @param xy_coord Data frame for site coordinates. Each row should correspond to an individual patch, with x and y coordinates (columns). Defualt \code{NULL}.
 #' @param distance_matrix Distance matrix indicating distance between habitat patches. If provided, the distance matrix will be used to generate dispersal matrix and to calculate distance decay of environmental correlations. Default \code{NULL}.
