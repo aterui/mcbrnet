@@ -1,10 +1,6 @@
 template:
   package: preferably
   bootstrap: 5
-navbar:
-  structure:
-    left:  [intro, reference, articles, news]
-    right: [search, github]
 reference:
 - title: "Network generation"
   desc: "Functions for spatial networks"
