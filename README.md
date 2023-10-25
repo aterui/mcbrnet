@@ -1,36 +1,12 @@
 
 # Overview
 
-`mcbrnet` is a collection of functions to perform metacommunity
-simulation in branching networks. Main functions include:
-
-- `brnet()` generates a random branching network with the specified
-  number of patches and probability of branching. The function returns
-  adjacency and distance matrices, hypothetical
-  environmental/disturbance values at each patch, and the number of
-  patches upstream (akin to the watershed area in river networks).
-
-- `mcsim()` simulates metacommunity dynamics. This function follows a
-  general framework proposed by [Thompson et
-  al. (2020)](https://doi.org/10.1111/ele.13568). However, it has
-  several unique features that are detailed in [Terui et al
-  (2021)](https://doi.org/10.1073/pnas.2105574118).
-
-- `igpsim()` simulates three-species meta-food web dynamics with
-  intraguild predation. This function shares many features with
-  `mcsim()`. Currently under development.
-
-- `ggbrnet()` is a wrapper of `ggraph` functions for easy visualization
-  of a network produced by `brnet()` .
-
-- `ptsource()` is a function to simulate propagation of environmental
-  pollutants in a river network.
-
-- `frgm()` is a function to simulate fragmentation in a river network.
-
-- `adjtodist()` converts an adjacency matrix to a distance matrix.
-
-See Articles for instruction.
+`mcbrnet` is a collection of functions to perform ecological simulations
+in spatial networks. Main functions in this package can: (1) generate a
+random branching network with the specified number of patches and
+probability of branching (`brnet()`); and (2) simulate
+metacommunity/foodweb dynamics in space (`mcsim()`, `igpsim()`,
+`sglv()`). See **Articles** for instruction.
 
 # Citation
 
