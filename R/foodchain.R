@@ -109,7 +109,10 @@ foodchain <- function(n,
   y <- data.table::data.table(t = v_t,
                               species = v_sp,
                               patch = v_patch,
-                              g = as.numeric(paste0(v_t, v_patch)),
+                              g = paste0("t",
+                                         sprintf("%05d", v_t),
+                                         "p",
+                                         sprintf("%05d", v_patch)),
                               n = c(x))
 
   # food chain length -------------------------------------------------------
