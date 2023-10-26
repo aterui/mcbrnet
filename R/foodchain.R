@@ -55,7 +55,7 @@ max_tp <- function(n_species, n, alpha) {
     # update trophic positions recursively
     for (i in (n_basal + 1):n_species) {
       value <- tp %*% frac + 1
-      tp[i] <- value[i]
+      tp[i] <- ifelse(g[i] == 0, 0, value[i])
     }
 
     max_tp <- max(tp[n > 0])
