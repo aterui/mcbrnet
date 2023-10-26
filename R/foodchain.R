@@ -34,7 +34,19 @@ max_tp <- function(n_species, n, alpha) {
     frac <- do.call(rbind,
                     lapply(1:n_species,
                            function(i) {
-                             alpha[i, (n_basal + 1):n_species] * n[i] / g[(n_basal + 1):n_species]
+                             ## num: contribution of each prey
+                             ## den: total prey converted into consumer
+                             ## frac0: factional contribution of each prey
+                             num <- alpha[i, (n_basal + 1):n_species] * n[i]
+                             den <- g[(n_basal + 1):n_species]
+                             frac0 <- num / den
+
+                             ## 0 / 0 returns NaN
+                             ## replace with 0 if num == 0 && den == 0
+                             k <- intersect(which(num == 0), which(den == 0))
+                             frac0[k] <- 0
+
+                             return(frac0)
                            }))
 
     ## add columns for basal species (all zero)
@@ -49,7 +61,6 @@ max_tp <- function(n_species, n, alpha) {
     max_tp <- max(tp[n > 0])
 
     return(max_tp)
-
   }
 
 }
