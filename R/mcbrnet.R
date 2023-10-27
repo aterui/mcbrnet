@@ -10,12 +10,7 @@
 #' @param sd_disturb_source SD of disturbance strength at headwaters. The SD is defined in a logit scale with a normal distribution.
 #' @param sd_disturb_lon SD of longitudinal noise of disturbance strength. The SD is defined in a logit scale with a normal distribution.
 #' @param randomize_patch Whether randomize patches or not. If \code{FALSE}, the function may generate a biased network with ordered patches. Default \code{TRUE}.
-#' @param plot Whether a plot should be shown or not. If \code{FALSE}, a plot of the generated network will not be shown. Default \code{TRUE}.
-#' @param patch_color Type of patch (vertex) label (either \code{"env"}, \code{"disturbance"} or any color code). Default \code{"env"}.
-#' @param patch_label Type of patch (vertex) label (either \code{"patch", "branch", "n_upstream"}). \code{"patch"} shows patch ID, \code{"branch"} branch ID, and \code{"n_upstream"} the number of upstream contributing patches. If \code{"none"}, no label will be shown on patches in the plot. Default \code{"none"}.
-#' @param patch_size Patch (vertex) size in the plot.
 #' @param n_patch_free Whether imposing a constraint on \code{n_patch}. If \code{TRUE}, the number of patches a random variable following a negative binomial distribution.
-#' @param ... Arguments passed to \code{ggraph::geom_node_label()}.
 #'
 #' @importFrom dplyr %>%
 #' @importFrom grDevices grey
@@ -44,12 +39,7 @@ brnet <- function(n_patch = 50,
                   sd_disturb_source = 1,
                   sd_disturb_lon = 0.1,
                   randomize_patch = TRUE,
-                  plot = FALSE,
-                  patch_color = "env",
-                  patch_label = "none",
-                  patch_size = 3,
-                  n_patch_free = FALSE,
-                  ...) {
+                  n_patch_free = FALSE) {
 
 
   # define variables --------------------------------------------------------
