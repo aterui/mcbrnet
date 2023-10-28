@@ -1504,6 +1504,7 @@ sglv <- function(n_species,
   # create dummy time-series for signals
   signal <- data.frame(time = time,
                        psi = rep(0, length(time)))
+
   signal$psi[t_psi] <- 1
 
   # linear interpolation function
@@ -1521,21 +1522,23 @@ sglv <- function(n_species,
 
   # intrinsic growth --------------------------------------------------------
 
+  ## v_r: vector (patch1; sp1, sp2, ...) ... (patch n; sp1, sp2, ...)
+  ## length(v_r) = n_species x n_patch
   if (inherits(r, "matrix")) {
 
-    if (!all(dim(r) == c(n_patch, n_species)))
-      stop("Dimension mismatch in r; r must be a n_patch x n_species matrix")
+    if (!all(dim(r) == c(n_species, n_patch)))
+      stop("Dimension mismatch in r; r must be a n_species x n_patch matrix")
 
-    R <- r
+    v_r <- c(r)
 
   } else {
 
-    Rt <- fun_to_m(r,
-                   n_species = n_species,
-                   n_patch = n_patch,
-                   param_attr = "species")
+    R <- fun_to_m(r,
+                  n_species = n_species,
+                  n_patch = n_patch,
+                  param_attr = "species")
 
-    R <- t(Rt$m_x)
+    v_r <- c(R$m_x)
 
   }
 
