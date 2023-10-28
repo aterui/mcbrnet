@@ -150,22 +150,6 @@ brnet <- function(n_patch = 50,
                             n_patch_upstream = c(v_wa))
 
 
-  # visualization -----------------------------------------------------------
-
-  if (plot == TRUE) {
-
-    g <- ggbrnet(x = list(adjacency_matrix = m_adj,
-                          distance_matrix = m_distance,
-                          df_patch = df_patch),
-                 patch_color = patch_color,
-                 patch_label = patch_label,
-                 patch_size = patch_size,
-                 ...)
-
-    print(g)
-
-  }
-
   # return ------------------------------------------------------------------
 
   list_brnet <- list(adjacency_matrix = m_adj,
