@@ -1510,14 +1510,14 @@ sglv <- function(n_species,
   input <- stats::approxfun(signal, rule = 2)
 
   # n_patch x n_species disturbance intensity matrix
-  ## fun_to_m() returns n_species x n_patch matrix
-  ## transpose to n_patch x n_species
-  Et <- with(disturb, fun_to_m(int,
-                               n_species = n_species,
-                               n_patch = n_patch,
-                               param_attr = "patch"))
+  ## E: fun_to_m() returns n_species x n_patch matrix
+  ## v_e: E into vector (patch1; sp1, sp2, ...) x ... (patch n; sp1, sp2, ...)
+  E <- with(disturb, fun_to_m(int,
+                              n_species = n_species,
+                              n_patch = n_patch,
+                              param_attr = "patch"))
 
-  E <- t(Et$m_x)
+  v_e <- c(E$m_x)
 
   # intrinsic growth --------------------------------------------------------
 
