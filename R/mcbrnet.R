@@ -1570,8 +1570,8 @@ sglv <- function(n_species,
   # apply dispersal rate and mortality
   ## (phi - m) * diag(n_species): immigration, disp. mortality m
   ## -phi * diag(n_species): emigration
-  m_off <- (phi - m) * diag(n_species)
-  m_diag <- -phi * diag(n_species)
+  m_off <- with(dispersal, (phi - m) * diag(n_species))
+  m_diag <- with(dispersal, -phi * diag(n_species))
 
   ## expand to large connectivity matrix
   ## dim: (n_species + n_patch) x (n_species + n_patch)
@@ -1593,9 +1593,8 @@ sglv <- function(n_species,
   deriv <- function(t, n, parms) {
     with(parms, {
       psi <- input(t)
-      N <- matrix(n, nrow = n_patch, ncol = n_species)
-      dN <- N * (R - psi * E + N %*% A) + C %*% N
-      list(dN)
+      dn <- n * (r - psi * e + t(A) %*% n) + C %*% n
+      list(dn)
     })
   }
 
@@ -1613,11 +1612,9 @@ sglv <- function(n_species,
 
   # parameter list
   parms <- with(dispersal,
-                list(n_species = n_species,
-                     n_patch = n_patch,
-                     R = R,
-                     E = E,
-                     A = alpha,
+                list(r = v_r,
+                     e = v_e,
+                     A = A,
                      C = C))
 
   # initial values for a state variable
