@@ -1542,6 +1542,13 @@ sglv <- function(n_species,
 
   }
 
+
+  # interaction -------------------------------------------------------------
+
+  ## large interaction matrix
+  ## dim: (n_species + n_patch) x (n_species + n_patch)
+  A <- kronecker(diag(n_patch), alpha)
+
   # dispersal ---------------------------------------------------------------
 
   # pick id of non-zero columns
@@ -1561,10 +1568,16 @@ sglv <- function(n_species,
   }
 
   # apply dispersal rate and mortality
-  ## C <- (phi - m) * C0: immigration, accounting for disp. mortality by m
-  ## diag(C) <- -phi: emigration
-  C <- with(dispersal, (phi - m) * C1)
-  diag(C) <- with(dispersal, -phi)
+  ## (phi - m) * diag(n_species): immigration, disp. mortality m
+  ## -phi * diag(n_species): emigration
+  m_off <- (phi - m) * diag(n_species)
+  m_diag <- -phi * diag(n_species)
+
+  ## expand to large connectivity matrix
+  ## dim: (n_species + n_patch) x (n_species + n_patch)
+  C_off <- kronecker(C1, m_off)
+  C_diag <- kronecker(diag(n_patch), m_diag)
+  C <- C_diag + C_off
 
   # ode ---------------------------------------------------------------------
 
