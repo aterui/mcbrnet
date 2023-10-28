@@ -6,8 +6,7 @@ y <- runif(1, 0.2, 0.8)
 
 net <- brnet(n_patch = x,
              p_branch = y,
-             randomize_patch = FALSE,
-             plot = FALSE)
+             randomize_patch = FALSE)
 
 m_adj <- net$adjacency_matrix
 branch <- dplyr::n_distinct(net$df_patch$branch_id)

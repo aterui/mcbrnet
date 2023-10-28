@@ -13,8 +13,7 @@ m_n_hat <- matrix(rpois(n = n_species * n_patch,
 v_p_dispersal <- runif(n_species, 0, 1)
 
 net <- brnet(n_patch = n_patch,
-             p_branch = 0.5,
-             plot = FALSE)
+             p_branch = 0.5)
 
 m_dispersal <- exp(-alpha * net$distance_matrix)
 diag(m_dispersal) <- 0
