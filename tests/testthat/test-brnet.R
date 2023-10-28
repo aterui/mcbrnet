@@ -12,8 +12,7 @@ net1 <- brnet(n_patch = n_patch,
               sd_disturb_lon = 0,
               mean_env_source = mu_env,
               mean_disturb_source = mu_disturb,
-              sd_disturb_source = .1,
-              plot = FALSE)
+              sd_disturb_source = .1)
 
 net2 <- brnet(n_patch = n_patch,
               p_branch = 0.5,
@@ -22,15 +21,13 @@ net2 <- brnet(n_patch = n_patch,
               sd_disturb_lon = 0,
               mean_env_source = mu_env,
               mean_disturb_source = mu_disturb,
-              sd_disturb_source = 0,
-              plot = FALSE)
+              sd_disturb_source = 0)
 
 linear <- brnet(n_patch = n_patch,
                 p_branch = 0,
                 mean_disturb_source = mu_disturb,
                 sd_disturb_lon = 0,
-                sd_disturb_source = 0.1,
-                plot = FALSE)
+                sd_disturb_source = 0.1)
 
 # test --------------------------------------------------------------------
 
