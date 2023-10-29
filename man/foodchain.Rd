@@ -9,8 +9,8 @@ foodchain(
   n_species,
   n_patch,
   alpha,
-  start = max(n[, 1]) - 99,
-  end = max(n[, 1]),
+  start = ceiling(max(n[, 1]) - max(n[, 1]) * 0.5) + 1,
+  end = floor(max(n[, 1])),
   full = FALSE
 )
 }
@@ -23,9 +23,9 @@ foodchain(
 
 \item{alpha}{Numeric. Interaction matrix}
 
-\item{start}{Integer. Initial time step to be included in the calculation}
+\item{start}{Integer. Initial time step to be included in the calculation. \code{floor} applied internally}
 
-\item{end}{Integer. Last time step to be included in the calculation}
+\item{end}{Integer. Last time step to be included in the calculation. \code{floor} applied internally}
 
 \item{full}{Logical. If \code{TRUE}, a full spatiotemporal matrix of food chain length returned as attributes.}
 }

@@ -2067,8 +2067,8 @@ max_tp <- function(n_species, n, alpha) {
 #' @param n_species Integer. Number of species
 #' @param n_patch Integer. Number of habitat patches
 #' @param alpha Numeric. Interaction matrix
-#' @param start Integer. Initial time step to be included in the calculation
-#' @param end Integer. Last time step to be included in the calculation
+#' @param start Integer. Initial time step to be included in the calculation. \code{floor} applied internally
+#' @param end Integer. Last time step to be included in the calculation. \code{floor} applied internally
 #' @param full Logical. If \code{TRUE}, a full spatiotemporal matrix of food chain length returned as attributes.
 #'
 #' @author Akira Terui, \email{hanabi0111@gmail.com}
@@ -2079,8 +2079,8 @@ foodchain <- function(n,
                       n_species,
                       n_patch,
                       alpha,
-                      start = max(n[, 1]) - 99,
-                      end = max(n[, 1]),
+                      start = ceiling(max(n[, 1]) - max(n[, 1]) * 0.5) + 1,
+                      end = floor(max(n[, 1])),
                       full = FALSE) {
 
   # verify input ------------------------------------------------------------
@@ -2098,7 +2098,7 @@ foodchain <- function(n,
                n_species))
 
   # subset data -------------------------------------------------------------
-  times <- seq(start, end, by = 1)
+  times <- seq(floor(start), floor(end), by = 1)
   index_t <- which(n[, "time"] %in% times)
   x <- n[index_t, -which(colnames(n) == "time")]
 
@@ -2107,10 +2107,11 @@ foodchain <- function(n,
   v_t <- rep(times, times = n_species * n_patch)
 
   ## species vector
-  v_sp <- rep(seq_len(n_species), each = length(times) * n_patch)
+  v_sp <- rep(rep(seq_len(n_species), each = length(times)),
+              times = n_patch)
 
   ## patch vector
-  v_patch <- rep(rep(seq_len(n_patch), each = length(times)), times = n_species)
+  v_patch <- rep(seq_len(n_patch), each = length(times) * n_species)
 
   ## combine: g specifies a unique combination of time and patch
   y <- data.table::data.table(t = v_t,
@@ -2124,13 +2125,12 @@ foodchain <- function(n,
 
   # food chain length -------------------------------------------------------
   ## vector - time (t) and patch-specific (j) food chains
-  v_fcl <- with(y, tapply(y, INDEX = g,
-                          FUN = function(d) {
-                            with(d, max_tp(n_species = n_species,
-                                           n = n,
-                                           alpha = alpha)
-                            )
-                          }))
+  v_fcl <- tapply(y, INDEX = y$g,
+                  FUN = function(d) {
+                    max_tp(n_species = n_species,
+                           n = d$n,
+                           alpha = alpha)
+                  })
 
   ## matrix - time (t) and patch-specific (j) food chains
   ## row: time, col: patch
