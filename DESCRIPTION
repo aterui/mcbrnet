@@ -19,7 +19,8 @@ Imports:
     ggraph,
     MetBrewer,
     deSolve,
-    data.table
+    data.table,
+    Rcpp
 Roxygen: list(markdown = TRUE)
 Suggests: 
     testthat (>= 3.0.0),
@@ -29,3 +30,6 @@ Suggests:
 Config/testthat/edition: 3
 VignetteBuilder: knitr
 URL: https://github.com/aterui/mcbrnet
+LinkingTo: 
+    Rcpp,
+    RcppArmadillo

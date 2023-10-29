@@ -27,7 +27,7 @@ SEXP deriv(double t, arma::vec n, Rcpp::List parms) {
 
   // input: approximation function
   // read from R Global Env
-  Rcpp::Environment e0 = Rcpp::Environment::global_env();
+  Rcpp::Environment e0 = Rcpp::Environment::env("package:mcbrnet");
   Rcpp::Function input = e0["input"];
 
   // output

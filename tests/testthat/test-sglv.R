@@ -10,10 +10,10 @@ A <- ppm(s, b, l, theta)
 alpha <- to_alpha(A)
 
 R <- findr(alpha, k0 = 10, lambda0 = 0.01)
-r <- t(fun_to_m(R[, 1],
-                n_species = s,
-                n_patch = patch,
-                param_attr = "species")$m_x)
+r <- fun_to_m(R[, 1],
+              n_species = s,
+              n_patch = patch,
+              param_attr = "species")$m_x
 x <- t(fun_to_m(R[, 2],
                 n_species = s,
                 n_patch = patch,
@@ -27,7 +27,8 @@ cout <- sglv(n_species = s,
              disturb = list(int = 0,
                             rate = 1,
                             s = 1),
-             threshold = 0)
+             threshold = 0,
+             cpp = FALSE)
 
 x_prime <- round(c(x), 3)
 x0 <- round(cout[nrow(cout), -1], 3)
