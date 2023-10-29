@@ -20,6 +20,7 @@ Imports:
     MetBrewer,
     deSolve,
     data.table,
+    MCMCpack,
     Rcpp
 Roxygen: list(markdown = TRUE)
 Suggests: 

@@ -1442,7 +1442,7 @@ sglv <- function(n_species,
                                 s = interval * 10),
                  n0 = list(min = 0,
                            max = 1),
-                 threshold = 1E-4,
+                 threshold = 0,
                  cpp = TRUE,
                  ...) {
 
@@ -1493,21 +1493,23 @@ sglv <- function(n_species,
 
   # disturbance setup -------------------------------------------------------
 
+  # pseudo time steps
+  time <- seq(0, n_timestep, by = disturb$s)
+
+  # create dummy time-series for signals
+  signal <- data.frame(time = time,
+                       psi = rep(0, length(time)))
+
   # n possible disturbance points
   # + 100 to ensure cumsum(x) > n_timestep
   # remove points > n_timestep
   psi <- with(disturb, cumsum(rexp(n = ceiling((1 / rate) + 100), rate)))
   psi <- psi[psi <= n_timestep]
 
-  # pseudo time steps
-  time <- seq(0, n_timestep, by = disturb$s)
-  t_psi <- sapply(psi, FUN = function(x) which.min(abs(time - x)))
-
-  # create dummy time-series for signals
-  signal <- data.frame(time = time,
-                       psi = rep(0, length(time)))
-
-  signal$psi[t_psi] <- 1
+  if (length(psi) > 0) {
+    t_psi <- sapply(psi, FUN = function(x) which.min(abs(time - x)))
+    signal$psi[t_psi] <- 1
+  }
 
   # linear interpolation function
   input <- stats::approxfun(signal, rule = 2)
@@ -1645,9 +1647,11 @@ sglv <- function(n_species,
 #'
 #' @param alpha Numeric. n_species x n_species interaction matrix
 #' @param k0 Numeric. Total carrying capacity for basal species combined
+#' @param theta Numeric. Shape parameter for a Dirichlet distribution that determines relative equilibrium densities of basal species
 #' @param lambda0 Numeric. Initial lambda value for the exponential decay of equilibrium densities with trophic position
 #' @param interval Numeric. Increment of lambda value.
 #' @param sigma Numeric. Degree of noise added to equilibrium densities
+#' @param maxit Integer. Maximum number of iterations to find a suitable lambda
 #'
 #' @author Akira Terui, \email{hanabi0111@gmail.com}
 #'
@@ -1655,9 +1659,11 @@ sglv <- function(n_species,
 
 findr <- function(alpha,
                   k0,
+                  theta = 1,
                   lambda0 = 1E-3,
                   interval = 0.01,
-                  sigma = 0.01) {
+                  sigma = 0.01,
+                  maxit = 1000) {
 
   # half interaction matrix
   alpha0 <- alpha
@@ -1669,9 +1675,17 @@ findr <- function(alpha,
   n_basal <- length(id_basal)
   n_c <- ncol(alpha) - n_basal
 
-  # trophic position
-  v_k <- runif(length(id_basal))
+  # basal equilibrium
+  if (length(theta) != 1 && length(theta) != n_basal)
+    stop("'theta' must be a scalar or have length of the number of basal species")
+
+  if (theta <= 0)
+    stop("'theta' must be positive")
+
+  v_k <- MCMCpack::rdirichlet(1, alpha = rep(theta, n_basal))
   f_k <- k0 * (v_k / sum(v_k))
+
+  # trophic position
   tp <- attr(alpha, "tp")
 
   ## k0 varies by basal species
@@ -1689,17 +1703,22 @@ findr <- function(alpha,
   r <- drop(- x %*% alpha)
 
   # loop until all consumer's r < 0
-  while(any(r[-id_basal] >= 0)) {
+  for (i in seq_len(maxit)) {
     lambda <- lambda + interval
     x <- w_k0 * exp(-lambda * (tp - 1))
     x[-id_basal] <- x[-id_basal] * eps
     r <- drop(- x %*% alpha)
+    if (all(r[-id_basal] < 0)) break
   }
+
+  if (any(r[-id_basal] >= 0))
+    message("one or more consumer's r remain positive; increase 'maxit'?")
 
   cout <- cbind(r, x, tp)
   rownames(cout) <- 1:ncol(alpha)
   colnames(cout) <- c("r", "equilibrium", "tp")
   attr(cout, "lambda") <- lambda
+  attr(cout, "iteration") <- i
 
   return(cout)
 }

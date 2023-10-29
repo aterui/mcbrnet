@@ -14,7 +14,7 @@ sglv(
   dispersal = list(adj = matrix(0, nrow = n_patch, ncol = n_patch), phi = 0, m = 0),
   disturb = list(int = 1, rate = (1/n_timestep) * 10, s = interval * 10),
   n0 = list(min = 0, max = 1),
-  threshold = 1e-04,
+  threshold = 0,
   cpp = TRUE,
   ...
 )
