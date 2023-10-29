@@ -1605,17 +1605,16 @@ sglv <- function(n_species,
   }
 
   ## extinction: triggered when "n - threshold = 0"
-  eventfun <- function(t, n, pars) {
+  eventfun <- function(t, n, parms) {
     n <- ifelse(n <= threshold, 0, n)
     return(n)
   }
 
   # parameter list
-  parms <- with(dispersal,
-                list(r = v_r,
-                     e = v_e,
-                     A = A,
-                     C = C))
+  parms <- list(r = v_r,
+                e = v_e,
+                A = A,
+                C = C)
 
   # initial values for a state variable
   n_init <- with(n0, stats::runif(n_species * n_patch,
