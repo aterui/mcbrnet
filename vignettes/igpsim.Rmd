@@ -84,8 +84,7 @@ igp
 patch <- 100
 
 net <- brnet(n_patch = patch,
-             p_branch = 0.5,
-             plot = F)
+             p_branch = 0.5)
 
 igp <- with(net,
             igpsim(n_patch = patch, 

@@ -86,8 +86,7 @@ mc
 ```{r, results='hide', message = F, fig.width=11}
 patch <- 100
 net <- brnet(n_patch = patch,
-             p_branch = 0.5,
-             plot = F)
+             p_branch = 0.5)
 
 mc <- with(net,
            mcsim(n_patch = patch,
