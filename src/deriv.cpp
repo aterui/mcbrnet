@@ -20,15 +20,12 @@ SEXP deriv(double t, arma::vec n, Rcpp::List parms) {
   // C: [matrix] (ns x np) x (ns x np) connectivity matrix
   // e: [vector] ns x np vector for disturbance intensity
   // psi: [scalar] disturbance incidence
+  // input: [function] approximation function
   arma::vec r = parms["r"];
   arma::vec e = parms["e"];
   arma::mat A = parms["A"];
   arma::mat C = parms["C"];
-
-  // input: approximation function
-  // read from R Global Env
-  Rcpp::Environment e0 = Rcpp::Environment::global_env();
-  Rcpp::Function input = e0["input"];
+  Rcpp::Function input = parms["input"];
 
   // output
   arma::vec dn(n.size());

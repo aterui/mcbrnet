@@ -1618,6 +1618,9 @@ sglv <- function(n_species,
                 A = A,
                 C = C)
 
+  if (cpp)
+    parms$input <- input
+
   # initial values for a state variable
   n_init <- with(n0, stats::runif(n_species * n_patch,
                                   min = min,
