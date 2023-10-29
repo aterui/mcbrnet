@@ -1,22 +1,23 @@
 
-# setup -------------------------------------------------------------------
+test_that("ptsource", {
 
-n_patch <- round(runif(1, min = 5, max = 50))
-p_branch <- 0
-n_source <- round(runif(1, min = 1, max = n_patch))
+  # setup -------------------------------------------------------------------
 
-x <- brnet(n_patch = n_patch,
-           p_branch = p_branch)
+  n_patch <- round(runif(1, min = 5, max = 50))
+  p_branch <- 0
+  n_source <- round(runif(1, min = 1, max = n_patch))
 
-y <- ptsource(x,
-              n_source = n_source,
-              p = 1,
-              q = 0)
+  x <- brnet(n_patch = n_patch,
+             p_branch = p_branch)
 
-y <- y$df_patch
+  y <- ptsource(x,
+                n_source = n_source,
+                p = 1,
+                q = 0)
 
-# test --------------------------------------------------------------------
+  y <- y$df_patch
 
-test_that("accumulation", {
+  # test --------------------------------------------------------------------
+
   expect_equal(max(dplyr::pull(y, impact)), n_source)
 })

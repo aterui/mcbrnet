@@ -1,58 +1,52 @@
 
-# setup -------------------------------------------------------------------
+test_that("fun_disp_mat", {
 
-# matrix
-n_patch <- round(runif(1, 5, 15))
-m_distance <- dist(cbind(runif(n_patch, 0, 10),
-                         runif(n_patch, 0, 10)),
-                   diag = TRUE,
-                   upper = TRUE)
-m_distance <- data.matrix(m_distance)
+  # setup -------------------------------------------------------------------
 
-m_dispersal <- exp(-m_distance)
-diag(m_dispersal) <- 0
+  # matrix
+  n_patch <- round(runif(1, 5, 15))
+  m_distance <- dist(cbind(runif(n_patch, 0, 10),
+                           runif(n_patch, 0, 10)),
+                     diag = TRUE,
+                     upper = TRUE)
+  m_distance <- data.matrix(m_distance)
 
-# sample
-m1 <- fun_disp_mat(n_patch = n_patch,
-                   theta = 1,
-                   landscape_size = 10)
+  m_dispersal <- exp(-m_distance)
+  diag(m_dispersal) <- 0
 
-m2 <- fun_disp_mat(n_patch = n_patch,
-                   theta = 1,
-                   distance_matrix = m_distance)
+  # sample
+  m1 <- fun_disp_mat(n_patch = n_patch,
+                     theta = 1,
+                     landscape_size = 10)
 
-m3 <- fun_disp_mat(n_patch = n_patch,
-                   theta = 1,
-                   distance_matrix = m_distance,
-                   dispersal_matrix = m_dispersal)
+  m2 <- fun_disp_mat(n_patch = n_patch,
+                     theta = 1,
+                     distance_matrix = m_distance)
 
+  m3 <- fun_disp_mat(n_patch = n_patch,
+                     theta = 1,
+                     distance_matrix = m_distance,
+                     dispersal_matrix = m_dispersal)
 
-# test --------------------------------------------------------------------
+  # test --------------------------------------------------------------------
 
-test_that("check ifelse structure", {
-
+  # fun_disp_mat: ifelse structure
   expect_error(fun_disp_mat(n_patch = n_patch,
                             theta = 1))
 
-})
-
-test_that("distance/dispersal matrix", {
-
-  # only distance matrix provided
+  # fun_disp_mat: distance/dispersal matrix
+  ## only distance matrix provided
   expect_true(is.matrix(m2$m_distance))
 
-  # distance & dispersal matrices provided
+  ## distance & dispersal matrices provided
   expect_true(is.null(m3$m_distance))
   expect_true(is.matrix(m3$m_dispersal))
 
-  # m1 & m2 outputs equivalency
+  ## m1 & m2 outputs equivalency
   expect_equal(m2$m_distance, m_distance)
   expect_equal(m3$m_dispersal, m_dispersal)
 
-})
-
-test_that("df_xy_coord", {
-
+  ## fun_disp_mat: df_xy_coord
   expect_true(is.null(m2$df_xy_coord))
   expect_true(is.null(m3$df_xy_coord))
 
