@@ -3,7 +3,7 @@
 #' @keywords internal
 "_PACKAGE"
 
-.onUnload = function(libpath) {
+.onUnload <- function(libpath) {
   library.dynam.unload("mcbrnet", libpath)
 }
 

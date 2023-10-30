@@ -1715,7 +1715,7 @@ findr <- function(alpha,
     message("one or more consumer's r remain positive; increase 'maxit'?")
 
   cout <- cbind(r, x, tp)
-  rownames(cout) <- 1:ncol(alpha)
+  rownames(cout) <- seq_len(ncol(alpha))
   colnames(cout) <- c("r", "equilibrium", "tp")
   attr(cout, "lambda") <- lambda
   attr(cout, "iteration") <- i

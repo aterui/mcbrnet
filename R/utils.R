@@ -286,7 +286,6 @@ fun_igp <- function(x,
   ## attack rate x handling time
   h_bc <- a[1] * h[1]
   h_bp <- a[2] * h[2]
-  h_cp <- a[3] * h[3]
 
 
   # trophic dynamics: B to C ------------------------------------------------

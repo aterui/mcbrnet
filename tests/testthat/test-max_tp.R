@@ -35,5 +35,3 @@ test_that("max_tp", {
   expect_gte(max_tp(s, n = n, alpha = alpha),
              max_tp(s, n = n2, alpha = alpha))
 })
-
-
