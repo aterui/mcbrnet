@@ -190,33 +190,33 @@ by <code>plot = TRUE</code>, which will show five sample patches:</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 15,000 × 7</span></span></span>
 <span><span class="co">#&gt;    timestep patch_id carrying_capacity disturbance species     abundance   fcl</span></span>
 <span><span class="co">#&gt;       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span>        1        1               100           0 basal              58     2</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span>        1        1               100           0 basal              57     2</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span>        1        1               100           0 ig-prey             0     2</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span>        1        1               100           0 ig-predator        30     2</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span>        1        2               100           0 basal              54     2</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span>        1        1               100           0 ig-predator        29     2</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span>        1        2               100           0 basal              43     2</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span>        1        2               100           0 ig-prey             0     2</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span>        1        2               100           0 ig-predator        47     2</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span>        1        3               100           0 basal              75     2</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span>        1        2               100           0 ig-predator        38     2</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span>        1        3               100           0 basal              48     2</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span>        1        3               100           0 ig-prey             0     2</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>        1        3               100           0 ig-predator        10     2</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span>        1        4               100           0 basal              50     2</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>        1        3               100           0 ig-predator        33     2</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span>        1        4               100           0 basal              63     2</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 14,990 more rows</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $df_species</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 3</span></span></span>
 <span><span class="co">#&gt;   species     mean_abundance p_dispersal</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> basal                 62.4         0.1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> basal                 64.1         0.1</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> ig-prey                0           0.1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ig-predator           28.3         0.1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ig-predator           26.9         0.1</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $df_patch</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 4</span></span></span>
 <span><span class="co">#&gt;   patch_id   fcl carrying_capacity disturbance</span></span>
 <span><span class="co">#&gt;      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>        1  2                  100           0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>        1  1.84               100           0</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>        2  2                  100           0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>        3  1.97               100           0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>        3  2                  100           0</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span>        4  2                  100           0</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span>        5  2                  100           0</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -232,19 +232,19 @@ by <code>plot = TRUE</code>, which will show five sample patches:</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 2</span></span></span>
 <span><span class="co">#&gt;   x_coord y_coord</span></span>
 <span><span class="co">#&gt;     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>    6.29   0.161</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>    7.45   2.59 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>    2.37   4.69 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span>    9.82   5.15 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span>    8.82   7.74 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>    2.51    1.25</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>    7.38    2.23</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>    9.22    4.75</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span>    8.56    3.63</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span>    7.06    3.12</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $distance_matrix</span></span>
-<span><span class="co">#&gt;          1        2        3        4        5</span></span>
-<span><span class="co">#&gt; 1 0.000000 2.690923 5.991744 6.114943 7.992252</span></span>
-<span><span class="co">#&gt; 2 2.690923 0.000000 5.503657 3.491647 5.333130</span></span>
-<span><span class="co">#&gt; 3 5.991744 5.503657 0.000000 7.469520 7.135336</span></span>
-<span><span class="co">#&gt; 4 6.114943 3.491647 7.469520 0.000000 2.779554</span></span>
-<span><span class="co">#&gt; 5 7.992252 5.333130 7.135336 2.779554 0.000000</span></span></code></pre></div>
+<span><span class="co">#&gt;          1         2        3        4         5</span></span>
+<span><span class="co">#&gt; 1 0.000000 4.9672512 7.568481 6.494685 4.9159418</span></span>
+<span><span class="co">#&gt; 2 4.967251 0.0000000 3.123706 1.830336 0.9523655</span></span>
+<span><span class="co">#&gt; 3 7.568481 3.1237057 0.000000 1.302595 2.7090447</span></span>
+<span><span class="co">#&gt; 4 6.494685 1.8303361 1.302595 0.000000 1.5810027</span></span>
+<span><span class="co">#&gt; 5 4.915942 0.9523655 2.709045 1.581003 0.0000000</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="custom-brnet-igpsim">Custom: <code>brnet()</code> + <code>igpsim()</code><a class="anchor" aria-label="anchor" href="#custom-brnet-igpsim"></a>
@@ -259,8 +259,7 @@ function:</p>
 <code class="sourceCode R"><span><span class="va">patch</span> <span class="op">&lt;-</span> <span class="fl">100</span></span>
 <span></span>
 <span><span class="va">net</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/brnet.html">brnet</a></span><span class="op">(</span>n_patch <span class="op">=</span> <span class="va">patch</span>,</span>
-<span>             p_branch <span class="op">=</span> <span class="fl">0.5</span>,</span>
-<span>             plot <span class="op">=</span> <span class="cn">F</span><span class="op">)</span></span>
+<span>             p_branch <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">igp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="va">net</span>,</span>
 <span>            <span class="fu"><a href="../reference/igpsim.html">igpsim</a></span><span class="op">(</span>n_patch <span class="op">=</span> <span class="va">patch</span>, </span>

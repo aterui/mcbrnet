@@ -50,7 +50,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Spatial generalized Lotka-Volterra model</h1>
-      <small class="dont-index">Source: <a href="https://github.com/aterui/mcbrnet/blob/HEAD/R/sglv.R" class="external-link"><code>R/sglv.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/aterui/mcbrnet/blob/HEAD/R/mcbrnet.R" class="external-link"><code>R/mcbrnet.R</code></a></small>
       <div class="d-none name"><code>sglv.Rd</code></div>
     </div>
 
@@ -70,7 +70,8 @@
 <span>  dispersal <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>adj <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fl">0</span>, nrow <span class="op">=</span> <span class="va">n_patch</span>, ncol <span class="op">=</span> <span class="va">n_patch</span><span class="op">)</span>, phi <span class="op">=</span> <span class="fl">0</span>, m <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>,</span>
 <span>  disturb <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>int <span class="op">=</span> <span class="fl">1</span>, rate <span class="op">=</span> <span class="op">(</span><span class="fl">1</span><span class="op">/</span><span class="va">n_timestep</span><span class="op">)</span> <span class="op">*</span> <span class="fl">10</span>, s <span class="op">=</span> <span class="va">interval</span> <span class="op">*</span> <span class="fl">10</span><span class="op">)</span>,</span>
 <span>  n0 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>min <span class="op">=</span> <span class="fl">0</span>, max <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
-<span>  threshold <span class="op">=</span> <span class="fl">1e-04</span>,</span>
+<span>  threshold <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  cpp <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -115,6 +116,10 @@
 
 <dt>threshold</dt>
 <dd><p>Numeric. Extinction threshold. Species will be removed from a simulation if species density goes below this value</p></dd>
+
+
+<dt>cpp</dt>
+<dd><p>Logical. If <code>TRUE</code>, Rcpp function is used for the numerical solver</p></dd>
 
 
 <dt>...</dt>

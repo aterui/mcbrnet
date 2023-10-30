@@ -50,7 +50,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Find suitable intrinsic growth rates</h1>
-      <small class="dont-index">Source: <a href="https://github.com/aterui/mcbrnet/blob/HEAD/R/sglv.R" class="external-link"><code>R/sglv.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/aterui/mcbrnet/blob/HEAD/R/mcbrnet.R" class="external-link"><code>R/mcbrnet.R</code></a></small>
       <div class="d-none name"><code>findr.Rd</code></div>
     </div>
 
@@ -60,7 +60,15 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">findr</span><span class="op">(</span><span class="va">alpha</span>, <span class="va">k0</span>, lambda0 <span class="op">=</span> <span class="fl">0.001</span>, interval <span class="op">=</span> <span class="fl">0.01</span>, sigma <span class="op">=</span> <span class="fl">0.01</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">findr</span><span class="op">(</span></span>
+<span>  <span class="va">alpha</span>,</span>
+<span>  <span class="va">k0</span>,</span>
+<span>  theta <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  lambda0 <span class="op">=</span> <span class="fl">0.001</span>,</span>
+<span>  interval <span class="op">=</span> <span class="fl">0.01</span>,</span>
+<span>  sigma <span class="op">=</span> <span class="fl">0.01</span>,</span>
+<span>  maxit <span class="op">=</span> <span class="fl">1000</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -73,6 +81,10 @@
 <dd><p>Numeric. Total carrying capacity for basal species combined</p></dd>
 
 
+<dt>theta</dt>
+<dd><p>Numeric. Shape parameter for a Dirichlet distribution that determines relative equilibrium densities of basal species</p></dd>
+
+
 <dt>lambda0</dt>
 <dd><p>Numeric. Initial lambda value for the exponential decay of equilibrium densities with trophic position</p></dd>
 
@@ -83,6 +95,10 @@
 
 <dt>sigma</dt>
 <dd><p>Numeric. Degree of noise added to equilibrium densities</p></dd>
+
+
+<dt>maxit</dt>
+<dd><p>Integer. Maximum number of iterations to find a suitable lambda</p></dd>
 
 </dl></div>
     <div class="section level2">
