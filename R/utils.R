@@ -616,7 +616,7 @@ fun_to_m <- function(x,
 
     if (length(x) == 1) {
 
-      message("single value is given for an species or patch attribute: assume identical across species or patches")
+      message("single value is given for species or patch attributes: assume identical across species or patches")
 
       v_x <- rep(x = x, times = n_patch)
       m_x <- matrix(x,
@@ -642,7 +642,7 @@ fun_to_m <- function(x,
 
     if (length(x) == 1) {
 
-      message("single value is given for an species or patch attribute: assume identical across species or patches")
+      message("single value is given for species or patch attributes: assume identical across species or patches")
 
       v_x <- rep(x = x, times = n_species)
       m_x <- matrix(x,
@@ -685,7 +685,7 @@ fun_to_v <- function(x, n) {
 
   if (length(x) == 1) {
 
-    message("single value is given for an species or patch attribute: assume identical across species or patches")
+    message("single value is given for species or patch attributes: assume identical across species or patches")
     v_k <- rep(x = x,
                times = n)
 
