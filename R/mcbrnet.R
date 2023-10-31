@@ -1475,10 +1475,10 @@ sglv <- function(n_species,
     stop("Elements in the dispersal list must be 'int', 'rate', and 's'")
 
   with(disturb, {
-    if (length(int) != 1 && length(int) != n_patch)
+    if (length(int) > 1 && length(int) != n_patch)
       stop("disturbance intensity (int) must have length one or n_patch")
 
-    if (int < 0 || rate < 0 || s < 0)
+    if (any(int < 0) || rate < 0 || s < 0)
       stop("'int,' 'rate,' and 's' must be >= 0")
   })
 
