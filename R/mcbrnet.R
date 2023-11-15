@@ -1910,6 +1910,7 @@ extra_prey <- function(alpha0,
 #' Apply conversion efficiency and attack rate
 #'
 #' @inheritParams extra_prey
+#' @param competition List for competition coefficients between producers. Specify minimum and maximum values for a uniform distribution.
 #' @param attack List for attack rates. Specify minimum and maximum values for a uniform distribution.
 #' @param convert List for conversion efficiency. Specify minimum and maximum values for a uniform distribution.
 #' @param mortal List for mortality (or intraspecific competition). Specify minimum and maximum values for a uniform distribution.
@@ -1919,6 +1920,8 @@ extra_prey <- function(alpha0,
 #' @export
 
 to_alpha <- function(alpha0,
+                     competition = list(min = 0,
+                                        max = 1),
                      attack = list(min = 0,
                                    max = 1),
                      convert = list(min = 0,
@@ -1935,25 +1938,40 @@ to_alpha <- function(alpha0,
 
   # generate random parameters
   ## matrix for attack rates
-  a <- with(attack, matrix(stats::runif(ncol(alpha0)^2, min = min, max = max),
-                           nrow = nrow(alpha0),
-                           ncol = ncol(alpha0)))
+  a <- with(attack,
+            matrix(stats::runif(ncol(alpha0)^2,
+                                min = min,
+                                max = max),
+                   nrow = nrow(alpha0),
+                   ncol = ncol(alpha0)))
 
   ## matrix for conversion efficiency
-  b <- with(convert, matrix(stats::runif(ncol(alpha0)^2, min = min, max = max),
-                            nrow = nrow(alpha0),
-                            ncol = ncol(alpha0)))
+  b <- with(convert,
+            matrix(stats::runif(ncol(alpha0)^2,
+                                min = min,
+                                max = max),
+                   nrow = nrow(alpha0),
+                   ncol = ncol(alpha0)))
 
   ## vector for intraspecific competition
-  m <- with(mortal, stats::runif(ncol(alpha0), min = min, max = max))
+  m <- with(mortal,
+            stats::runif(ncol(alpha0),
+                         min = min,
+                         max = max))
 
   # interaction matrix
-  # diag(alpha) represent net effects of cannibalism
+  ## diag(alpha) represent net effects of cannibalism
   u_alpha0[, -basal] <- a[, -basal] * su_alpha0
   alpha <- b * u_alpha0 - t(u_alpha0)
 
-  # intraspecific interaction
-  # added to net effects of cannibalism as "diag(alpha) - m"
+  ## competition between producers
+  alpha[basal, basal] <- with(competition,
+                              -stats::runif(n = length(basal)^2,
+                                            min = min,
+                                            max = max))
+
+  ## intraspecific interaction
+  ## added to net effects of cannibalism as "diag(alpha) - m"
   diag(alpha) <- diag(alpha) - m
 
   return(alpha)

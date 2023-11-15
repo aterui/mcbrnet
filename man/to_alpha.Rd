@@ -6,6 +6,7 @@
 \usage{
 to_alpha(
   alpha0,
+  competition = list(min = 0, max = 1),
   attack = list(min = 0, max = 1),
   convert = list(min = 0, max = 1),
   mortal = list(min = 0, max = 1)
@@ -13,6 +14,8 @@ to_alpha(
 }
 \arguments{
 \item{alpha0}{Interaction matrix}
+
+\item{competition}{List for competition coefficients between producers. Specify minimum and maximum values for a uniform distribution.}
 
 \item{attack}{List for attack rates. Specify minimum and maximum values for a uniform distribution.}
 
