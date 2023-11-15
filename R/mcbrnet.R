@@ -1668,10 +1668,10 @@ findr <- function(alpha,
   # half interaction matrix
   alpha0 <- alpha
   alpha0[lower.tri(alpha0, diag = TRUE)] <- 0
-  alpha0[alpha0 != 0] <- 1
+  alpha0[alpha0 > 0] <- 1
 
   # basal species id
-  id_basal <- which(colSums(alpha0) == 0)
+  id_basal <- which(colSums(alpha0) <= 0)
   n_basal <- length(id_basal)
   n_c <- ncol(alpha) - n_basal
 
@@ -1682,8 +1682,8 @@ findr <- function(alpha,
   if (theta <= 0)
     stop("'theta' must be positive")
 
-  v_k <- MCMCpack::rdirichlet(1, alpha = rep(theta, n_basal))
-  f_k <- k0 * (v_k / sum(v_k))
+  p_k <- MCMCpack::rdirichlet(1, alpha = rep(theta, n_basal))
+  f_k <- k0 * p_k
 
   # trophic position
   tp <- attr(alpha, "tp")
@@ -2029,7 +2029,7 @@ max_tp <- function(n_species, n, alpha) {
   # initialize trophic positions for basal species
   tp <- rep(-1, n_species)
 
-  id_basal <- which(colSums(alpha) == 0)
+  id_basal <- which(colSums(alpha) <= 0)
   n_basal <- length(id_basal)
   tp[id_basal] <- 1
 
