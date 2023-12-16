@@ -10,6 +10,7 @@ foodweb(
   l,
   theta,
   cannibal = FALSE,
+  competition = list(min = 0, max = 0),
   attack = list(min = 0, max = 1),
   convert = list(min = 0, max = 1),
   mortal = list(min = 0, max = 1)
@@ -25,6 +26,8 @@ foodweb(
 \item{theta}{Numeric. Scale parameter of an exponential distribution. Smaller values indicate greater trophic specialization.}
 
 \item{cannibal}{Logical. If \code{TRUE}, cannibalism allowed}
+
+\item{competition}{List for competition coefficients between producers. Specify minimum and maximum values for a uniform distribution.}
 
 \item{attack}{List for attack rates. Specify minimum and maximum values for a uniform distribution.}
 

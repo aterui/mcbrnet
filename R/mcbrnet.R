@@ -1991,6 +1991,8 @@ foodweb <- function(n_species,
                     l,
                     theta,
                     cannibal = FALSE,
+                    competition = list(min = 0,
+                                       max = 0),
                     attack = list(min = 0,
                                   max = 1),
                     convert = list(min = 0,
@@ -2005,6 +2007,7 @@ foodweb <- function(n_species,
                 cannibal = cannibal)
 
   alpha <- to_alpha(alpha0 = alpha0,
+                    competition = competition,
                     attack = attack,
                     convert = convert,
                     mortal = mortal)
