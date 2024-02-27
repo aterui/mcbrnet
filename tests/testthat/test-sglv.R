@@ -38,7 +38,7 @@ test_that("sglv", {
   set.seed(123)
   cout1 <- sglv(n_species = s,
                 n_patch = patch,
-                n_timestep = 100,
+                n_timestep = 200,
                 r = r,
                 alpha = alpha,
                 disturb = list(int = 0,
@@ -51,7 +51,7 @@ test_that("sglv", {
   set.seed(123)
   cout2 <- sglv(n_species = s,
                 n_patch = patch,
-                n_timestep = 100,
+                n_timestep = 200,
                 r = r,
                 alpha = alpha,
                 disturb = list(int = 0,
@@ -61,8 +61,8 @@ test_that("sglv", {
                 cpp = TRUE)
 
   x_prime <- c(x)
-  x0_r <- cout1[nrow(cout1), -1]
-  x0_cpp <- cout2[nrow(cout2), -1]
+  x0_r <- colMeans(cout1[((nrow(cout1) - 1) / 2):nrow(cout1), -1])
+  x0_cpp <- colMeans(cout2[((nrow(cout2) - 1) / 2):nrow(cout2), -1])
   rho1 <- cor(x_prime, x0_r)
   rho2 <- cor(x_prime, x0_cpp)
 
