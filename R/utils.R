@@ -733,3 +733,96 @@ fun_wa <- function(x) {
 
   return(m_wa)
 }
+
+#' Yield partial derivatives
+#'
+#' @param r Numeric. Intrinsic growth rate of species i.
+#' @param a Numeric vector. Interaction coefficients.
+#' @param i Integer. Species numeric ID.
+#' @inheritParams stability
+#'
+#' @export
+
+fun_partial <- function(r, a, i, x0, model) {
+
+  # check input -------------------------------------------------------------
+  if (length(r) != 1)
+    stop(paste("Input 'r' must be a scalar:",
+               "'r' has length", length(r)))
+
+  if (length(i) != 1)
+    stop(paste("'i' must be a scalar:",
+               "'i' has length", length(i)))
+
+  if (length(a) != length(x0))
+    stop(paste("Invalid inputs in 'a' or 'x0':",
+               "'a' has length =", length(a),
+               "while 'x0' has length =", length(x0)))
+
+  if (model %in% c("ricker", "bh", "glv"))
+    stop(paste("Invalid model type: 'model' must be either of",
+               "'ricker', 'bh', or 'glv'"))
+
+  # model formula -----------------------------------------------------------
+  ## declare vectorized parameters and variables
+  v_a <- paste0("a[", seq_len(length(a)), "]")
+  v_x <- paste0("x[", seq_len(length(x0)), "]")
+  arg <- paste(c("r", "x", "a"), collapse = ", ")
+
+  ## linear combination
+  lcm <- paste(v_a, "*", v_x)
+
+  ## Generalized Lotka-Volterra model
+  if (model == "glv") {
+    ## get a model formula
+    fm <- c("r", lcm)
+    m <- paste0("x[", i, "]", " * ",
+                "(",
+                paste(fm, collapse = " - "),
+                ")")
+
+    ## function text for evaluation
+    f_text <- parse(text = paste0("f <- function(", arg, ") {",
+                                  m,
+                                  "}"))
+
+    eval(f_text)
+  }
+
+  ## Ricker model
+  if (model == "ricker") {
+    ## get a model formula
+    fm <- c("r", lcm)
+    m <- paste0("x[", i, "]", " * ",
+                "exp(",
+                paste(fm, collapse = " - "),
+                ")")
+
+    ## function text for evaluation
+    f_text <- parse(text = paste0("f <- function(", arg, ") {",
+                                  m,
+                                  "}"))
+
+    eval(f_text)
+  }
+
+  ## Beverton-Holt model
+  if (model == "bh") {
+    ## get a model formula
+    m <- paste0("x[", i, "]", " * ", "exp(r)",
+                " * ",
+                "(1 + ",
+                paste(lcm, collapse = " + "),
+                ") ** -1")
+
+    ## function text for evaluation
+    f_text <- parse(text = paste0("f <- function(", arg, ") {",
+                                  m,
+                                  "}"))
+
+    eval(f_text)
+  }
+
+  ## return partial derivatives evaluated at x0 (equilibrium)
+  return(pracma::jacobian(f, x0 = x0, r = r, a = a))
+}
