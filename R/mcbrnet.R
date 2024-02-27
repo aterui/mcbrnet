@@ -2171,3 +2171,98 @@ foodchain <- function(n,
 
   return(fcl)
 }
+
+#' Calculate a leading eigenvalue
+#'
+#' @param n_species Integer. Number of species.
+#' @param R Numeric vector. Specify a vector of intrinsic growth rates for modeled species.
+#' @param x0 Numeric vector. Specify a vector of equilibrium densities for modeled species.
+#' @param A Numeric matrix. Specify an interaction matrix.
+#' @param model Character. Specify a model type. Either \code{"ricker"} (Ricker), \code{"bh"} (Beverton-Holt), or \code{"glv"} (Generalized Lotka-Volterra).
+#'
+#' @author Akira Terui, \email{hanabi0111@gmail.com}
+#'
+#' @export
+
+stability <- function(n_species, R, x0, A, model = "ricker") {
+
+  # check input -------------------------------------------------------------
+
+  if (any(unique(dim(A)) != n_species))
+    stop("dimension mismatch in A")
+
+  if (!missing(R)) {
+    if (length(R) != n_species)
+      stop("dimension mismatch in A or R")
+  }
+
+  if (!missing(x0)) {
+    if (length(x0) != n_species)
+      stop("dimension mismatch in A or x0")
+  }
+
+
+  # get maximum absolute eigenvalue -----------------------------------------
+
+  if (det(A) == 0) {
+    ## if det(A) = 0, return NA
+    return(NA)
+
+  } else {
+
+    if (model == "ricker"||model == "glv") {
+      ## Ricker or GLV model
+
+      if (missing(R) & !missing(x0)) {
+        ## if equilibrium density provided,
+        ## calculate R from A and x0
+        R <- drop(A %*% x0)
+      }
+
+      if (!missing(R) & missing(x0)) {
+        ## if intrinsic growth provided,
+        ## calculate x0 from A and R
+        x0 <- drop(solve(A) %*% R)
+      }
+    }
+
+    if (model == "bh") {
+      ## Beverton-Holt model
+
+      if (missing(R) & !missing(x0)) {
+        ## if equilibrium density provided,
+        ## calculate R from A and x0
+        R <- drop(log(1 + A %*% x0))
+      }
+
+      if (!missing(R) & missing(x0)) {
+        ## if intrinsic growth provided,
+        ## calculate x0 from A and R
+        x0 <- drop(solve(A) %*% (exp(R) - 1))
+      }
+    }
+
+    # check negative equilibrium
+    if (any(x0 < 0))
+      stop("Negative equilibrium density is not allowed")
+
+    J <- t(sapply(seq_len(n_species),
+                  function(i) {
+                    partial(r = R[i],
+                            a = A[i, ],
+                            x0 = x0,
+                            i = i,
+                            model = model)
+                  }))
+
+    lambda <- eigen(J)
+    max_lambda <- max(abs(lambda$values))
+
+    attr(max_lambda, "J") <- J
+    attr(max_lambda, "R") <- R
+    attr(max_lambda, "x0") <- x0
+
+    return(max_lambda)
+  }
+
+}
