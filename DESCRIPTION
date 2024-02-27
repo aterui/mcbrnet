@@ -21,7 +21,9 @@ Imports:
     deSolve,
     data.table,
     MCMCpack,
-    Rcpp
+    Rcpp,
+    pracma,
+    utils
 Roxygen: list(markdown = TRUE)
 Suggests: 
     testthat (>= 3.0.0),
