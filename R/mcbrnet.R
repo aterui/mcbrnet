@@ -2184,7 +2184,7 @@ foodchain <- function(n,
 #'
 #' @export
 
-stability <- function(n_species, R, x0, A, model = "ricker") {
+stability <- function(n_species, R, x0, A, model = "glv") {
 
   # check input -------------------------------------------------------------
 
@@ -2206,20 +2206,20 @@ stability <- function(n_species, R, x0, A, model = "ricker") {
 
   if (det(A) == 0) {
     ## if det(A) = 0, return NA
-    return(NA)
+    max_lambda <- NA
 
   } else {
 
-    if (model == "ricker"||model == "glv") {
+    if (model == "ricker" || model == "glv") {
       ## Ricker or GLV model
 
-      if (missing(R) & !missing(x0)) {
+      if (missing(R) && !missing(x0)) {
         ## if equilibrium density provided,
         ## calculate R from A and x0
         R <- drop(A %*% x0)
       }
 
-      if (!missing(R) & missing(x0)) {
+      if (!missing(R) && missing(x0)) {
         ## if intrinsic growth provided,
         ## calculate x0 from A and R
         x0 <- drop(solve(A) %*% R)
@@ -2229,13 +2229,13 @@ stability <- function(n_species, R, x0, A, model = "ricker") {
     if (model == "bh") {
       ## Beverton-Holt model
 
-      if (missing(R) & !missing(x0)) {
+      if (missing(R) && !missing(x0)) {
         ## if equilibrium density provided,
         ## calculate R from A and x0
         R <- drop(log(1 + A %*% x0))
       }
 
-      if (!missing(R) & missing(x0)) {
+      if (!missing(R) && missing(x0)) {
         ## if intrinsic growth provided,
         ## calculate x0 from A and R
         x0 <- drop(solve(A) %*% (exp(R) - 1))
@@ -2248,11 +2248,11 @@ stability <- function(n_species, R, x0, A, model = "ricker") {
 
     J <- t(sapply(seq_len(n_species),
                   function(i) {
-                    partial(r = R[i],
-                            a = A[i, ],
-                            x0 = x0,
-                            i = i,
-                            model = model)
+                    fun_partial(r = R[i],
+                                a = A[i, ],
+                                x0 = x0,
+                                i = i,
+                                model = model)
                   }))
 
     lambda <- eigen(J)
@@ -2261,8 +2261,7 @@ stability <- function(n_species, R, x0, A, model = "ricker") {
     attr(max_lambda, "J") <- J
     attr(max_lambda, "R") <- R
     attr(max_lambda, "x0") <- x0
-
-    return(max_lambda)
   }
 
+  return(max_lambda)
 }
