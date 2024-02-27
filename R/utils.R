@@ -772,6 +772,9 @@ fun_partial <- function(r, a, i, x0, model) {
   ## linear combination
   lcm <- paste(v_a, "*", v_x)
 
+  ## function
+  f <- NULL
+
   ## Generalized Lotka-Volterra model
   if (model == "glv") {
     ## get a model formula
