@@ -92,11 +92,10 @@ mc <- with(net,
            mcsim(n_patch = patch,
                  n_species = 5,
                  mean_env = df_patch$environment,
-                 carrying_capacity = df_patch$n_patch_upstream*10,
+                 carrying_capacity = df_patch$n_patch_upstream * 10,
                  distance_matrix = distance_matrix,
-                 plot = T)
+                 plot = TRUE)
            )
-
 ```
 
 ## Custom: parameter detail

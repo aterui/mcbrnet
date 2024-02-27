@@ -87,7 +87,7 @@ net <- brnet(n_patch = patch,
              p_branch = 0.5)
 
 igp <- with(net,
-            igpsim(n_patch = patch, 
+            igpsim(n_patch = patch,
                    distance_matrix = distance_matrix,
                    plot = TRUE)
             )

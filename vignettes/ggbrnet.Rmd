@@ -122,6 +122,6 @@ set.seed(1)
 ```
 
 ```{r}
-brnet() %>% 
+brnet() %>%
   ggbrnet(patch_size = 1)
 ```
