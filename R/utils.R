@@ -781,7 +781,7 @@ fun_partial <- function(r, a, i, x0, model) {
     fm <- c("r", lcm)
     m <- paste0("x[", i, "]", " * ",
                 "(",
-                paste(fm, collapse = " - "),
+                paste(fm, collapse = " + "),
                 ")")
 
     ## function text for evaluation
@@ -798,7 +798,7 @@ fun_partial <- function(r, a, i, x0, model) {
     fm <- c("r", lcm)
     m <- paste0("x[", i, "]", " * ",
                 "exp(",
-                paste(fm, collapse = " - "),
+                paste(fm, collapse = " + "),
                 ")")
 
     ## function text for evaluation
