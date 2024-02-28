@@ -1658,7 +1658,7 @@ sglv <- function(n_species,
 findr <- function(alpha,
                   k0,
                   theta = 1,
-                  lambda0 = 1E-3,
+                  lambda0 = 0,
                   interval = 0.01,
                   sigma = 0.01,
                   maxit = 1000) {
