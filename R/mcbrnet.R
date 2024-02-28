@@ -1918,7 +1918,7 @@ extra_prey <- function(alpha0,
 #' @param competition List for competition coefficients between producers. Specify minimum and maximum values for a uniform distribution.
 #' @param attack List for attack rates. Specify minimum and maximum values for a uniform distribution.
 #' @param convert List for conversion efficiency. Specify minimum and maximum values for a uniform distribution.
-#' @param mortal List for mortality (or intraspecific competition). Specify minimum and maximum values for a uniform distribution.
+#' @param regulation List for self regulation (or intraspecific competition). Specify minimum and maximum values for a uniform distribution.
 #'
 #' @author Akira Terui, \email{hanabi0111@gmail.com}
 #'
@@ -1931,11 +1931,12 @@ to_alpha <- function(alpha0,
                                    max = 1),
                      convert = list(min = 0,
                                     max = 1),
-                     mortal = list(min = 0,
-                                   max = 1)) {
+                     regulation = list(min = 0,
+                                       max = 1)) {
 
   # identify basal species
-  u_alpha0 <- alpha0
+  u_alpha0 <- abs(alpha0)
+  u_alpha0[lower.tri(u_alpha0)] <- 0
   basal <- which(colSums(alpha0) == 0)
 
   # scale by # of resources
@@ -1959,15 +1960,15 @@ to_alpha <- function(alpha0,
                    ncol = ncol(alpha0)))
 
   ## vector for intraspecific competition
-  m <- with(mortal,
-            stats::runif(ncol(alpha0),
-                         min = min,
-                         max = max))
+  sr <- with(regulation,
+             stats::runif(ncol(alpha0),
+                          min = min,
+                          max = max))
 
   # interaction matrix
   ## diag(alpha) represent net effects of cannibalism
   u_alpha0[, -basal] <- a[, -basal] * su_alpha0
-  alpha <- b * u_alpha0 - t(u_alpha0)
+  alpha <- -u_alpha0 + b * t(u_alpha0)
 
   ## competition between producers
   alpha[basal, basal] <- with(competition,
@@ -1975,9 +1976,11 @@ to_alpha <- function(alpha0,
                                             min = min,
                                             max = max))
 
+  diag(alpha[basal, basal]) <- 0
+
   ## intraspecific interaction
-  ## added to net effects of cannibalism as "diag(alpha) - m"
-  diag(alpha) <- diag(alpha) - m
+  ## added to net effects of cannibalism as "diag(alpha) - sr"
+  diag(alpha) <- diag(alpha) - sr
 
   return(alpha)
 }
