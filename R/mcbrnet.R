@@ -1595,7 +1595,7 @@ sglv <- function(n_species,
   derivr <- function(t, n, parms) {
     with(parms, {
       psi <- input(t)
-      dn <- n * (r - psi * e + t(A) %*% n) + C %*% n
+      dn <- n * (r - psi * e + A %*% n) + C %*% n
       list(dn)
     })
   }
