@@ -1643,7 +1643,7 @@ sglv <- function(n_species,
 
 #' Find suitable intrinsic growth rates
 #'
-#' @param alpha Numeric. n_species x n_species interaction matrix
+#' @param alpha Numeric matrix. \code{n_species x n_species} interaction matrix
 #' @param k0 Numeric. Total carrying capacity for basal species combined
 #' @param theta Numeric. Shape parameter for a Dirichlet distribution that determines relative equilibrium densities of basal species
 #' @param lambda0 Numeric. Initial lambda value for the exponential decay of equilibrium densities with trophic position
@@ -1845,7 +1845,7 @@ ppm <- function(n_species,
 #' Extra prey function
 #'
 #' @inheritParams ppm
-#' @param alpha0 Interaction matrix
+#' @param alpha0 Numeric matrix. \code{n_species x n_species} interaction matrix
 #' @param j Integer. Consumer's index
 #' @param i0 Integer. Index for the first prey
 #' @param tp Numeric. Initial trophic positions
