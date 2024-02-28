@@ -1737,7 +1737,8 @@ ppm <- function(n_species,
                 n_basal,
                 l,
                 theta,
-                cannibal = FALSE) {
+                cannibal = FALSE,
+                lower_tri = TRUE) {
   # n_species: number of species in the pool
   # n_basal: number of basal species
   # l: expected number of links
@@ -1830,9 +1831,15 @@ ppm <- function(n_species,
     tp[j] <- tp_new[j]
   }
 
-  attr(alpha0, "tp") <- tp
+  if (lower_tri) {
+    cout <- alpha0 - t(alpha0)
+  } else {
+    cout <- alpha0
+  }
 
-  return(alpha0)
+  attr(cout, "tp") <- tp
+
+  return(cout)
 }
 
 #' Extra prey function
@@ -2002,7 +2009,8 @@ foodweb <- function(n_species,
                 n_basal = n_basal,
                 theta = theta,
                 l = l,
-                cannibal = cannibal)
+                cannibal = cannibal,
+                lower_tri = FALSE)
 
   alpha <- to_alpha(alpha0 = alpha0,
                     competition = competition,
