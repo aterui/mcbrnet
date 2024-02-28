@@ -1666,7 +1666,7 @@ findr <- function(alpha,
   # half interaction matrix
   alpha0 <- alpha
   alpha0[lower.tri(alpha0, diag = TRUE)] <- 0
-  alpha0[alpha0 > 0] <- 1
+  alpha0[alpha0 != 0] <- 1
 
   # basal species id
   id_basal <- which(colSums(alpha0) <= 0)
@@ -1832,9 +1832,9 @@ ppm <- function(n_species,
   }
 
   if (lower_tri) {
-    cout <- alpha0 - t(alpha0)
+    cout <- - alpha0 + t(alpha0)
   } else {
-    cout <- alpha0
+    cout <- - alpha0
   }
 
   attr(cout, "tp") <- tp
@@ -1862,9 +1862,9 @@ extra_prey <- function(alpha0,
                        theta,
                        kappa,
                        cannibal = FALSE) {
-  # alpha0:      adjacency matrix defining trophic interactions
+  # alpha0: adjacency matrix defining trophic interactions
   # j:      consumer's index (j - 1 is the number of possible prey)
-  # i0:     index of the first prey chosen (1 =< i0 < j)
+  # i0:     index of the first prey chosen (1 <= i0 < j)
   # tp:     vector of trophic positions for possible prey nodes (length = S)
   # kappa:  number of extra prey nodes in addition to the first prey i0
   # theta:  scale parameter for an exponential decay of prey preference
