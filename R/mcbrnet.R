@@ -1926,7 +1926,7 @@ extra_prey <- function(alpha0,
 
 to_alpha <- function(alpha0,
                      competition = list(min = 0,
-                                        max = 1),
+                                        max = 0),
                      attack = list(min = 0,
                                    max = 1),
                      convert = list(min = 0,
@@ -2005,8 +2005,8 @@ foodweb <- function(n_species,
                                   max = 1),
                     convert = list(min = 0,
                                    max = 1),
-                    mortal = list(min = 0,
-                                  max = 1)) {
+                    regulation = list(min = 0,
+                                      max = 1)) {
 
   alpha0 <- ppm(n_species = n_species,
                 n_basal = n_basal,
@@ -2019,7 +2019,7 @@ foodweb <- function(n_species,
                     competition = competition,
                     attack = attack,
                     convert = convert,
-                    mortal = mortal)
+                    regulation = regulation)
 
   return(alpha)
 }
