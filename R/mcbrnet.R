@@ -2278,7 +2278,7 @@ stability <- function(n_species, R, x0, A, model = "glv") {
       max_lambda <- max(abs(lambda$values))
     } else {
       ## continuous models
-      max_lambda <- max(lambda$values)
+      max_lambda <- max(Re(lambda$values))
     }
 
     attr(max_lambda, "J") <- J
