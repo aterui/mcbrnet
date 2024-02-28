@@ -1585,14 +1585,12 @@ sglv <- function(n_species,
 
   # ode ---------------------------------------------------------------------
 
-  # n: n_patch x n_species abundance vector
-  # N: n_patch x n_species abundance matrix
-  # R: n_patch x n_species growth rate matrix
+  # n: abundance vector with length n_patch x n_species
+  # r: growth rate vector with length n_patch x n_species
   # psi: indicator parameter scalar
-  # E: n_patch x n_species disturbance intensity matrix
-  # A: n_species x n_species interaction matrix
-  # phi: migration rate
-  # C: n_patch x n_patch connectivity matrix
+  # e: disturbance intensity vector with length n_patch x n_species
+  # A: interaction matrix with dim (n_species + n_patch) x (n_species + n_patch)
+  # C: connectivity matrix with dim (n_species + n_patch) x (n_species + n_patch)
 
   derivr <- function(t, n, parms) {
     with(parms, {
@@ -2242,10 +2240,11 @@ stability <- function(n_species, R, x0, A, model = "glv") {
       }
     }
 
-    # check negative equilibrium
+    ## check negative equilibrium
     if (any(x0 < 0))
       stop("Negative equilibrium density is not allowed")
 
+    ## get Jacobian matrix
     J <- t(sapply(seq_len(n_species),
                   function(i) {
                     fun_partial(r = R[i],
@@ -2255,8 +2254,16 @@ stability <- function(n_species, R, x0, A, model = "glv") {
                                 model = model)
                   }))
 
+    ## leading eigenvalue
     lambda <- eigen(J)
-    max_lambda <- max(abs(lambda$values))
+
+    if (model == "ricker" || model == "bh") {
+      ## discrete models
+      max_lambda <- max(abs(lambda$values))
+    } else {
+      ## continuous models
+      max_lambda <- max(lambda$values)
+    }
 
     attr(max_lambda, "J") <- J
     attr(max_lambda, "R") <- R
