@@ -2275,7 +2275,7 @@ stability <- function(n_species, R, x0, A, model = "glv") {
 
     if (model == "ricker" || model == "bh") {
       ## discrete models
-      max_lambda <- max(abs(lambda$values))
+      max_lambda <- max(abs(Re(lambda$values)))
     } else {
       ## continuous models
       max_lambda <- max(Re(lambda$values))
