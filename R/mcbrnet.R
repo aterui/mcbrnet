@@ -2027,8 +2027,8 @@ foodweb <- function(n_species,
 #' Maximum trophic position
 #'
 #' @param n_species Integer. Number of species
-#' @param n Numeric. Vector of species density
-#' @param alpha Numeric. Interaction matrix
+#' @param n Numeric vector. Vector of species density
+#' @param alpha Numeric matrix. \code{n_species x n_species} interaction matrix
 #'
 #' @author Akira Terui, \email{hanabi0111@gmail.com}
 #'
@@ -2036,24 +2036,26 @@ foodweb <- function(n_species,
 
 max_tp <- function(n_species, n, alpha) {
 
-  alpha[lower.tri(alpha, diag = TRUE)] <- 0
+  # remove upper.tri()
+  # lower.tri() represents energetic conversion from prey to predator
+  alpha[upper.tri(alpha, diag = TRUE)] <- 0
 
   # initialize trophic positions for basal species
   tp <- rep(-1, n_species)
 
-  id_basal <- which(colSums(alpha) <= 0)
+  id_basal <- which(rowSums(alpha) == 0)
   n_basal <- length(id_basal)
   tp[id_basal] <- 1
 
   if (all(n[id_basal] == 0)) {
 
     # if basal species are all absent
-    return(0)
+    max_tp <- 0
 
   } else {
 
     # total gain from prey (prey converted to predator density)
-    g <- drop(n %*% alpha)
+    g <- drop(alpha %*% n)
 
     # fractional contribution of each prey
     ## frac excludes basal species
@@ -2063,7 +2065,7 @@ max_tp <- function(n_species, n, alpha) {
                              ## num: contribution of each prey
                              ## den: total prey converted into consumer
                              ## frac0: factional contribution of each prey
-                             num <- alpha[i, (n_basal + 1):n_species] * n[i]
+                             num <- alpha[(n_basal + 1):n_species, i] * n[i]
                              den <- g[(n_basal + 1):n_species]
                              frac0 <- num / den
 
@@ -2085,10 +2087,9 @@ max_tp <- function(n_species, n, alpha) {
     }
 
     max_tp <- max(tp[n > 0])
-
-    return(max_tp)
   }
 
+  return(max_tp)
 }
 
 #' Spatiotemporal average of maximum trophic positions using \code{\link{sglv}} output
