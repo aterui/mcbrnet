@@ -1698,14 +1698,14 @@ findr <- function(alpha,
 
   x <- w_k0 * exp(-lambda * (tp - 1))
   x[-id_basal] <- x[-id_basal] * eps
-  r <- drop(- x %*% alpha)
+  r <- drop(- alpha %*% x)
 
   # loop until all consumer's r < 0
   for (i in seq_len(maxit)) {
     lambda <- lambda + interval
     x <- w_k0 * exp(-lambda * (tp - 1))
     x[-id_basal] <- x[-id_basal] * eps
-    r <- drop(- x %*% alpha)
+    r <- drop(- alpha %*% x)
     if (all(r[-id_basal] < 0)) break
   }
 
@@ -2222,13 +2222,13 @@ stability <- function(n_species, R, x0, A, model = "glv") {
       if (missing(R) && !missing(x0)) {
         ## if equilibrium density provided,
         ## calculate R from A and x0
-        R <- drop(A %*% x0)
+        R <- drop(-A %*% x0)
       }
 
       if (!missing(R) && missing(x0)) {
         ## if intrinsic growth provided,
         ## calculate x0 from A and R
-        x0 <- drop(solve(A) %*% R)
+        x0 <- drop(-solve(A) %*% R)
       }
     }
 
