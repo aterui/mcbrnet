@@ -9,7 +9,7 @@ SEXP deriv(double t, arma::vec n, Rcpp::List parms) {
   // deriv <- function(t, n, parms) {
   //   with(parms, {
   //     psi <- input(t)
-  //     dn <- n * (r - psi * e + t(A) %*% n) + C %*% n
+  //     dn <- n * (r - psi * e + A %*% n) + C %*% n
   //     list(dn)
   //   })
   // }
@@ -33,7 +33,7 @@ SEXP deriv(double t, arma::vec n, Rcpp::List parms) {
   // model
   SEXP v = input(t);
   Rcpp::NumericVector psi(v);
-  dn = n % (r - psi[0] * e + A.t() * n) + C * n;
+  dn = n % (r - psi[0] * e + A * n) + C * n;
 
   return(Rcpp::List::create(dn));
 }
