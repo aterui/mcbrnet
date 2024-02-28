@@ -759,7 +759,7 @@ fun_partial <- function(r, a, i, x0, model) {
                "'a' has length =", length(a),
                "while 'x0' has length =", length(x0)))
 
-  if (model %in% c("ricker", "bh", "glv"))
+  if (!(model %in% c("ricker", "bh", "glv")))
     stop(paste("Invalid model type: 'model' must be either of",
                "'ricker', 'bh', or 'glv'"))
 
