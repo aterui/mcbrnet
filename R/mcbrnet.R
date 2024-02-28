@@ -1937,10 +1937,10 @@ to_alpha <- function(alpha0,
   # identify basal species
   u_alpha0 <- abs(alpha0)
   u_alpha0[lower.tri(u_alpha0)] <- 0
-  basal <- which(colSums(alpha0) == 0)
+  basal <- which(colSums(u_alpha0) == 0)
 
   # scale by # of resources
-  su_alpha0 <- t(t(alpha0[, -basal]) / colSums(alpha0)[-basal])
+  su_alpha0 <- t(t(u_alpha0[, -basal]) / colSums(u_alpha0)[-basal])
 
   # generate random parameters
   ## matrix for attack rates
@@ -1976,7 +1976,11 @@ to_alpha <- function(alpha0,
                                             min = min,
                                             max = max))
 
-  diag(alpha[basal, basal]) <- 0
+  if (length(basal) > 1) {
+    diag(alpha[basal, basal]) <- 0
+  } else {
+    alpha[basal, basal] <- 0
+  }
 
   ## intraspecific interaction
   ## added to net effects of cannibalism as "diag(alpha) - sr"
