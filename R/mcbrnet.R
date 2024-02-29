@@ -2190,37 +2190,37 @@ foodchain <- function(n,
 #' Calculate a leading eigenvalue
 #'
 #' @param n_species Integer. Number of species.
-#' @param R Numeric vector. Specify a vector of intrinsic growth rates for modeled species.
+#' @param r Numeric vector. Specify a vector of intrinsic growth rates for modeled species.
 #' @param x0 Numeric vector. Specify a vector of equilibrium densities for modeled species.
-#' @param A Numeric matrix. Specify an interaction matrix.
+#' @param alpha Numeric matrix. Specify an interaction matrix.
 #' @param model Character. Specify a model type. Either \code{"ricker"} (Ricker), \code{"bh"} (Beverton-Holt), or \code{"glv"} (Generalized Lotka-Volterra).
 #'
 #' @author Akira Terui, \email{hanabi0111@gmail.com}
 #'
 #' @export
 
-stability <- function(n_species, R, x0, A, model = "glv") {
+stability <- function(n_species, r, x0, alpha, model = "glv") {
 
   # check input -------------------------------------------------------------
 
-  if (any(unique(dim(A)) != n_species))
-    stop("dimension mismatch in A")
+  if (any(unique(dim(alpha)) != n_species))
+    stop("dimension mismatch in alpha")
 
-  if (!missing(R)) {
-    if (length(R) != n_species)
-      stop("dimension mismatch in A or R")
+  if (!missing(r)) {
+    if (length(r) != n_species)
+      stop("dimension mismatch in alpha or r")
   }
 
   if (!missing(x0)) {
     if (length(x0) != n_species)
-      stop("dimension mismatch in A or x0")
+      stop("dimension mismatch in alpha or x0")
   }
 
 
   # get maximum absolute eigenvalue -----------------------------------------
 
-  if (det(A) == 0) {
-    ## if det(A) = 0, return NA
+  if (det(alpha) == 0) {
+    ## if det(alpha) = 0, return NA
     max_lambda <- NA
 
   } else {
@@ -2228,32 +2228,32 @@ stability <- function(n_species, R, x0, A, model = "glv") {
     if (model == "ricker" || model == "glv") {
       ## Ricker or GLV model
 
-      if (missing(R) && !missing(x0)) {
+      if (missing(r) && !missing(x0)) {
         ## if equilibrium density provided,
-        ## calculate R from A and x0
-        R <- drop(-A %*% x0)
+        ## calculate r from alpha and x0
+        r <- drop(-alpha %*% x0)
       }
 
-      if (!missing(R) && missing(x0)) {
+      if (!missing(r) && missing(x0)) {
         ## if intrinsic growth provided,
-        ## calculate x0 from A and R
-        x0 <- drop(-solve(A) %*% R)
+        ## calculate x0 from alpha and r
+        x0 <- drop(-solve(alpha) %*% r)
       }
     }
 
     if (model == "bh") {
       ## Beverton-Holt model
 
-      if (missing(R) && !missing(x0)) {
+      if (missing(r) && !missing(x0)) {
         ## if equilibrium density provided,
-        ## calculate R from A and x0
-        R <- drop(log(1 + A %*% x0))
+        ## calculate r from alpha and x0
+        r <- drop(log(1 + alpha %*% x0))
       }
 
-      if (!missing(R) && missing(x0)) {
+      if (!missing(r) && missing(x0)) {
         ## if intrinsic growth provided,
-        ## calculate x0 from A and R
-        x0 <- drop(solve(A) %*% (exp(R) - 1))
+        ## calculate x0 from alpha and r
+        x0 <- drop(solve(alpha) %*% (exp(r) - 1))
       }
     }
 
@@ -2262,17 +2262,17 @@ stability <- function(n_species, R, x0, A, model = "glv") {
       stop("Negative equilibrium density is not allowed")
 
     ## get Jacobian matrix
-    J <- t(sapply(seq_len(n_species),
+    jm <- t(sapply(seq_len(n_species),
                   function(i) {
-                    fun_partial(r = R[i],
-                                a = A[i, ],
+                    fun_partial(r = r[i],
+                                a = alpha[i, ],
                                 x0 = x0,
                                 i = i,
                                 model = model)
                   }))
 
     ## leading eigenvalue
-    lambda <- eigen(J)
+    lambda <- eigen(jm)
 
     if (model == "ricker" || model == "bh") {
       ## discrete models
@@ -2282,8 +2282,8 @@ stability <- function(n_species, R, x0, A, model = "glv") {
       max_lambda <- max(Re(lambda$values))
     }
 
-    attr(max_lambda, "J") <- J
-    attr(max_lambda, "R") <- R
+    attr(max_lambda, "jacobian") <- jm
+    attr(max_lambda, "r") <- r
     attr(max_lambda, "x0") <- x0
   }
 
