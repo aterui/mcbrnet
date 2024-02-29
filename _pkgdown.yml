@@ -20,6 +20,7 @@ reference:
   - foodweb
   - foodchain
   - findr
+  - stability
 - title: "Utils"
   desc: "Utility functions for internal use"
   contents:

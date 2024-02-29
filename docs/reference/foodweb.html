@@ -66,9 +66,10 @@
 <span>  <span class="va">l</span>,</span>
 <span>  <span class="va">theta</span>,</span>
 <span>  cannibal <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  competition <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>min <span class="op">=</span> <span class="fl">0</span>, max <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>,</span>
 <span>  attack <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>min <span class="op">=</span> <span class="fl">0</span>, max <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
 <span>  convert <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>min <span class="op">=</span> <span class="fl">0</span>, max <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
-<span>  mortal <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>min <span class="op">=</span> <span class="fl">0</span>, max <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<span>  regulation <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>min <span class="op">=</span> <span class="fl">0</span>, max <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -94,6 +95,10 @@
 <dd><p>Logical. If <code>TRUE</code>, cannibalism allowed</p></dd>
 
 
+<dt>competition</dt>
+<dd><p>List for competition coefficients between producers. Specify minimum and maximum values for a uniform distribution.</p></dd>
+
+
 <dt>attack</dt>
 <dd><p>List for attack rates. Specify minimum and maximum values for a uniform distribution.</p></dd>
 
@@ -102,8 +107,8 @@
 <dd><p>List for conversion efficiency. Specify minimum and maximum values for a uniform distribution.</p></dd>
 
 
-<dt>mortal</dt>
-<dd><p>List for mortality (or intraspecific competition). Specify minimum and maximum values for a uniform distribution.</p></dd>
+<dt>regulation</dt>
+<dd><p>List for self regulation (or intraspecific competition). Specify minimum and maximum values for a uniform distribution.</p></dd>
 
 </dl></div>
     <div class="section level2">

@@ -60,7 +60,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">ppm</span><span class="op">(</span><span class="va">n_species</span>, <span class="va">n_basal</span>, <span class="va">l</span>, <span class="va">theta</span>, cannibal <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">ppm</span><span class="op">(</span><span class="va">n_species</span>, <span class="va">n_basal</span>, <span class="va">l</span>, <span class="va">theta</span>, cannibal <span class="op">=</span> <span class="cn">FALSE</span>, lower_tri <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -83,6 +83,10 @@
 
 <dt>cannibal</dt>
 <dd><p>Logical. If <code>TRUE</code>, cannibalism allowed</p></dd>
+
+
+<dt>lower_tri</dt>
+<dd><p>Logical. If <code>TRUE</code>, lower triangle elements of the matrix will be returned</p></dd>
 
 </dl></div>
     <div class="section level2">

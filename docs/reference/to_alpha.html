@@ -62,16 +62,21 @@
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">to_alpha</span><span class="op">(</span></span>
 <span>  <span class="va">alpha0</span>,</span>
+<span>  competition <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>min <span class="op">=</span> <span class="fl">0</span>, max <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>,</span>
 <span>  attack <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>min <span class="op">=</span> <span class="fl">0</span>, max <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
 <span>  convert <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>min <span class="op">=</span> <span class="fl">0</span>, max <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
-<span>  mortal <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>min <span class="op">=</span> <span class="fl">0</span>, max <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<span>  regulation <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>min <span class="op">=</span> <span class="fl">0</span>, max <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>alpha0</dt>
-<dd><p>Interaction matrix</p></dd>
+<dd><p>Numeric matrix. <code>n_species x n_species</code> interaction matrix</p></dd>
+
+
+<dt>competition</dt>
+<dd><p>List for competition coefficients between producers. Specify minimum and maximum values for a uniform distribution.</p></dd>
 
 
 <dt>attack</dt>
@@ -82,8 +87,8 @@
 <dd><p>List for conversion efficiency. Specify minimum and maximum values for a uniform distribution.</p></dd>
 
 
-<dt>mortal</dt>
-<dd><p>List for mortality (or intraspecific competition). Specify minimum and maximum values for a uniform distribution.</p></dd>
+<dt>regulation</dt>
+<dd><p>List for self regulation (or intraspecific competition). Specify minimum and maximum values for a uniform distribution.</p></dd>
 
 </dl></div>
     <div class="section level2">
