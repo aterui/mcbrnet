@@ -9,9 +9,9 @@ max_tp(n_species, n, alpha)
 \arguments{
 \item{n_species}{Integer. Number of species}
 
-\item{n}{Numeric. Vector of species density}
+\item{n}{Numeric vector. Vector of species density}
 
-\item{alpha}{Numeric. Interaction matrix}
+\item{alpha}{Numeric matrix. \code{n_species x n_species} interaction matrix}
 }
 \description{
 Maximum trophic position

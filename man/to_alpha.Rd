@@ -6,14 +6,14 @@
 \usage{
 to_alpha(
   alpha0,
-  competition = list(min = 0, max = 1),
+  competition = list(min = 0, max = 0),
   attack = list(min = 0, max = 1),
   convert = list(min = 0, max = 1),
-  mortal = list(min = 0, max = 1)
+  regulation = list(min = 0, max = 1)
 )
 }
 \arguments{
-\item{alpha0}{Interaction matrix}
+\item{alpha0}{Numeric matrix. \code{n_species x n_species} interaction matrix}
 
 \item{competition}{List for competition coefficients between producers. Specify minimum and maximum values for a uniform distribution.}
 
@@ -21,7 +21,7 @@ to_alpha(
 
 \item{convert}{List for conversion efficiency. Specify minimum and maximum values for a uniform distribution.}
 
-\item{mortal}{List for mortality (or intraspecific competition). Specify minimum and maximum values for a uniform distribution.}
+\item{regulation}{List for self regulation (or intraspecific competition). Specify minimum and maximum values for a uniform distribution.}
 }
 \description{
 Apply conversion efficiency and attack rate

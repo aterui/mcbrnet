@@ -1728,6 +1728,7 @@ findr <- function(alpha,
 #' @param l Interger. Expected number of links in the upper triangle
 #' @param theta Numeric. Scale parameter of an exponential distribution. Smaller values indicate greater trophic specialization.
 #' @param cannibal Logical. If \code{TRUE}, cannibalism allowed
+#' @param lower_tri Logical. If \code{TRUE}, lower triangle elements of the matrix will be returned
 #'
 #' @author Akira Terui, \email{hanabi0111@gmail.com}
 #'

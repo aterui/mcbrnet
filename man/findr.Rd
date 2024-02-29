@@ -8,14 +8,14 @@ findr(
   alpha,
   k0,
   theta = 1,
-  lambda0 = 0.001,
+  lambda0 = 0,
   interval = 0.01,
   sigma = 0.01,
   maxit = 1000
 )
 }
 \arguments{
-\item{alpha}{Numeric. n_species x n_species interaction matrix}
+\item{alpha}{Numeric matrix. \code{n_species x n_species} interaction matrix}
 
 \item{k0}{Numeric. Total carrying capacity for basal species combined}
 

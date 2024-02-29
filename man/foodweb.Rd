@@ -13,7 +13,7 @@ foodweb(
   competition = list(min = 0, max = 0),
   attack = list(min = 0, max = 1),
   convert = list(min = 0, max = 1),
-  mortal = list(min = 0, max = 1)
+  regulation = list(min = 0, max = 1)
 )
 }
 \arguments{
@@ -33,7 +33,7 @@ foodweb(
 
 \item{convert}{List for conversion efficiency. Specify minimum and maximum values for a uniform distribution.}
 
-\item{mortal}{List for mortality (or intraspecific competition). Specify minimum and maximum values for a uniform distribution.}
+\item{regulation}{List for self regulation (or intraspecific competition). Specify minimum and maximum values for a uniform distribution.}
 }
 \description{
 Generate a food web based on the preferential prey model

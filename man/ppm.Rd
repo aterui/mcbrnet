@@ -4,7 +4,7 @@
 \alias{ppm}
 \title{Preferential prey model}
 \usage{
-ppm(n_species, n_basal, l, theta, cannibal = FALSE)
+ppm(n_species, n_basal, l, theta, cannibal = FALSE, lower_tri = TRUE)
 }
 \arguments{
 \item{n_species}{Integer. Number of species}
@@ -16,6 +16,8 @@ ppm(n_species, n_basal, l, theta, cannibal = FALSE)
 \item{theta}{Numeric. Scale parameter of an exponential distribution. Smaller values indicate greater trophic specialization.}
 
 \item{cannibal}{Logical. If \code{TRUE}, cannibalism allowed}
+
+\item{lower_tri}{Logical. If \code{TRUE}, lower triangle elements of the matrix will be returned}
 }
 \description{
 Preferential prey model

@@ -7,7 +7,7 @@
 extra_prey(alpha0, j, i0, tp, theta, kappa, cannibal = FALSE)
 }
 \arguments{
-\item{alpha0}{Interaction matrix}
+\item{alpha0}{Numeric matrix. \code{n_species x n_species} interaction matrix}
 
 \item{j}{Integer. Consumer's index}
 
