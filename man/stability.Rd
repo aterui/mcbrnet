@@ -4,16 +4,16 @@
 \alias{stability}
 \title{Calculate a leading eigenvalue}
 \usage{
-stability(n_species, R, x0, A, model = "glv")
+stability(n_species, r, x0, alpha, model = "glv")
 }
 \arguments{
 \item{n_species}{Integer. Number of species.}
 
-\item{R}{Numeric vector. Specify a vector of intrinsic growth rates for modeled species.}
+\item{r}{Numeric vector. Specify a vector of intrinsic growth rates for modeled species.}
 
 \item{x0}{Numeric vector. Specify a vector of equilibrium densities for modeled species.}
 
-\item{A}{Numeric matrix. Specify an interaction matrix.}
+\item{alpha}{Numeric matrix. Specify an interaction matrix.}
 
 \item{model}{Character. Specify a model type. Either \code{"ricker"} (Ricker), \code{"bh"} (Beverton-Holt), or \code{"glv"} (Generalized Lotka-Volterra).}
 }
