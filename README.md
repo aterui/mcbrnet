@@ -12,19 +12,24 @@ metacommunity/foodweb dynamics in space (`mcsim()`, `igpsim()`). See
 
 # Citation
 
-Current best citation for this package is:
+Current best citations for this package is:
 
 [Terui A, Kim S, Dolph CL, Kadoya T, Miyazaki Y. (2021) Emergent dual
 scaling of riverine biodiversity. *Proceedings of the National Academy
 of Sciences* 118: e2105574118](https://doi.org/10.1073/pnas.2105574118)
 
+[Pomeranz JPF, Finlay JF, Terui A. (2023) Ecosystem size and complexity
+as extrinsic drivers of food chain length in branching ecosystems.
+*Ecosphere* 14(8):
+e4648](https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecs2.4648)
+
 # Installation
 
-The latest version of `mcbrnet` package can be installed with:
+The latest stable version of `mcbrnet` package can be installed with:
 
 ``` r
 #install.packages("remotes")
-remotes::install_github("aterui/mcbrnet@1.4.0")
+remotes::install_github("aterui/mcbrnet@1.4.1")
 library(mcbrnet)
 ```
 

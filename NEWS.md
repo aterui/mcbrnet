@@ -1,6 +1,11 @@
 Changelog
 ================
 
+# mcbrnet 1.4.1 (9/10/24)
+
+- disabled functions `foodchain()`, `max_tp()`
+- disabled `disturb` argument in `sglv()`
+
 # mcbrnet 1.4.0 (10/24/23)
 
 - add new major functions `sglv()`, `foodweb()`, `foodchain()`,

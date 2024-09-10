@@ -32,6 +32,9 @@ test_that("sglv", {
                 n_patch = patch,
                 param_attr = "species")$m_x
 
+
+  net <- brnet(patch)
+
   # run simulation ----------------------------------------------------------
 
   ## R version
@@ -40,11 +43,11 @@ test_that("sglv", {
                 n_patch = patch,
                 n_timestep = 200,
                 r = r,
+                dispersal = list(adj = net$adjacency_matrix,
+                                 phi = runif(1, 0, 0.1),
+                                 m = runif(1, 0, 0.001)),
                 alpha = alpha,
-                disturb = list(int = 0,
-                               rate = 1,
-                               s = 1),
-                threshold = 0,
+                threshold = runif(1, 0, 0.001),
                 cpp = FALSE)
 
   ## C++ version
@@ -53,11 +56,11 @@ test_that("sglv", {
                 n_patch = patch,
                 n_timestep = 200,
                 r = r,
+                dispersal = list(adj = net$adjacency_matrix,
+                                 phi = runif(1, 0, 0.1),
+                                 m = runif(1, 0, 0.001)),
                 alpha = alpha,
-                disturb = list(int = 0,
-                               rate = 1,
-                               s = 1),
-                threshold = 0,
+                threshold = runif(1, 0, 0.001),
                 cpp = TRUE)
 
   x_prime <- c(x)
