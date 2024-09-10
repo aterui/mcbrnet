@@ -1,13 +1,12 @@
-pandoc: 3.1.1
-pkgdown: 2.0.7
+pandoc: 3.1.11
+pkgdown: 2.1.0
 pkgdown_sha: ~
 articles:
   brnet: brnet.html
   ggbrnet: ggbrnet.html
   igpsim: igpsim.html
   mcsim: mcsim.html
-last_built: 2024-02-29T16:51Z
+last_built: 2024-09-10T20:19Z
 urls:
   reference: https://aterui.github.io/mcbrnet/reference
   article: https://aterui.github.io/mcbrnet/articles
-
