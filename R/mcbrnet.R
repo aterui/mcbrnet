@@ -478,7 +478,7 @@ adjtodist <- function(x) {
 #' @export
 
 ggbrnet <- function(x,
-                    patch_color = "black",
+                    patch_color = "steelblue",
                     edge_color = "black",
                     edge_alpha = "none",
                     edge_linetype = "solid",
