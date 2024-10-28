@@ -1,7 +1,7 @@
 Package: mcbrnet
 Type: Package
 Title: Ecological simulation in spatial networks
-Version: 1.4.1
+Version: 1.4.2
 Author: Akira Terui, Justin F. Pomeranz, Shota Shibasaki
 Maintainer: Akira Terui <hanabi0111@gmail.com>
 Description: Ecological simulation in spatial networks.
@@ -31,7 +31,7 @@ Suggests:
     rmarkdown
 Config/testthat/edition: 3
 VignetteBuilder: knitr
-URL: https://github.com/aterui/mcbrnet
+URL: https://aterui.github.io/mcbrnet/
 LinkingTo: 
     Rcpp,
     RcppArmadillo

@@ -23,7 +23,7 @@ library(tidyverse)
 
 ## Quick start
 
-`ggbrnet()` takes `brnet()` object as the first argument, so it's compatible with pipe `%>%`. By default, it colors patches based on environmental values `df_patch$environment`:
+`ggbrnet()` takes `brnet()` object as the first argument, so it's compatible with pipe `%>%`:
 
 ```{r}
 brnet() %>% 
@@ -34,18 +34,25 @@ brnet() %>%
 
 **Arguments:** `patch_color`
 
-Users can change how they color patches by specifying `patch_color`. Default is `env` referring to the environment column in `patch_attr` argument. Another option is `disturb` referring to the disturbance column:
+Users can change how they color patches by specifying `patch_color`. Default is `"black"`. Other options are `env` and `disturb` referring to the `environment` and `disturbance` columns, respectively:
 
 ```{r, include=F}
 set.seed(1)
 ```
 
 ```{r}
+## colored by `environment`
 brnet() %>% 
-  ggbrnet(patch_color = "disturb")
+  ggbrnet(patch_color = "env") + # "environment" works too
+  labs(color = "Environment")
+
+## colored by `disturbance`
+brnet() %>% 
+  ggbrnet(patch_color = "disturb") + # "disturbance" works too
+  labs(color = "Disturbance")
 ```
 
-As a special case, the function accepts `"other"`, which allows users to specify any column in `$df_patch`. In this case, it is required to specify the column in which data exist in `value_col` with quotation:
+It is also possible to specify one of the columns in `.$df_patch`:
 
 ```{r}
 df0 <- brnet()
@@ -53,11 +60,11 @@ df0$df_patch <- df0$df_patch %>%
   mutate(x = runif(50, 0, 100))
 
 df0 %>% 
-  ggbrnet(patch_color = "other",
-          value_col = "x")
+  ggbrnet(patch_color = "x") +
+  labs(color = "x")
 ```
 
-If `patch_color` is neither `env`, `disturb`, nor `other`, the function takes it as an ordinary color name, for example:
+If `patch_color` is neither `env`, `disturb`, nor any column in `.$df_patch`, the function takes it as an ordinary color name, for example:
 
 ```{r, include=F}
 set.seed(1)
@@ -65,7 +72,7 @@ set.seed(1)
 
 ```{r}
 brnet() %>% 
-  ggbrnet(patch_color = "salmon")
+  ggbrnet()
 ```
 
 ## Patch label
@@ -109,8 +116,7 @@ Users may specify additional arguments passed to `ggraph::geom_node_label()` to 
 ```{r}
 # branch ID adjust label position
 brnet() %>% 
-  ggbrnet(patch_label = "branch",
-          nudge_x = 0.2)
+  ggbrnet(nudge_x = 0.2)
 ```
 
 ## Patch size

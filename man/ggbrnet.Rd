@@ -6,11 +6,11 @@
 \usage{
 ggbrnet(
   x,
-  patch_color = "env",
+  patch_color = "steelblue",
   edge_color = "black",
-  edge_weight = "none",
-  value_col = NULL,
-  color_label = NULL,
+  edge_alpha = 1,
+  edge_linetype = "solid",
+  edge_width = 0.5,
   patch_label = "none",
   patch_size = 3,
   ...
@@ -19,17 +19,17 @@ ggbrnet(
 \arguments{
 \item{x}{\code{brnet()} object}
 
-\item{patch_color}{Type of patch (vertex) label (either \code{"env"}, \code{"disturbance"}, \code{"other"} or any color). Default \code{"env"}.}
+\item{patch_color}{Type of patch (vertex) label (either \code{"env"}, \code{"disturb"}, any column name in \code{`df_patch`}, or any color).}
 
 \item{edge_color}{Edge color}
 
-\item{edge_weight}{Type of edge weight (\code{"passability"}). Default \code{NULL}.}
+\item{edge_alpha}{Edge transparency. Numeric or one of the columns in \code{df_edge}.}
 
-\item{value_col}{Patch values. Must be specified if \code{patch_color = "other"}.}
+\item{edge_linetype}{Edge line type}
 
-\item{color_label}{Color legend title}
+\item{edge_width}{Edge line width}
 
-\item{patch_label}{Type of patch (vertex) label (either \code{"patch", "branch", "n_upstream"}). \code{"patch"} shows patch ID, \code{"branch"} branch ID, and \code{"n_upstream"} the number of upstream contributing patches. If \code{"none"}, no label will be shown on patches in the plot. Default \code{"none"}.}
+\item{patch_label}{Type of patch (vertex) label (either \code{"patch", "branch", "n_upstream"}). \code{"patch"} shows patch ID, \code{"branch"} branch ID, and \code{"n_upstream"} the number of upstream contributing patches. If \code{"none"}, no label will be shown on patches in the plot.}
 
 \item{patch_size}{Patch (vertex) size in the plot.}
 

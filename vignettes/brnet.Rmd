@@ -151,7 +151,7 @@ brnet(n_patch = 50,
       sd_env_source = 3,
       sd_env_lon = 0.5,
       rho = 0.5) %>% 
-  ggbrnet()
+  ggbrnet(patch_color = "env")
 ```
 
 ```{r env2, eval = T}
@@ -161,7 +161,7 @@ brnet(n_patch = 50,
       sd_env_source = 0,
       sd_env_lon = 3,
       rho = 0.5) %>% 
-  ggbrnet()
+  ggbrnet(patch_color = "env")
 ```
 
 ## Customize: disturbance
@@ -170,9 +170,9 @@ brnet(n_patch = 50,
 
 Disturbance values are generated as detailed below:
 
-1.  Disturbance levels for upstream terminal patches (i.e., patches with no upstream patch) are drawn from a normal distribution in a logit scale as $logit~m_h \sim N(logit~\mu_{m}, \sigma_{h,m}^2)$.
+1.  Disturbance levels for upstream terminal patches (i.e., patches with no upstream patch) are drawn from a normal distribution in a logit scale as $\text{logit}~m_h \sim N(\text{logit}~\mu_{m}, \sigma_{h,m}^2)$.
 
-2.  Disturbance cascades downstream as in environmental values: $logit~m_{down} \sim N(logit~m_{up}, \sigma_{l,m}^2)$. At bifurcation patches (or confluence), the disturbance value takes a weighted mean of the two contributing patches given the stream size of these patches $N_{up}$ (the number of upstream contributing patches): $logit~m_{down} = \omega(logit~m_{up, 1} + \epsilon_1) + (1 - \omega)(logit~ m_{up,2} + \epsilon_2)$, where $\omega = \frac{N_{up,1}}{N_{up,1} + N_{up,2}}$ and $\epsilon \sim N(0, \sigma_{l,m}^2)$.
+2.  Disturbance cascades downstream as in environmental values: $\text{logit}~m_{down} \sim N(\text{logit}~m_{up}, \sigma_{l,m}^2)$. At bifurcation patches (or confluence), the disturbance value takes a weighted mean of the two contributing patches given the stream size of these patches $N_{up}$ (the number of upstream contributing patches): $\text{logit}~m_{down} = \omega(\text{logit}~m_{up, 1} + \epsilon_1) + (1 - \omega)(\text{logit}~ m_{up,2} + \epsilon_2)$, where $\omega = \frac{N_{up,1}}{N_{up,1} + N_{up,2}}$ and $\epsilon \sim N(0, \sigma_{l,m}^2)$.
 
 Users may change the values of $\mu_{m}$ (`mean_disturb_source`), $\sigma_{h,m}$ (`sd_disturb_source`) and $\sigma_{l,m}$(`sd_disturb_lon`).
 
@@ -223,20 +223,20 @@ y <- brnet(n_patch = 10) %>%
 y$df_patch
 ```
 
-Also, easy to visualize the spatial pattern of pollution with `ggbrnet()`. Just need to set `patch_color = "other"` and `value_col = "impact"`.
+Also, easy to visualize the spatial pattern of pollution with `ggbrnet()`. Just need to set `patch_color = "impact"`.
 
 ```{r pollute2}
 brnet(n_patch = 30) %>% 
   ptsource(n_source = 3,
            p = 0.8,
            q = 0) %>% 
-  ggbrnet(patch_color = "other", 
-          value_col = "impact")
+  ggbrnet(patch_color = "impact") +
+  labs(color = "Impact")
 ```
 
 Finally, it is possible to specify the spatial pattern of point sources. By default, the function generates point sources at random, but it may be more realistic to have some spatial clusters.
 
-The `"cluster"` pattern randomly pick one location as a point source, and the rest of point sources appear close to this initial point source:
+The `"cluster"` pattern randomly pick one location as a the first point source, and the rest of point sources appear close to this initial point source:
 
 ```{r pollute3}
 brnet(n_patch = 30) %>% 
@@ -244,8 +244,8 @@ brnet(n_patch = 30) %>%
            p = 0.8,
            q = 0,
            pattern = "cluster") %>% 
-  ggbrnet(patch_color = "other", 
-          value_col = "impact")
+  ggbrnet(patch_color = "impact") +
+  labs(color = "Impact")
 ```
 
 The `"upstream"` pattern pick point source locations from smaller tributaries (i.e., based on number of upstream patches), but not necessarily clustered:
@@ -256,8 +256,8 @@ brnet(n_patch = 30) %>%
            p = 0.8,
            q = 0,
            pattern = "upstream") %>% 
-  ggbrnet(patch_color = "other", 
-          value_col = "impact")
+  ggbrnet(patch_color = "impact") +
+  labs(color = "Impact")
 ```
 
 The `"downstream"` does the opposite (pick from larger streams):
@@ -268,8 +268,8 @@ brnet(n_patch = 30) %>%
            p = 0.8,
            q = 0,
            pattern = "downstream") %>% 
-  ggbrnet(patch_color = "other", 
-          value_col = "impact")
+  ggbrnet(patch_color = "impact") +
+  labs(color = "Impact")
 ```
 
 ## Customize: fragmentation
@@ -290,7 +290,7 @@ brnet(n_patch = 30) %>%
 
 The arguments `p` and `n_barrier` define the probability of traversing across an edge with a barrier and the number of total barriers , respectively. Passability can be different among barriers; in this case, the user must specify the passabilities of individual barriers separately (as a vector with length `n_barrier`). The barrier effect is cumulative. For example, if one passes two barriers A (passability = $p_A$) and B (passability $p_B$) when moving from a given node node to another node, the original movement probability $m$ will be reduced to $m p_Ap_B$.
 
-Just like `ptsource()`, this function will take an output from `brnet()` function but also accepts any adjacency matrix. `ggbrnet()` will help you visualize fragmented edges by specifying `edge_weight = "passability"`.
+Just like `ptsource()`, this function will take an output from `brnet()` function but also accepts any adjacency matrix. `ggbrnet()` will help you visualize fragmented edges by specifying `edge_alpha = "passability"`.
 
 Example: `random` pattern:
 
@@ -300,7 +300,7 @@ brnet(n_patch = 30) %>%
        p = 0.1,
        n_barrier = 5,
        pattern = "random") %>%
-  ggbrnet(edge_weight = "passability")
+  ggbrnet(edge_alpha = "passability")
 ```
 
 Example: `upstream` pattern:
@@ -311,7 +311,7 @@ brnet(n_patch = 30) %>%
        p = 0.1,
        n_barrier = 5,
        pattern = "upstream") %>%
-  ggbrnet(edge_weight = "passability")
+  ggbrnet(edge_alpha = "passability")
 ```
 
 Example: `downstream` pattern:
@@ -322,5 +322,5 @@ brnet(n_patch = 30) %>%
        p = 0.1,
        n_barrier = 5,
        pattern = "downstream") %>%
-  ggbrnet(edge_weight = "passability")
+  ggbrnet(edge_alpha = "passability")
 ```

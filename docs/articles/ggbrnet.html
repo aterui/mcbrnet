@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">mcbrnet</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.4.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.4.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -45,7 +45,6 @@
 <li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json">
 </form></li>
-<li class="nav-item"><a class="external-link nav-link" href="https://github.com/aterui/mcbrnet/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul>
 </div>
 
@@ -62,7 +61,7 @@
       <h1>ggbrnet</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/aterui/mcbrnet/blob/HEAD/vignettes/ggbrnet.Rmd" class="external-link"><code>vignettes/ggbrnet.Rmd</code></a></small>
+
       <div class="d-none name"><code>ggbrnet.Rmd</code></div>
     </div>
 
@@ -79,9 +78,7 @@ for easy visualization of a network produced by <code><a href="../reference/brne
 <h2 id="quick-start">Quick start<a class="anchor" aria-label="anchor" href="#quick-start"></a>
 </h2>
 <p><code><a href="../reference/ggbrnet.html">ggbrnet()</a></code> takes <code><a href="../reference/brnet.html">brnet()</a></code> object as the first
-argument, so it’s compatible with pipe <code>%&gt;%</code>. By default,
-it colors patches based on environmental values
-<code>df_patch$environment</code>:</p>
+argument, so it’s compatible with pipe <code>%&gt;%</code>:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/brnet.html">brnet</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
 <span>  <span class="fu"><a href="../reference/ggbrnet.html">ggbrnet</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
@@ -92,32 +89,40 @@ it colors patches based on environmental values
 </h2>
 <p><strong>Arguments:</strong> <code>patch_color</code></p>
 <p>Users can change how they color patches by specifying
-<code>patch_color</code>. Default is <code>env</code> referring to the
-environment column in <code>patch_attr</code> argument. Another option
-is <code>disturb</code> referring to the disturbance column:</p>
+<code>patch_color</code>. Default is <code>"black"</code>. Other options
+are <code>env</code> and <code>disturb</code> referring to the
+<code>environment</code> and <code>disturbance</code> columns,
+respectively:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/brnet.html">brnet</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu"><a href="../reference/ggbrnet.html">ggbrnet</a></span><span class="op">(</span>patch_color <span class="op">=</span> <span class="st">"disturb"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="co">## colored by `environment`</span></span>
+<span><span class="fu"><a href="../reference/brnet.html">brnet</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
+<span>  <span class="fu"><a href="../reference/ggbrnet.html">ggbrnet</a></span><span class="op">(</span>patch_color <span class="op">=</span> <span class="st">"env"</span><span class="op">)</span> <span class="op">+</span> <span class="co"># "environment" works too</span></span>
+<span>  <span class="fu">labs</span><span class="op">(</span>color <span class="op">=</span> <span class="st">"Environment"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="ggbrnet_files/figure-html/unnamed-chunk-4-1.png" width="700"></p>
-<p>As a special case, the function accepts <code>"other"</code>, which
-allows users to specify any column in <code>$df_patch</code>. In this
-case, it is required to specify the column in which data exist in
-<code>value_col</code> with quotation:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
+<span><span class="co">## colored by `disturbance`</span></span>
+<span><span class="fu"><a href="../reference/brnet.html">brnet</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
+<span>  <span class="fu"><a href="../reference/ggbrnet.html">ggbrnet</a></span><span class="op">(</span>patch_color <span class="op">=</span> <span class="st">"disturb"</span><span class="op">)</span> <span class="op">+</span> <span class="co"># "disturbance" works too</span></span>
+<span>  <span class="fu">labs</span><span class="op">(</span>color <span class="op">=</span> <span class="st">"Disturbance"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="ggbrnet_files/figure-html/unnamed-chunk-4-2.png" width="700"></p>
+<p>It is also possible to specify one of the columns in
+<code>.$df_patch</code>:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">df0</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/brnet.html">brnet</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">df0</span><span class="op">$</span><span class="va">df_patch</span> <span class="op">&lt;-</span> <span class="va">df0</span><span class="op">$</span><span class="va">df_patch</span> <span class="op">%&gt;%</span> </span>
 <span>  <span class="fu">mutate</span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fl">50</span>, <span class="fl">0</span>, <span class="fl">100</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">df0</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu"><a href="../reference/ggbrnet.html">ggbrnet</a></span><span class="op">(</span>patch_color <span class="op">=</span> <span class="st">"other"</span>,</span>
-<span>          value_col <span class="op">=</span> <span class="st">"x"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/ggbrnet.html">ggbrnet</a></span><span class="op">(</span>patch_color <span class="op">=</span> <span class="st">"x"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">labs</span><span class="op">(</span>color <span class="op">=</span> <span class="st">"x"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="ggbrnet_files/figure-html/unnamed-chunk-5-1.png" width="700"></p>
 <p>If <code>patch_color</code> is neither <code>env</code>,
-<code>disturb</code>, nor <code>other</code>, the function takes it as
-an ordinary color name, for example:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code>disturb</code>, nor any column in <code>.$df_patch</code>, the
+function takes it as an ordinary color name, for example:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/brnet.html">brnet</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu"><a href="../reference/ggbrnet.html">ggbrnet</a></span><span class="op">(</span>patch_color <span class="op">=</span> <span class="st">"salmon"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/ggbrnet.html">ggbrnet</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="ggbrnet_files/figure-html/unnamed-chunk-7-1.png" width="700"></p>
 </div>
 <div class="section level2">
@@ -126,17 +131,17 @@ an ordinary color name, for example:</p>
 <p><strong>Arguments:</strong> <code>patch_label</code></p>
 <p>Users may add patch labels using the argument
 <code>patch_label</code>:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># patch ID</span></span>
 <span><span class="fu"><a href="../reference/brnet.html">brnet</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
 <span>  <span class="fu"><a href="../reference/ggbrnet.html">ggbrnet</a></span><span class="op">(</span>patch_label <span class="op">=</span> <span class="st">"patch"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="ggbrnet_files/figure-html/unnamed-chunk-9-1.png" width="700"></p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># branch ID</span></span>
 <span><span class="fu"><a href="../reference/brnet.html">brnet</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
 <span>  <span class="fu"><a href="../reference/ggbrnet.html">ggbrnet</a></span><span class="op">(</span>patch_label <span class="op">=</span> <span class="st">"branch"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="ggbrnet_files/figure-html/unnamed-chunk-11-1.png" width="700"></p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># number of upstream contributing patches</span></span>
 <span><span class="fu"><a href="../reference/brnet.html">brnet</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
 <span>  <span class="fu"><a href="../reference/ggbrnet.html">ggbrnet</a></span><span class="op">(</span>patch_label <span class="op">=</span> <span class="st">"n_upstream"</span><span class="op">)</span></span></code></pre></div>
@@ -144,18 +149,17 @@ an ordinary color name, for example:</p>
 <p>Users may specify additional arguments passed to
 <code><a href="https://ggraph.data-imaginist.com/reference/geom_node_text.html" class="external-link">ggraph::geom_node_label()</a></code> to tweak details, for
 example:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># branch ID adjust label position</span></span>
 <span><span class="fu"><a href="../reference/brnet.html">brnet</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu"><a href="../reference/ggbrnet.html">ggbrnet</a></span><span class="op">(</span>patch_label <span class="op">=</span> <span class="st">"branch"</span>,</span>
-<span>          nudge_x <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/ggbrnet.html">ggbrnet</a></span><span class="op">(</span>nudge_x <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span></span></code></pre></div>
 <p><img src="ggbrnet_files/figure-html/unnamed-chunk-14-1.png" width="700"></p>
 </div>
 <div class="section level2">
 <h2 id="patch-size">Patch size<a class="anchor" aria-label="anchor" href="#patch-size"></a>
 </h2>
 <p>To change patch size, specify <code>patch_size</code>:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/brnet.html">brnet</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
 <span>  <span class="fu"><a href="../reference/ggbrnet.html">ggbrnet</a></span><span class="op">(</span>patch_size <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
 <p><img src="ggbrnet_files/figure-html/unnamed-chunk-16-1.png" width="700"></p>

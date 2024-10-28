@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">mcbrnet</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.4.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.4.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -45,7 +45,6 @@
 <li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json">
 </form></li>
-<li class="nav-item"><a class="external-link nav-link" href="https://github.com/aterui/mcbrnet/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul>
 </div>
 
@@ -62,7 +61,7 @@
       <h1>brnet</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/aterui/mcbrnet/blob/HEAD/vignettes/brnet.Rmd" class="external-link"><code>vignettes/brnet.Rmd</code></a></small>
+
       <div class="d-none name"><code>brnet.Rmd</code></div>
     </div>
 
@@ -260,7 +259,7 @@ strength of longitudinal environmental noise.</p>
 <span>      sd_env_source <span class="op">=</span> <span class="fl">3</span>,</span>
 <span>      sd_env_lon <span class="op">=</span> <span class="fl">0.5</span>,</span>
 <span>      rho <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu"><a href="../reference/ggbrnet.html">ggbrnet</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/ggbrnet.html">ggbrnet</a></span><span class="op">(</span>patch_color <span class="op">=</span> <span class="st">"env"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="brnet_files/figure-html/env1-1.png" width="700"></p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># large local variation with no headwater variation</span></span>
@@ -269,7 +268,7 @@ strength of longitudinal environmental noise.</p>
 <span>      sd_env_source <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>      sd_env_lon <span class="op">=</span> <span class="fl">3</span>,</span>
 <span>      rho <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu"><a href="../reference/ggbrnet.html">ggbrnet</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/ggbrnet.html">ggbrnet</a></span><span class="op">(</span>patch_color <span class="op">=</span> <span class="st">"env"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="brnet_files/figure-html/env2-1.png" width="700"></p>
 </div>
 <div class="section level2">
@@ -282,15 +281,15 @@ strength of longitudinal environmental noise.</p>
 <li><p>Disturbance levels for upstream terminal patches (i.e., patches
 with no upstream patch) are drawn from a normal distribution in a logit
 scale as
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>l</mi><mi>o</mi><mi>g</mi><mi>i</mi><mi>t</mi><mspace width="0.222em"></mspace><msub><mi>m</mi><mi>h</mi></msub><mo>∼</mo><mi>N</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>l</mi><mi>o</mi><mi>g</mi><mi>i</mi><mi>t</mi><mspace width="0.222em"></mspace><msub><mi>μ</mi><mi>m</mi></msub><mo>,</mo><msubsup><mi>σ</mi><mrow><mi>h</mi><mo>,</mo><mi>m</mi></mrow><mn>2</mn></msubsup><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">logit~m_h \sim N(logit~\mu_{m}, \sigma_{h,m}^2)</annotation></semantics></math>.</p></li>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext mathvariant="normal">logit</mtext><mspace width="0.222em"></mspace><msub><mi>m</mi><mi>h</mi></msub><mo>∼</mo><mi>N</mi><mrow><mo stretchy="true" form="prefix">(</mo><mtext mathvariant="normal">logit</mtext><mspace width="0.222em"></mspace><msub><mi>μ</mi><mi>m</mi></msub><mo>,</mo><msubsup><mi>σ</mi><mrow><mi>h</mi><mo>,</mo><mi>m</mi></mrow><mn>2</mn></msubsup><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\text{logit}~m_h \sim N(\text{logit}~\mu_{m}, \sigma_{h,m}^2)</annotation></semantics></math>.</p></li>
 <li><p>Disturbance cascades downstream as in environmental values:
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>l</mi><mi>o</mi><mi>g</mi><mi>i</mi><mi>t</mi><mspace width="0.222em"></mspace><msub><mi>m</mi><mrow><mi>d</mi><mi>o</mi><mi>w</mi><mi>n</mi></mrow></msub><mo>∼</mo><mi>N</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>l</mi><mi>o</mi><mi>g</mi><mi>i</mi><mi>t</mi><mspace width="0.222em"></mspace><msub><mi>m</mi><mrow><mi>u</mi><mi>p</mi></mrow></msub><mo>,</mo><msubsup><mi>σ</mi><mrow><mi>l</mi><mo>,</mo><mi>m</mi></mrow><mn>2</mn></msubsup><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">logit~m_{down} \sim N(logit~m_{up}, \sigma_{l,m}^2)</annotation></semantics></math>.
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext mathvariant="normal">logit</mtext><mspace width="0.222em"></mspace><msub><mi>m</mi><mrow><mi>d</mi><mi>o</mi><mi>w</mi><mi>n</mi></mrow></msub><mo>∼</mo><mi>N</mi><mrow><mo stretchy="true" form="prefix">(</mo><mtext mathvariant="normal">logit</mtext><mspace width="0.222em"></mspace><msub><mi>m</mi><mrow><mi>u</mi><mi>p</mi></mrow></msub><mo>,</mo><msubsup><mi>σ</mi><mrow><mi>l</mi><mo>,</mo><mi>m</mi></mrow><mn>2</mn></msubsup><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\text{logit}~m_{down} \sim N(\text{logit}~m_{up}, \sigma_{l,m}^2)</annotation></semantics></math>.
 At bifurcation patches (or confluence), the disturbance value takes a
 weighted mean of the two contributing patches given the stream size of
 these patches
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>N</mi><mrow><mi>u</mi><mi>p</mi></mrow></msub><annotation encoding="application/x-tex">N_{up}</annotation></semantics></math>
 (the number of upstream contributing patches):
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>l</mi><mi>o</mi><mi>g</mi><mi>i</mi><mi>t</mi><mspace width="0.222em"></mspace><msub><mi>m</mi><mrow><mi>d</mi><mi>o</mi><mi>w</mi><mi>n</mi></mrow></msub><mo>=</mo><mi>ω</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>l</mi><mi>o</mi><mi>g</mi><mi>i</mi><mi>t</mi><mspace width="0.222em"></mspace><msub><mi>m</mi><mrow><mi>u</mi><mi>p</mi><mo>,</mo><mn>1</mn></mrow></msub><mo>+</mo><msub><mi>ϵ</mi><mn>1</mn></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>−</mo><mi>ω</mi><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><mi>l</mi><mi>o</mi><mi>g</mi><mi>i</mi><mi>t</mi><mspace width="0.222em"></mspace><msub><mi>m</mi><mrow><mi>u</mi><mi>p</mi><mo>,</mo><mn>2</mn></mrow></msub><mo>+</mo><msub><mi>ϵ</mi><mn>2</mn></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">logit~m_{down} = \omega(logit~m_{up, 1} + \epsilon_1) + (1 - \omega)(logit~ m_{up,2} + \epsilon_2)</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext mathvariant="normal">logit</mtext><mspace width="0.222em"></mspace><msub><mi>m</mi><mrow><mi>d</mi><mi>o</mi><mi>w</mi><mi>n</mi></mrow></msub><mo>=</mo><mi>ω</mi><mrow><mo stretchy="true" form="prefix">(</mo><mtext mathvariant="normal">logit</mtext><mspace width="0.222em"></mspace><msub><mi>m</mi><mrow><mi>u</mi><mi>p</mi><mo>,</mo><mn>1</mn></mrow></msub><mo>+</mo><msub><mi>ϵ</mi><mn>1</mn></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>−</mo><mi>ω</mi><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><mtext mathvariant="normal">logit</mtext><mspace width="0.222em"></mspace><msub><mi>m</mi><mrow><mi>u</mi><mi>p</mi><mo>,</mo><mn>2</mn></mrow></msub><mo>+</mo><msub><mi>ϵ</mi><mn>2</mn></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\text{logit}~m_{down} = \omega(\text{logit}~m_{up, 1} + \epsilon_1) + (1 - \omega)(\text{logit}~ m_{up,2} + \epsilon_2)</annotation></semantics></math>,
 where
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ω</mi><mo>=</mo><mfrac><msub><mi>N</mi><mrow><mi>u</mi><mi>p</mi><mo>,</mo><mn>1</mn></mrow></msub><mrow><msub><mi>N</mi><mrow><mi>u</mi><mi>p</mi><mo>,</mo><mn>1</mn></mrow></msub><mo>+</mo><msub><mi>N</mi><mrow><mi>u</mi><mi>p</mi><mo>,</mo><mn>2</mn></mrow></msub></mrow></mfrac></mrow><annotation encoding="application/x-tex">\omega = \frac{N_{up,1}}{N_{up,1} + N_{up,2}}</annotation></semantics></math>
 and
@@ -380,30 +379,29 @@ environmental pollutant:</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 1 more variable: n_patch_upstream &lt;dbl&gt;</span></span></span></code></pre></div>
 <p>Also, easy to visualize the spatial pattern of pollution with
 <code><a href="../reference/ggbrnet.html">ggbrnet()</a></code>. Just need to set
-<code>patch_color = "other"</code> and
-<code>value_col = "impact"</code>.</p>
+<code>patch_color = "impact"</code>.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/brnet.html">brnet</a></span><span class="op">(</span>n_patch <span class="op">=</span> <span class="fl">30</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
 <span>  <span class="fu"><a href="../reference/ptsource.html">ptsource</a></span><span class="op">(</span>n_source <span class="op">=</span> <span class="fl">3</span>,</span>
 <span>           p <span class="op">=</span> <span class="fl">0.8</span>,</span>
 <span>           q <span class="op">=</span> <span class="fl">0</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu"><a href="../reference/ggbrnet.html">ggbrnet</a></span><span class="op">(</span>patch_color <span class="op">=</span> <span class="st">"other"</span>, </span>
-<span>          value_col <span class="op">=</span> <span class="st">"impact"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/ggbrnet.html">ggbrnet</a></span><span class="op">(</span>patch_color <span class="op">=</span> <span class="st">"impact"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">labs</span><span class="op">(</span>color <span class="op">=</span> <span class="st">"Impact"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="brnet_files/figure-html/pollute2-1.png" width="700"></p>
 <p>Finally, it is possible to specify the spatial pattern of point
 sources. By default, the function generates point sources at random, but
 it may be more realistic to have some spatial clusters.</p>
 <p>The <code>"cluster"</code> pattern randomly pick one location as a
-point source, and the rest of point sources appear close to this initial
-point source:</p>
+the first point source, and the rest of point sources appear close to
+this initial point source:</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/brnet.html">brnet</a></span><span class="op">(</span>n_patch <span class="op">=</span> <span class="fl">30</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
 <span>  <span class="fu"><a href="../reference/ptsource.html">ptsource</a></span><span class="op">(</span>n_source <span class="op">=</span> <span class="fl">3</span>,</span>
 <span>           p <span class="op">=</span> <span class="fl">0.8</span>,</span>
 <span>           q <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>           pattern <span class="op">=</span> <span class="st">"cluster"</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu"><a href="../reference/ggbrnet.html">ggbrnet</a></span><span class="op">(</span>patch_color <span class="op">=</span> <span class="st">"other"</span>, </span>
-<span>          value_col <span class="op">=</span> <span class="st">"impact"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/ggbrnet.html">ggbrnet</a></span><span class="op">(</span>patch_color <span class="op">=</span> <span class="st">"impact"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">labs</span><span class="op">(</span>color <span class="op">=</span> <span class="st">"Impact"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="brnet_files/figure-html/pollute3-1.png" width="700"></p>
 <p>The <code>"upstream"</code> pattern pick point source locations from
 smaller tributaries (i.e., based on number of upstream patches), but not
@@ -414,8 +412,8 @@ necessarily clustered:</p>
 <span>           p <span class="op">=</span> <span class="fl">0.8</span>,</span>
 <span>           q <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>           pattern <span class="op">=</span> <span class="st">"upstream"</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu"><a href="../reference/ggbrnet.html">ggbrnet</a></span><span class="op">(</span>patch_color <span class="op">=</span> <span class="st">"other"</span>, </span>
-<span>          value_col <span class="op">=</span> <span class="st">"impact"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/ggbrnet.html">ggbrnet</a></span><span class="op">(</span>patch_color <span class="op">=</span> <span class="st">"impact"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">labs</span><span class="op">(</span>color <span class="op">=</span> <span class="st">"Impact"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="brnet_files/figure-html/pollute4-1.png" width="700"></p>
 <p>The <code>"downstream"</code> does the opposite (pick from larger
 streams):</p>
@@ -425,8 +423,8 @@ streams):</p>
 <span>           p <span class="op">=</span> <span class="fl">0.8</span>,</span>
 <span>           q <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>           pattern <span class="op">=</span> <span class="st">"downstream"</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu"><a href="../reference/ggbrnet.html">ggbrnet</a></span><span class="op">(</span>patch_color <span class="op">=</span> <span class="st">"other"</span>, </span>
-<span>          value_col <span class="op">=</span> <span class="st">"impact"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/ggbrnet.html">ggbrnet</a></span><span class="op">(</span>patch_color <span class="op">=</span> <span class="st">"impact"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">labs</span><span class="op">(</span>color <span class="op">=</span> <span class="st">"Impact"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="brnet_files/figure-html/pollute5-1.png" width="700"></p>
 </div>
 <div class="section level2">
@@ -467,7 +465,7 @@ will be reduced to
 <p>Just like <code><a href="../reference/ptsource.html">ptsource()</a></code>, this function will take an output
 from <code><a href="../reference/brnet.html">brnet()</a></code> function but also accepts any adjacency
 matrix. <code><a href="../reference/ggbrnet.html">ggbrnet()</a></code> will help you visualize fragmented edges
-by specifying <code>edge_weight = "passability"</code>.</p>
+by specifying <code>edge_alpha = "passability"</code>.</p>
 <p>Example: <code>random</code> pattern:</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/brnet.html">brnet</a></span><span class="op">(</span>n_patch <span class="op">=</span> <span class="fl">30</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
@@ -475,7 +473,7 @@ by specifying <code>edge_weight = "passability"</code>.</p>
 <span>       p <span class="op">=</span> <span class="fl">0.1</span>,</span>
 <span>       n_barrier <span class="op">=</span> <span class="fl">5</span>,</span>
 <span>       pattern <span class="op">=</span> <span class="st">"random"</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
-<span>  <span class="fu"><a href="../reference/ggbrnet.html">ggbrnet</a></span><span class="op">(</span>edge_weight <span class="op">=</span> <span class="st">"passability"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/ggbrnet.html">ggbrnet</a></span><span class="op">(</span>edge_alpha <span class="op">=</span> <span class="st">"passability"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="brnet_files/figure-html/frgm1-1.png" width="700"></p>
 <p>Example: <code>upstream</code> pattern:</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
@@ -484,7 +482,7 @@ by specifying <code>edge_weight = "passability"</code>.</p>
 <span>       p <span class="op">=</span> <span class="fl">0.1</span>,</span>
 <span>       n_barrier <span class="op">=</span> <span class="fl">5</span>,</span>
 <span>       pattern <span class="op">=</span> <span class="st">"upstream"</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
-<span>  <span class="fu"><a href="../reference/ggbrnet.html">ggbrnet</a></span><span class="op">(</span>edge_weight <span class="op">=</span> <span class="st">"passability"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/ggbrnet.html">ggbrnet</a></span><span class="op">(</span>edge_alpha <span class="op">=</span> <span class="st">"passability"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="brnet_files/figure-html/frgm2-1.png" width="700"></p>
 <p>Example: <code>downstream</code> pattern:</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
@@ -493,7 +491,7 @@ by specifying <code>edge_weight = "passability"</code>.</p>
 <span>       p <span class="op">=</span> <span class="fl">0.1</span>,</span>
 <span>       n_barrier <span class="op">=</span> <span class="fl">5</span>,</span>
 <span>       pattern <span class="op">=</span> <span class="st">"downstream"</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
-<span>  <span class="fu"><a href="../reference/ggbrnet.html">ggbrnet</a></span><span class="op">(</span>edge_weight <span class="op">=</span> <span class="st">"passability"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/ggbrnet.html">ggbrnet</a></span><span class="op">(</span>edge_alpha <span class="op">=</span> <span class="st">"passability"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="brnet_files/figure-html/frgm3-1.png" width="700"></p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

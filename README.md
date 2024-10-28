@@ -29,7 +29,7 @@ The latest stable version of `mcbrnet` package can be installed with:
 
 ``` r
 #install.packages("remotes")
-remotes::install_github("aterui/mcbrnet@1.4.1")
+remotes::install_github("aterui/mcbrnet@1.4.2")
 library(mcbrnet)
 ```
 

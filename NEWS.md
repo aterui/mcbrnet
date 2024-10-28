@@ -1,6 +1,11 @@
 Changelog
 ================
 
+# mcbrnet 1.4.2 (10/28/24)
+
+- `ggbrnet()` has been updated to increase flexibility (some
+  incompatibility with earlier versions). See **Articles** for details.
+
 # mcbrnet 1.4.1 (9/10/24)
 
 - disabled functions `foodchain()`, `max_tp()`
