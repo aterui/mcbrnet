@@ -462,12 +462,12 @@ adjtodist <- function(x) {
 #' Visualize a branching network
 #'
 #' @param x `brnet()` object
-#' @param patch_color Type of patch (vertex) label (either \code{"env"}, \code{"disturbance"}, \code{"other"} or any color). Default \code{"env"}.
+#' @param patch_color Type of patch (vertex) label (either \code{"env"}, \code{"disturb"}, any column name in \code{`df_patch`}, or any color).
 #' @param edge_color Edge color
-#' @param edge_weight Type of edge weight (\code{"passability"}). Default \code{NULL}.
-#' @param value_col Patch values. Must be specified if \code{patch_color = "other"}.
-#' @param color_label Color legend title
-#' @param patch_label Type of patch (vertex) label (either \code{"patch", "branch", "n_upstream"}). \code{"patch"} shows patch ID, \code{"branch"} branch ID, and \code{"n_upstream"} the number of upstream contributing patches. If \code{"none"}, no label will be shown on patches in the plot. Default \code{"none"}.
+#' @param edge_alpha Edge transparency. Numeric or one of the columns in `df_edge`.
+#' @param edge_linetype Edge line type
+#' @param edge_width Edge line width
+#' @param patch_label Type of patch (vertex) label (either \code{"patch", "branch", "n_upstream"}). \code{"patch"} shows patch ID, \code{"branch"} branch ID, and \code{"n_upstream"} the number of upstream contributing patches. If \code{"none"}, no label will be shown on patches in the plot.
 #' @param patch_size Patch (vertex) size in the plot.
 #' @param ... Arguments passed to \code{ggraph::geom_node_label()}.
 #'
@@ -478,11 +478,11 @@ adjtodist <- function(x) {
 #' @export
 
 ggbrnet <- function(x,
-                    patch_color = "env",
+                    patch_color = "black",
                     edge_color = "black",
-                    edge_weight = "none",
-                    value_col = NULL,
-                    color_label = NULL,
+                    edge_alpha = "none",
+                    edge_linetype = "solid",
+                    edge_width = 0.5,
                     patch_label = "none",
                     patch_size = 3,
                     ...) {
@@ -491,128 +491,123 @@ ggbrnet <- function(x,
 
   # patch attributes --------------------------------------------------------
 
-  adj <- igraph::graph.adjacency(x$adjacency_matrix,
-                                 mode = "undirected")
-
-  patch_attr <- x$df_patch
+  adj <- igraph::graph_from_adjacency_matrix(x$adjacency_matrix,
+                                             mode = "undirected")
 
   ## patch color
-  if (patch_color == "env") {
+  patch_attr <- x$df_patch
+  v_value <- c("environment", "disturbance")
+  names(v_value) <- c("env", "disturb")
 
-    igraph::V(adj)$patch_value <- patch_attr$environment
-    if (is.null(color_label)) color_label <- "Environment"
+  if ((patch_color %in% colnames(patch_attr)) || (patch_color %in% names(v_value))) {
 
+    if (patch_color %in% colnames(patch_attr)) {
+      pcolcnm <- patch_color
+    } else {
+      ## for compatibility with v. 1.4.1 or earlier
+      pcolcnm <- v_value[names(v_value) == patch_color]
+    }
+
+    igraph::V(adj)$patch_value <- unlist(patch_attr[, pcolcnm])
   }
 
-  if (patch_color == "disturb") {
-
-    igraph::V(adj)$patch_value <- patch_attr$disturbance
-    if (is.null(color_label)) color_label <- "Disturbance"
-
-  }
-
-  if (patch_color == "other") {
-
-    if (is.null(value_col)) stop("Provide 'value_col' if patch_color = 'other'")
-    igraph::V(adj)$patch_value <- unlist(patch_attr[, value_col])
-    if (is.null(color_label)) color_label <- "Value"
-
-  }
-
-  ## edge color
-  if (edge_weight == "passability") {
+  ## edge weight
+  if (!is.null(x$df_edge)) {
 
     edge_attr <- x$df_edge
-    igraph::E(adj)$p <- edge_attr$passability
 
+    if (edge_alpha %in% colnames(edge_attr)) {
+      igraph::E(adj)$p <- unlist(edge_attr[, edge_alpha])
+    }
   }
 
   ## patch label
-  if (patch_label == "patch") {
+  v_patch_label <- c("patch_id",
+                     "branch_id",
+                     "n_patch_upstream")
 
-    igraph::V(adj)$patch_id <- patch_attr$patch_id
+  names(v_patch_label) <- c("patch", "branch", "n_upstream")
+
+  if ((patch_label %in% v_patch_label) || (patch_label %in% names(v_patch_label))) {
+
+    if (patch_label %in% v_patch_label) {
+      plabcnm <- patch_label
+    } else {
+      ## for compatibility with v. 1.4.1 or earlier
+      plabcnm <- v_patch_label[names(v_patch_label) == patch_label]
+    }
+
+    igraph::V(adj)$patch_id <- unlist(patch_attr[, plabcnm])
 
   } else {
 
-    if (patch_label == "branch") {
+    igraph::V(adj)$patch_id <- ""
 
-      igraph::V(adj)$patch_id <- patch_attr$branch_id
-
-    } else {
-
-      if (patch_label == "n_upstream") {
-
-        igraph::V(adj)$patch_id <- patch_attr$n_patch_upstream
-
-      } else {
-
-        if (patch_label != "none") message("patch_label should be 'patch', 'branch', or 'n_upstream' to display")
-        igraph::V(adj)$patch_id <- ""
-
-      }
-
+    if (patch_label != "none") {
+      message("patch_label should be 'patch', 'branch', or 'n_upstream' to display")
     }
 
   }
 
-
   # plot --------------------------------------------------------------------
 
-  g <- ggraph::ggraph(adj,
-                      layout = igraph::layout_as_tree(adj,
-                                                      root = 1,
-                                                      flip.y = FALSE))
+  g0 <- ggraph::ggraph(adj,
+                       layout = igraph::layout_as_tree(adj,
+                                                       root = 1,
+                                                       flip.y = FALSE))
 
-  if (!(patch_color %in% c("env", "disturb", "other"))) {
+  ## define edge
+  if (is.null(x$df_edge) || !(edge_alpha %in% colnames(edge_attr))) {
+    ## edge has fixed color, weight, linetype
+    g_edge <- g0 +
+      ggraph::geom_edge_link(color = edge_color,
+                             edge_linetype = edge_linetype,
+                             alpha = ifelse(is.numeric(edge_alpha),
+                                            yes = edge_alpha,
+                                            no = 1),
+                             edge_width = edge_width)
+
+    if (!(edge_alpha %in% colnames(edge_attr)) && (edge_alpha != "none"))
+      message(paste("column name",
+                    sQuote(edge_alpha),
+                    "does not exist in `df_edge` (supplied in `edge_alpha`)"))
+
+  } else {
+
+    if (edge_alpha %in% colnames(edge_attr)) {
+      ## variable patch & edge transparency
+      g_edge <- g0 +
+        ggraph::geom_edge_link(ggplot2::aes(alpha = .data$p),
+                               edge_color = edge_color,
+                               edge_linetype = edge_linetype,
+                               edge_width = edge_width)
+    }
+
+  }
+
+  ## define node
+  if ((patch_color %in% colnames(patch_attr)) || (patch_color %in% names(v_value))) {
+    ## variable patch color
+    g <- g_edge +
+      ggraph::geom_node_point(ggplot2::aes(color = .data$patch_value),
+                              size = patch_size) +
+      ggraph::geom_node_label(ggplot2::aes(label = .data$patch_id),
+                              fill = NA,
+                              label.size = 0,
+                              ...) +
+      MetBrewer::scale_color_met_c("Hiroshige",
+                                   direction = -1) +
+      ggplot2::theme_void()
+  } else {
     ## single patch color
-    g <- g +
-      ggraph::geom_edge_link(color = grey(0.5)) +
+    g <- g_edge +
       ggraph::geom_node_point(size = patch_size,
                               color = patch_color) +
       ggraph::geom_node_label(ggplot2::aes(label = .data$patch_id),
                               fill = NA,
-                              size = 3,
                               label.size = 0,
                               ...) +
       ggplot2::theme_void()
-
-  } else {
-
-    if (!(edge_weight %in% c("passability"))) {
-      ## variable patch color with single edge color
-      g <- g +
-        ggraph::geom_edge_link(color = edge_color) +
-        ggraph::geom_node_point(ggplot2::aes(color = .data$patch_value),
-                                size = patch_size) +
-        ggraph::geom_node_label(ggplot2::aes(label = .data$patch_id),
-                                fill = NA,
-                                size = 3,
-                                label.size = 0,
-                                ...) +
-        MetBrewer::scale_color_met_c("Hiroshige",
-                                     direction = -1) +
-        ggplot2::labs(color = color_label) +
-        ggplot2::theme_void()
-
-    } else {
-      ## variable patch & edge color
-      g <- g +
-        ggraph::geom_edge_link(ggplot2::aes(alpha = .data$p,
-                                            color = edge_color)) +
-        ggraph::geom_node_point(ggplot2::aes(color = .data$patch_value),
-                                size = patch_size) +
-        ggraph::geom_node_label(ggplot2::aes(label = .data$patch_id),
-                                fill = NA,
-                                size = 3,
-                                label.size = 0,
-                                ...) +
-        MetBrewer::scale_color_met_c("Hiroshige",
-                                     direction = -1) +
-        ggplot2::labs(color = color_label) +
-        ggplot2::theme_void()
-
-    }
-
   }
 
   return(g)
