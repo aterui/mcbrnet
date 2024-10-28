@@ -480,7 +480,7 @@ adjtodist <- function(x) {
 ggbrnet <- function(x,
                     patch_color = "steelblue",
                     edge_color = "black",
-                    edge_alpha = "none",
+                    edge_alpha = 1,
                     edge_linetype = "solid",
                     edge_width = 0.5,
                     patch_label = "none",
@@ -557,20 +557,17 @@ ggbrnet <- function(x,
                                                        flip.y = FALSE))
 
   ## define edge
-  if (is.null(x$df_edge) || !(edge_alpha %in% colnames(edge_attr))) {
+  if (is.null(x$df_edge)) {
+
+    if (!is.numeric(edge_alpha))
+      stop("'edge_alpha' should be supplied as a numeric scalar or one of the conlum names in `df_edge`.")
+
     ## edge has fixed color, weight, linetype
     g_edge <- g0 +
       ggraph::geom_edge_link(color = edge_color,
                              edge_linetype = edge_linetype,
-                             alpha = ifelse(is.numeric(edge_alpha),
-                                            yes = edge_alpha,
-                                            no = 1),
+                             alpha = edge_alpha,
                              edge_width = edge_width)
-
-    if (!(edge_alpha %in% colnames(edge_attr)) && (edge_alpha != "none"))
-      message(paste("column name",
-                    sQuote(edge_alpha),
-                    "does not exist in `df_edge` (supplied in `edge_alpha`)"))
 
   } else {
 
@@ -581,6 +578,10 @@ ggbrnet <- function(x,
                                edge_color = edge_color,
                                edge_linetype = edge_linetype,
                                edge_width = edge_width)
+    } else {
+      stop(paste("column name",
+                 sQuote(edge_alpha),
+                 "does not exist in `df_edge` (supplied in `edge_alpha`)"))
     }
 
   }
