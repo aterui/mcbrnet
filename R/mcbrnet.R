@@ -1787,7 +1787,9 @@ ppm <- function(n_species,
 #' Extra prey function
 #'
 #' @inheritParams ppm
-#' @param alpha0 Numeric matrix. \code{n_species x n_species} interaction matrix
+#' @param alpha0 Numeric matrix.
+#'  Adjacency matrix (\code{n_species x n_species})
+#'  defining trophic interactions
 #' @param j Integer. Consumer's index
 #' @param i0 Integer. Index for the first prey
 #' @param tp Numeric. Initial trophic positions
