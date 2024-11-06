@@ -1975,16 +1975,26 @@ foodweb <- function(n_species,
 #' Calculate a leading eigenvalue
 #'
 #' @param n_species Integer. Number of species.
-#' @param r Numeric vector. Specify a vector of intrinsic growth rates for modeled species.
-#' @param x0 Numeric vector. Specify a vector of equilibrium densities for modeled species.
-#' @param alpha Numeric matrix. Specify an interaction matrix.
-#' @param model Character. Specify a model type. Either \code{"ricker"} (Ricker), \code{"bh"} (Beverton-Holt), or \code{"glv"} (Generalized Lotka-Volterra).
+#' @param r Numeric vector.
+#'  Intrinsic growth rates for modeled species.
+#' @param x0 Numeric vector.
+#'  Equilibrium densities for modeled species.
+#' @param alpha Numeric matrix.
+#'  Interaction matrix for which linear stability is evaluated.
+#' @param model Character string specifying a model type.
+#'  Either \code{"ricker"} (Ricker),
+#'  \code{"bh"} (Beverton-Holt), or
+#'  \code{"glv"} (Generalized Lotka-Volterra).
 #'
 #' @author Akira Terui, \email{hanabi0111@gmail.com}
 #'
 #' @export
 
-stability <- function(n_species, r, x0, alpha, model = "glv") {
+stability <- function(n_species,
+                      r,
+                      x0,
+                      alpha,
+                      model = "glv") {
 
   # check input -------------------------------------------------------------
 
