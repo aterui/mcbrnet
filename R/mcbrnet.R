@@ -1,16 +1,31 @@
 #' Generate a random branching network
 #'
 #' @param n_patch Number of patches in a network.
-#' @param p_branch Branching probability (success probability of a geometric distribution).
-#' @param mean_env_source Mean value of environmental condition at upstream terminals.
-#' @param sd_env_source SD of environmental condition at upstream terminals.
+#' @param p_branch Branching probability
+#'  (success probability of a geometric distribution).
+#' @param mean_env_source Mean value of environmental condition
+#'  at upstream origins of water.
+#' @param sd_env_source SD of environmental condition
+#'  at upstream origins of water.
 #' @param rho Strength of spatial autocorrelation in environmental condition.
 #' @param sd_env_lon SD of longitudinal environmental noise.
-#' @param mean_disturb_source Mean disturbance strength at headwaters. The value is assumed to represent the proportional mortality (0 - 1.0) at the patch level.
-#' @param sd_disturb_source SD of disturbance strength at headwaters. The SD is defined in a logit scale with a normal distribution.
-#' @param sd_disturb_lon SD of longitudinal noise of disturbance strength. The SD is defined in a logit scale with a normal distribution.
-#' @param randomize_patch Whether randomize patches or not. If \code{FALSE}, the function may generate a biased network with ordered patches. Default \code{TRUE}.
-#' @param n_patch_free Whether imposing a constraint on \code{n_patch}. If \code{TRUE}, the number of patches a random variable following a negative binomial distribution.
+#'  The SD is defined in a logit scale with a normal distribution.
+#' @param mean_disturb_source Mean disturbance strength
+#'  at upstream origins of water.
+#'  The value represents the proportional mortality (0 - 1.0).
+#' @param sd_disturb_source SD of disturbance strength
+#'  at upstream origins of water.
+#'  The SD is defined in a logit scale with a normal distribution.
+#' @param sd_disturb_lon SD of longitudinal noise of disturbance strength.
+#'  The SD is defined in a logit scale with a normal distribution.
+#' @param randomize_patch Logical
+#'  indicating whether patches are randomized or not.
+#'  If \code{FALSE}, the function may generate a topologically-biased network.
+#'  Default \code{TRUE}.
+#' @param n_patch_free Logical indicating
+#'  whether imposing a constraint on \code{n_patch} or not.
+#'  If \code{TRUE}, the number of patches is a random variable
+#'  following a negative binomial distribution.
 #'
 #' @importFrom dplyr %>%
 #' @importFrom grDevices grey
@@ -164,14 +179,17 @@ brnet <- function(n_patch = 50,
 #' Create point source disturbance
 #'
 #' @param x `brnet()` object
-#' @param n_source Number of point sources
-#' @param p Reduction factor for downstream propagation
-#' @param q Reduction factor for upstream propagation
-#' @param pattern Spatial pattern of point sources. "random", "cluster", "upstream", "downstream"
+#' @param n_source Numeric. Number of point sources
+#' @param p Numeric. Reduction factor for downstream propagation
+#' @param q Numeric. Reduction factor for upstream propagation
+#' @param pattern Character.
+#'  Spatial pattern of point sources.
+#'  Either "random", "cluster", "upstream", or "downstream"
 #'
 #' @author Akira Terui, \email{hanabi0111@gmail.com}
 #'
-#' @section Reference: see \href{https://aterui.github.io/mcbrnet/}{package webpage} for instruction
+#' @section Reference:
+#'  see \href{https://aterui.github.io/mcbrnet/}{package webpage} for details
 #'
 #' @importFrom dplyr %>% filter
 #' @importFrom rlang .data
@@ -286,10 +304,14 @@ ptsource <- function(x,
 #' Dispersal probability matrix after accounting for network fragmentation
 #'
 #' @param x 'brnet' object or adjacency matrix
-#' @param rate rate parameter of exponential dispersal kernel
-#' @param pattern fragmentation pattern
-#' @param p passability of fragmented edges (probability)
-#' @param n_barrier number of barriers
+#' @param rate Numeric.
+#'  Rate parameter of exponential dispersal kernel
+#' @param pattern Character.
+#'  Specify fragmentation pattern ("random", "upstream", or "downstream")
+#' @param p Numeric.
+#'  Passability of fragmented edges (probability, from 0 to 1).
+#' @param n_barrier Integer.
+#'  Number of barriers.
 #'
 #' @author Akira Terui, \email{hanabi0111@gmail.com}
 #'
@@ -462,13 +484,28 @@ adjtodist <- function(x) {
 #' Visualize a branching network
 #'
 #' @param x `brnet()` object
-#' @param patch_color Type of patch (vertex) label (either \code{"env"}, \code{"disturb"}, any column name in \code{`df_patch`}, or any color).
-#' @param edge_color Edge color
-#' @param edge_alpha Edge transparency. Numeric or one of the columns in `df_edge`.
-#' @param edge_linetype Edge line type
-#' @param edge_width Edge line width
-#' @param patch_label Type of patch (vertex) label (either \code{"patch", "branch", "n_upstream"}). \code{"patch"} shows patch ID, \code{"branch"} branch ID, and \code{"n_upstream"} the number of upstream contributing patches. If \code{"none"}, no label will be shown on patches in the plot.
-#' @param patch_size Patch (vertex) size in the plot.
+#' @param patch_color Character.
+#'  Specify the type of patch (vertex) color.
+#'  Either `"env"`, `"disturb"`,
+#'  any column name in `df_patch`,
+#'  or any color.
+#' @param edge_color Edge color.
+#'  Mapping with `aes()` is not supported.
+#' @param edge_alpha Edge transparency.
+#'  Numeric or one of the columns in `df_edge`.
+#' @param edge_linetype Edge line type.
+#'  Mapping with `aes()` is not supported.
+#' @param edge_width Edge line width.
+#'  Mapping with `aes()` is not supported.
+#' @param patch_label Character.
+#'  Specify the type of patch (vertex) label.
+#'  Either `"patch"`, `"branch"`, `"n_upstream"`.
+#'  `"patch"` shows patch ID,
+#'  `"branch"` branch ID, and
+#'  `"n_upstream"` the number of upstream contributing patches.
+#'  If `"none"`, no label will be shown on patches in the plot.
+#' @param patch_size Numeric.
+#'  Patch (vertex) size in the plot.
 #' @param ... Arguments passed to \code{ggraph::geom_node_label()}.
 #'
 #' @importFrom rlang .data
@@ -617,42 +654,126 @@ ggbrnet <- function(x,
 
 #' Simulate metacommunity dynamics
 #'
-#' @param n_species Number of species in a metacommunity.
-#' @param n_patch Number of patches in a metacommunity.
-#' @param n_warmup Number of time-steps for warm-up. Default \code{200}.
-#' @param n_burnin Number of time-steps for burn-in. Default \code{200}.
-#' @param n_timestep Number of time-steps to be saved. Default \code{1000}.
-#' @param propagule_interval Time interval for propagule introduction during warm-up. If \code{NULL}, a value of \code{ceiling(n_warmup / 10)} will be used.
-#' @param propagule_seed Propagule mean density (intensity parameter in a Poisson distribution). Default \code{0.5}.
-#' @param carrying_capacity Carrying capacities of individual patches. Length must be one or equal to \code{n_patch}. Default \code{100}.
-#' @param xi Hassell exponent. Undercompensation (xi < 1), no compensation (xi = 1; reduced to Beverton-Holt), and overcompensation (xi > 1).
-#' @param interaction_type \code{"constant"} or \code{"random"}. \code{"constant"} assumes the unique interaction strength of \code{alpha} for all pairs of species. \code{"random"} draws random numbers from a uniform distribution with \code{min_alpha} and \code{max_alpha}.
-#' @param alpha Species interaction strength. Enabled if \code{interaction_type = "constant"}. Default \code{0}.
-#' @param min_alpha Minimum value of a uniform distribution that generates species interaction strength. Enabled if \code{interaction_type = "random"}. Default \code{NULL}.
-#' @param max_alpha Maximum value of a uniform distribution that generates species interaction strength. Enabled if \code{interaction_type = "random"}. Default \code{NULL}.
-#' @param r0 Maximum reproductive number of the Beverton-Holt model. Length must be one or equal to \code{n_species}.
-#' @param niche_optim Niche optimum of species (environmental value that maximizes the reproductive number). Length must be one or equal to \code{n_species}. Default \code{NULL}.
-#' @param min_optim Minimum value of a uniform distribution that generates optimal environmental values of simulated species. Values are randomly assigned to species. Enabled if \code{niche_optim = NULL}.
-#' @param max_optim Maximum value of a uniform distribution that generates optimal environmental values of simulated species. Values are randomly assigned to species. Enabled if \code{niche_optim = NULL}.
-#' @param sd_niche_width Niche width of species. Higher values indicate greater niche width. Length must be one or equal to \code{n_species}.
-#' @param min_niche_width Minimum value of a uniform distribution that generates niche width values of simulated species. Values are randomly assigned to species. Enabled if \code{sd_niche_width = NULL}.
-#' @param max_niche_width Maximum value of a uniform distribution that generates niche width values of simulated species. Values are randomly assigned to species. Enabled if \code{sd_niche_width = NULL}.
-#' @param niche_cost Determine the cost of wide niche (smaller values imply greater costs of wider niche). Default \code{1}.
-#' @param xy_coord Site coordinates. Must be provided as a data frame in which each row corresponds to an individual site with x and y coordinates (columns). Defualt \code{NULL}.
-#' @param distance_matrix Distance matrix indicating distance between habitat patches. If provided, the distance matrix will be used to generate dispersal matrix and to calculate distance decay of environmental correlations. Default \code{NULL}.
-#' @param dispersal_matrix Dispersal matrix to be used to simulate dispersal process. Override distance_matrix. Default \code{NULL}.
-#' @param p_disturb Disturbance probability.
-#' @param i_disturb Disturbance intensity expressed as proportional mortality (0 to 1). Length must be one or equal to \code{n_patch}.
-#' @param landscape_size Length of a landscape on a side. Enabled if \code{dispersal_matrix = NULL}.
-#' @param mean_env Mean environmental values of patches. Length must be one or equal to \code{n_patch}.
-#' @param sd_env Standard deviation of temporal environmental variation at each patch.
-#' @param spatial_env_cor If \code{TRUE}, spatial autocorrelation in temporal environmental fluctuation is considered. Default \code{FALSE}.
-#' @param phi Parameter describing the distance decay of spatial autocorrelation in temporal environmental fluctuation. Enabled if \code{spatial_env_cor = TRUE}.
-#' @param p_dispersal Dispersal probability. Length must be one or equal to \code{n_species}.
-#' @param theta Rate parameter of exponential dispersal kernel.
-#' @param zeta Species sensitivity to environmental pollutants.
-#' @param impact Concentration of environmental pollutants.
-#' @param plot If \code{TRUE}, five sample patches and species of \code{df_dynamics} are plotted.
+#' @param n_species Integer.
+#'  Number of species in a metacommunity.
+#' @param n_patch Integer.
+#'  Number of patches in a metacommunity.
+#' @param n_warmup Integer.
+#'  Number of time-steps for warm-up. Default \code{200}.
+#' @param n_burnin Integer.
+#'  Number of time-steps for burn-in. Default \code{200}.
+#' @param n_timestep Integer.
+#'  Number of time-steps to be saved. Default \code{1000}.
+#' @param propagule_interval Integer.
+#'  Time interval for propagule introduction during warm-up.
+#'  If \code{NULL}, a value of \code{ceiling(n_warmup / 10)} will be used.
+#' @param propagule_seed Numeric.
+#'  Propagule mean density (intensity parameter in a Poisson distribution).
+#'  Default \code{0.5}.
+#' @param carrying_capacity Numeric.
+#'  Carrying capacities of individual patches.
+#'  Length must be one or equal to \code{n_patch}. Default \code{100}.
+#' @param xi Numeric.
+#'  Hassell exponent.
+#'  Undercompensation (xi < 1),
+#'  no compensation (xi = 1; reduced to Beverton-Holt),
+#'  and overcompensation (xi > 1).
+#' @param interaction_type Character.
+#'  \code{"constant"} or \code{"random"}.
+#'  \code{"constant"} assumes the unique interaction strength of \code{alpha}
+#'  for all pairs of species.
+#'  \code{"random"} draws random numbers from a uniform distribution
+#'  with \code{min_alpha} and \code{max_alpha}.
+#' @param alpha Numeric matrix.
+#'  Species interaction strength.
+#'  Enabled if \code{interaction_type = "constant"}.
+#'  Default \code{0}.
+#' @param min_alpha Numeric.
+#'  Minimum value of a uniform distribution generating interaction strength.
+#'  Enabled if \code{interaction_type = "random"}. Default \code{NULL}.
+#' @param max_alpha Numeric.
+#'  Maximum value of a uniform distribution generating interaction strength.
+#'  Enabled if \code{interaction_type = "random"}. Default \code{NULL}.
+#' @param r0 Numeric.
+#'  Maximum reproductive number of the Beverton-Holt model.
+#'  Length must be one or equal to \code{n_species}.
+#' @param niche_optim Numeric.
+#'  Niche optimum of species
+#'  (the environmental value at which the reproductive number is maximized).
+#'  Length must be one or equal to \code{n_species}. Default \code{NULL}.
+#' @param min_optim Numeric.
+#'  Minimum value of a uniform distribution
+#'  generating the optimal environmental values of simulated species.
+#'  Values are randomly assigned to species.
+#'  Enabled if \code{niche_optim = NULL}.
+#' @param max_optim Numeric.
+#'  Maximum value of a uniform distribution
+#'  generating the optimal environmental values of simulated species.
+#'  Values are randomly assigned to species.
+#'  Enabled if \code{niche_optim = NULL}.
+#' @param sd_niche_width Numeric.
+#'  Niche width of species.
+#'  Higher values indicate greater niche width.
+#'  Length must be one or equal to \code{n_species}.
+#' @param min_niche_width Numeric.
+#'  Minimum value of a uniform distribution
+#'  generating the niche width values of simulated species.
+#'  Values are randomly assigned to species.
+#'  Enabled if \code{sd_niche_width = NULL}.
+#' @param max_niche_width Numeric.
+#'  Maximum value of a uniform distribution
+#'  generating the niche width values of simulated species.
+#'  Values are randomly assigned to species.
+#'  Enabled if \code{sd_niche_width = NULL}.
+#' @param niche_cost Numeric.
+#'  This parameter determines the cost of wide niche.
+#'  Smaller values imply greater costs of wider niche.
+#'  Default \code{1}.
+#' @param xy_coord Site coordinates.
+#'  Must be provided as a data frame,
+#'  in which each row corresponds to an individual site
+#'  with x and y coordinates (columns).
+#'  Defualt \code{NULL}.
+#' @param distance_matrix Distance matrix.
+#'  Each element must indicate distance between a given pair of habitat patches.
+#'  If provided, the distance matrix will be used
+#'  to generate dispersal matrix and distance decay of environmental correlations.
+#'  Default \code{NULL}.
+#' @param dispersal_matrix Dispersal matrix.
+#'  If provided, this matrix overrides `distance_matrix`
+#'  to simulate dispersal process.
+#'  Default \code{NULL}.
+#' @param p_disturb Numeric. Disturbance probability.
+#' @param i_disturb Numeric.
+#'  Disturbance intensity expressed as proportional mortality (0 to 1).
+#'  Length must be one or equal to \code{n_patch}.
+#' @param landscape_size Length of a landscape on a side.
+#'  Enabled if \code{distance_matrix = NULL} and \code{dispersal_matrix = NULL}.
+#' @param mean_env Numeric.
+#'  Mean environmental values of patches.
+#'  Length must be one or equal to \code{n_patch}.
+#' @param sd_env Numeric.
+#'  Standard deviation of temporal environmental variation at each patch.
+#' @param spatial_env_cor Numeric.
+#'  If \code{TRUE},
+#'  spatial autocorrelation in temporal environmental fluctuation is considered.
+#'  Default \code{FALSE}.
+#' @param phi Numeric.
+#'  This parameter describes the distance decay of spatial autocorrelation
+#'  in temporal environmental fluctuation.
+#'  Enabled if \code{spatial_env_cor = TRUE}.
+#' @param p_dispersal Numeric.
+#'  This parameter describes dispersal probability.
+#'  Length must be one or equal to \code{n_species}.
+#' @param theta Numeric.
+#'  Rate parameter of exponential dispersal kernel.
+#' @param zeta Numeric.
+#'  Species sensitivity to environmental pollutants.
+#' @param impact Numeric.
+#'  Concentration of environmental pollutants.
+#' @param plot Logical.
+#'  If \code{TRUE},
+#'  five sample patches and species of \code{df_dynamics} are plotted.
 #'
 #' @importFrom dplyr %>% filter
 #' @importFrom ggplot2 ggplot vars labeller geom_line aes scale_color_viridis_c labs facet_grid label_both
@@ -660,7 +781,8 @@ ggbrnet <- function(x,
 #' @importFrom utils setTxtProgressBar txtProgressBar
 #' @importFrom rlang .data
 #'
-#' @section Reference: see \href{https://aterui.github.io/mcbrnet/index.html}{package webpage} for instruction
+#' @section Reference:
+#'  see \href{https://aterui.github.io/mcbrnet/}{package webpage} for details
 #'
 #' @author Akira Terui, \email{hanabi0111@gmail.com}
 #'
@@ -1859,10 +1981,18 @@ extra_prey <- function(alpha0,
 #' Apply conversion efficiency and attack rate
 #'
 #' @inheritParams extra_prey
-#' @param competition List for competition coefficients between producers. Specify minimum and maximum values for a uniform distribution.
-#' @param attack List for attack rates. Specify minimum and maximum values for a uniform distribution.
-#' @param convert List for conversion efficiency. Specify minimum and maximum values for a uniform distribution.
-#' @param regulation List for self regulation (or intraspecific competition). Specify minimum and maximum values for a uniform distribution.
+#' @param competition List for competition coefficients between producers.
+#'  Specify minimum (\code{min}) and maximum values (\code{max})
+#'  for a uniform distribution.
+#' @param attack List for attack rates.
+#'  Specify minimum (\code{min}) and maximum values (\code{max})
+#'  for a uniform distribution.
+#' @param convert List for conversion efficiency.
+#'  Specify minimum (\code{min}) and maximum values (\code{max})
+#'  for a uniform distribution.
+#' @param regulation List for self regulation (or intraspecific competition).
+#'  Specify minimum (\code{min}) and maximum values (\code{max})
+#'  for a uniform distribution.
 #'
 #' @author Akira Terui, \email{hanabi0111@gmail.com}
 #'
