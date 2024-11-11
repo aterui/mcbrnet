@@ -19,19 +19,34 @@ ggbrnet(
 \arguments{
 \item{x}{\code{brnet()} object}
 
-\item{patch_color}{Type of patch (vertex) label (either \code{"env"}, \code{"disturb"}, any column name in \code{`df_patch`}, or any color).}
+\item{patch_color}{Character.
+Specify the type of patch (vertex) color.
+Either \code{"env"}, \code{"disturb"},
+any column name in \code{df_patch},
+or any color.}
 
-\item{edge_color}{Edge color}
+\item{edge_color}{Edge color.
+Mapping with \code{aes()} is not supported.}
 
-\item{edge_alpha}{Edge transparency. Numeric or one of the columns in \code{df_edge}.}
+\item{edge_alpha}{Edge transparency.
+Numeric or one of the columns in \code{df_edge}.}
 
-\item{edge_linetype}{Edge line type}
+\item{edge_linetype}{Edge line type.
+Mapping with \code{aes()} is not supported.}
 
-\item{edge_width}{Edge line width}
+\item{edge_width}{Edge line width.
+Mapping with \code{aes()} is not supported.}
 
-\item{patch_label}{Type of patch (vertex) label (either \code{"patch", "branch", "n_upstream"}). \code{"patch"} shows patch ID, \code{"branch"} branch ID, and \code{"n_upstream"} the number of upstream contributing patches. If \code{"none"}, no label will be shown on patches in the plot.}
+\item{patch_label}{Character.
+Specify the type of patch (vertex) label.
+Either \code{"patch"}, \code{"branch"}, \code{"n_upstream"}.
+\code{"patch"} shows patch ID,
+\code{"branch"} branch ID, and
+\code{"n_upstream"} the number of upstream contributing patches.
+If \code{"none"}, no label will be shown on patches in the plot.}
 
-\item{patch_size}{Patch (vertex) size in the plot.}
+\item{patch_size}{Numeric.
+Patch (vertex) size in the plot.}
 
 \item{...}{Arguments passed to \code{ggraph::geom_node_label()}.}
 }

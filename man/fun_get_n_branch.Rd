@@ -9,7 +9,8 @@ fun_get_n_branch(n_patch, p_branch)
 \arguments{
 \item{n_patch}{Number of patches in a network.}
 
-\item{p_branch}{Branching probability (success probability of a geometric distribution).}
+\item{p_branch}{Branching probability
+(success probability of a geometric distribution).}
 }
 \description{
 Get n_branch

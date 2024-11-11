@@ -11,7 +11,7 @@ Ecological simulation in spatial networks.
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://github.com/aterui/mcbrnet}
+  \item \url{https://aterui.github.io/mcbrnet/}
 }
 
 }

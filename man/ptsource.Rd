@@ -9,19 +9,22 @@ ptsource(x, n_source, p, q, pattern = "random")
 \arguments{
 \item{x}{\code{brnet()} object}
 
-\item{n_source}{Number of point sources}
+\item{n_source}{Numeric. Number of point sources}
 
-\item{p}{Reduction factor for downstream propagation}
+\item{p}{Numeric. Reduction factor for downstream propagation}
 
-\item{q}{Reduction factor for upstream propagation}
+\item{q}{Numeric. Reduction factor for upstream propagation}
 
-\item{pattern}{Spatial pattern of point sources. "random", "cluster", "upstream", "downstream"}
+\item{pattern}{Character.
+Spatial pattern of point sources.
+Either "random", "cluster", "upstream", or "downstream"}
 }
 \description{
 Create point source disturbance
 }
 \section{Reference}{
- see \href{https://aterui.github.io/mcbrnet/}{package webpage} for instruction
+
+see \href{https://aterui.github.io/mcbrnet/}{package webpage} for details
 }
 
 \author{

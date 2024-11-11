@@ -9,11 +9,15 @@ fun_m_adj(n_patch, p_branch, n_branch, n_patch_free)
 \arguments{
 \item{n_patch}{Number of patches in a network.}
 
-\item{p_branch}{Branching probability (success probability of a geometric distribution).}
+\item{p_branch}{Branching probability
+(success probability of a geometric distribution).}
 
 \item{n_branch}{Number of branches}
 
-\item{n_patch_free}{Whether imposing a constraint on \code{n_patch}. If \code{TRUE}, the number of patches a random variable following a negative binomial distribution.}
+\item{n_patch_free}{Logical indicating
+whether imposing a constraint on \code{n_patch} or not.
+If \code{TRUE}, the number of patches is a random variable
+following a negative binomial distribution.}
 }
 \description{
 Adjacency matrix in branching networks

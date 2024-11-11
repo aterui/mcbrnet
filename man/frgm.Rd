@@ -9,13 +9,17 @@ frgm(x, rate, pattern = "random", p = NULL, n_barrier)
 \arguments{
 \item{x}{'brnet' object or adjacency matrix}
 
-\item{rate}{rate parameter of exponential dispersal kernel}
+\item{rate}{Numeric.
+Rate parameter of exponential dispersal kernel}
 
-\item{pattern}{fragmentation pattern}
+\item{pattern}{Character.
+Specify fragmentation pattern ("random", "upstream", or "downstream")}
 
-\item{p}{passability of fragmented edges (probability)}
+\item{p}{Numeric.
+Passability of fragmented edges (probability, from 0 to 1).}
 
-\item{n_barrier}{number of barriers}
+\item{n_barrier}{Integer.
+Number of barriers.}
 }
 \description{
 Dispersal probability matrix after accounting for network fragmentation

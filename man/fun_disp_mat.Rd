@@ -14,17 +14,31 @@ fun_disp_mat(
 )
 }
 \arguments{
-\item{n_patch}{Number of patches in a metacommunity.}
+\item{n_patch}{Integer.
+Number of patches in a metacommunity.}
 
-\item{landscape_size}{Length of a landscape on a side. Enabled if \code{dispersal_matrix = NULL}.}
+\item{landscape_size}{Length of a landscape on a side.
+Enabled if \code{distance_matrix = NULL} and \code{dispersal_matrix = NULL}.}
 
-\item{theta}{Rate parameter of exponential dispersal kernel.}
+\item{theta}{Numeric.
+Rate parameter of exponential dispersal kernel.}
 
-\item{xy_coord}{Site coordinates. Must be provided as a data frame in which each row corresponds to an individual site with x and y coordinates (columns). Defualt \code{NULL}.}
+\item{xy_coord}{Site coordinates.
+Must be provided as a data frame,
+in which each row corresponds to an individual site
+with x and y coordinates (columns).
+Defualt \code{NULL}.}
 
-\item{distance_matrix}{Distance matrix indicating distance between habitat patches. If provided, the distance matrix will be used to generate dispersal matrix and to calculate distance decay of environmental correlations. Default \code{NULL}.}
+\item{distance_matrix}{Distance matrix.
+Each element must indicate distance between a given pair of habitat patches.
+If provided, the distance matrix will be used
+to generate dispersal matrix and distance decay of environmental correlations.
+Default \code{NULL}.}
 
-\item{dispersal_matrix}{Dispersal matrix to be used to simulate dispersal process. Override distance_matrix. Default \code{NULL}.}
+\item{dispersal_matrix}{Dispersal matrix.
+If provided, this matrix overrides \code{distance_matrix}
+to simulate dispersal process.
+Default \code{NULL}.}
 }
 \description{
 To dispersal matrix

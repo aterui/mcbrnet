@@ -21,25 +21,40 @@ brnet(
 \arguments{
 \item{n_patch}{Number of patches in a network.}
 
-\item{p_branch}{Branching probability (success probability of a geometric distribution).}
+\item{p_branch}{Branching probability
+(success probability of a geometric distribution).}
 
-\item{mean_env_source}{Mean value of environmental condition at upstream terminals.}
+\item{mean_env_source}{Mean value of environmental condition
+at upstream origins of water.}
 
-\item{sd_env_source}{SD of environmental condition at upstream terminals.}
+\item{sd_env_source}{SD of environmental condition
+at upstream origins of water.}
 
 \item{rho}{Strength of spatial autocorrelation in environmental condition.}
 
-\item{sd_env_lon}{SD of longitudinal environmental noise.}
+\item{sd_env_lon}{SD of longitudinal environmental noise.
+The SD is defined in a logit scale with a normal distribution.}
 
-\item{mean_disturb_source}{Mean disturbance strength at headwaters. The value is assumed to represent the proportional mortality (0 - 1.0) at the patch level.}
+\item{mean_disturb_source}{Mean disturbance strength
+at upstream origins of water.
+The value represents the proportional mortality (0 - 1.0).}
 
-\item{sd_disturb_source}{SD of disturbance strength at headwaters. The SD is defined in a logit scale with a normal distribution.}
+\item{sd_disturb_source}{SD of disturbance strength
+at upstream origins of water.
+The SD is defined in a logit scale with a normal distribution.}
 
-\item{sd_disturb_lon}{SD of longitudinal noise of disturbance strength. The SD is defined in a logit scale with a normal distribution.}
+\item{sd_disturb_lon}{SD of longitudinal noise of disturbance strength.
+The SD is defined in a logit scale with a normal distribution.}
 
-\item{randomize_patch}{Whether randomize patches or not. If \code{FALSE}, the function may generate a biased network with ordered patches. Default \code{TRUE}.}
+\item{randomize_patch}{Logical
+indicating whether patches are randomized or not.
+If \code{FALSE}, the function may generate a topologically-biased network.
+Default \code{TRUE}.}
 
-\item{n_patch_free}{Whether imposing a constraint on \code{n_patch}. If \code{TRUE}, the number of patches a random variable following a negative binomial distribution.}
+\item{n_patch_free}{Logical indicating
+whether imposing a constraint on \code{n_patch} or not.
+If \code{TRUE}, the number of patches is a random variable
+following a negative binomial distribution.}
 }
 \description{
 Generate a random branching network
