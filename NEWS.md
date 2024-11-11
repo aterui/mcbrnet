@@ -5,6 +5,9 @@ Changelog
 
 - `ggbrnet()` has been updated to increase flexibility (some
   incompatibility with earlier versions). See **Articles** for details.
+- disabled functions `findr()`, `ppm()`, `extra_prey()`, `to_alpha()`,
+  `foodweb()`, `stability()`; these functions were moved to `ecotools`
+  package at <https://github.com/aterui/ecotools>
 
 # mcbrnet 1.4.1 (9/10/24)
 

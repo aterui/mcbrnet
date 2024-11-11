@@ -60,27 +60,41 @@
 
 
 <dl><dt id="arg-n-patch">n_patch<a class="anchor" aria-label="anchor" href="#arg-n-patch"></a></dt>
-<dd><p>Number of patches in a metacommunity.</p></dd>
+<dd><p>Integer.
+Number of patches in a metacommunity.</p></dd>
 
 
 <dt id="arg-landscape-size">landscape_size<a class="anchor" aria-label="anchor" href="#arg-landscape-size"></a></dt>
-<dd><p>Length of a landscape on a side. Enabled if <code>dispersal_matrix = NULL</code>.</p></dd>
+<dd><p>Length of a landscape on a side.
+Enabled if <code>distance_matrix = NULL</code> and <code>dispersal_matrix = NULL</code>.</p></dd>
 
 
 <dt id="arg-theta">theta<a class="anchor" aria-label="anchor" href="#arg-theta"></a></dt>
-<dd><p>Rate parameter of exponential dispersal kernel.</p></dd>
+<dd><p>Numeric.
+Rate parameter of exponential dispersal kernel.</p></dd>
 
 
 <dt id="arg-xy-coord">xy_coord<a class="anchor" aria-label="anchor" href="#arg-xy-coord"></a></dt>
-<dd><p>Site coordinates. Must be provided as a data frame in which each row corresponds to an individual site with x and y coordinates (columns). Defualt <code>NULL</code>.</p></dd>
+<dd><p>Site coordinates.
+Must be provided as a data frame,
+in which each row corresponds to an individual site
+with x and y coordinates (columns).
+Defualt <code>NULL</code>.</p></dd>
 
 
 <dt id="arg-distance-matrix">distance_matrix<a class="anchor" aria-label="anchor" href="#arg-distance-matrix"></a></dt>
-<dd><p>Distance matrix indicating distance between habitat patches. If provided, the distance matrix will be used to generate dispersal matrix and to calculate distance decay of environmental correlations. Default <code>NULL</code>.</p></dd>
+<dd><p>Distance matrix.
+Each element must indicate distance between a given pair of habitat patches.
+If provided, the distance matrix will be used
+to generate dispersal matrix and distance decay of environmental correlations.
+Default <code>NULL</code>.</p></dd>
 
 
 <dt id="arg-dispersal-matrix">dispersal_matrix<a class="anchor" aria-label="anchor" href="#arg-dispersal-matrix"></a></dt>
-<dd><p>Dispersal matrix to be used to simulate dispersal process. Override distance_matrix. Default <code>NULL</code>.</p></dd>
+<dd><p>Dispersal matrix.
+If provided, this matrix overrides <code>distance_matrix</code>
+to simulate dispersal process.
+Default <code>NULL</code>.</p></dd>
 
 </dl></div>
 

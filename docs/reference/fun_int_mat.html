@@ -53,23 +53,36 @@
 
 
 <dl><dt id="arg-n-species">n_species<a class="anchor" aria-label="anchor" href="#arg-n-species"></a></dt>
-<dd><p>Number of species in a metacommunity.</p></dd>
+<dd><p>Integer.
+Number of species in a metacommunity.</p></dd>
 
 
 <dt id="arg-alpha">alpha<a class="anchor" aria-label="anchor" href="#arg-alpha"></a></dt>
-<dd><p>Species interaction strength. Enabled if <code>interaction_type = "constant"</code>. Default <code>0</code>.</p></dd>
+<dd><p>Numeric matrix.
+Species interaction strength.
+Enabled if <code>interaction_type = "constant"</code>.
+Default <code>0</code>.</p></dd>
 
 
 <dt id="arg-min-alpha">min_alpha<a class="anchor" aria-label="anchor" href="#arg-min-alpha"></a></dt>
-<dd><p>Minimum value of a uniform distribution that generates species interaction strength. Enabled if <code>interaction_type = "random"</code>. Default <code>NULL</code>.</p></dd>
+<dd><p>Numeric.
+Minimum value of a uniform distribution generating interaction strength.
+Enabled if <code>interaction_type = "random"</code>. Default <code>NULL</code>.</p></dd>
 
 
 <dt id="arg-max-alpha">max_alpha<a class="anchor" aria-label="anchor" href="#arg-max-alpha"></a></dt>
-<dd><p>Maximum value of a uniform distribution that generates species interaction strength. Enabled if <code>interaction_type = "random"</code>. Default <code>NULL</code>.</p></dd>
+<dd><p>Numeric.
+Maximum value of a uniform distribution generating interaction strength.
+Enabled if <code>interaction_type = "random"</code>. Default <code>NULL</code>.</p></dd>
 
 
 <dt id="arg-interaction-type">interaction_type<a class="anchor" aria-label="anchor" href="#arg-interaction-type"></a></dt>
-<dd><p><code>"constant"</code> or <code>"random"</code>. <code>"constant"</code> assumes the unique interaction strength of <code>alpha</code> for all pairs of species. <code>"random"</code> draws random numbers from a uniform distribution with <code>min_alpha</code> and <code>max_alpha</code>.</p></dd>
+<dd><p>Character.
+<code>"constant"</code> or <code>"random"</code>.
+<code>"constant"</code> assumes the unique interaction strength of <code>alpha</code>
+for all pairs of species.
+<code>"random"</code> draws random numbers from a uniform distribution
+with <code>min_alpha</code> and <code>max_alpha</code>.</p></dd>
 
 </dl></div>
 

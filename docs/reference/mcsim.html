@@ -90,152 +90,238 @@
 
 
 <dl><dt id="arg-n-species">n_species<a class="anchor" aria-label="anchor" href="#arg-n-species"></a></dt>
-<dd><p>Number of species in a metacommunity.</p></dd>
+<dd><p>Integer.
+Number of species in a metacommunity.</p></dd>
 
 
 <dt id="arg-n-patch">n_patch<a class="anchor" aria-label="anchor" href="#arg-n-patch"></a></dt>
-<dd><p>Number of patches in a metacommunity.</p></dd>
+<dd><p>Integer.
+Number of patches in a metacommunity.</p></dd>
 
 
 <dt id="arg-n-warmup">n_warmup<a class="anchor" aria-label="anchor" href="#arg-n-warmup"></a></dt>
-<dd><p>Number of time-steps for warm-up. Default <code>200</code>.</p></dd>
+<dd><p>Integer.
+Number of time-steps for warm-up. Default <code>200</code>.</p></dd>
 
 
 <dt id="arg-n-burnin">n_burnin<a class="anchor" aria-label="anchor" href="#arg-n-burnin"></a></dt>
-<dd><p>Number of time-steps for burn-in. Default <code>200</code>.</p></dd>
+<dd><p>Integer.
+Number of time-steps for burn-in. Default <code>200</code>.</p></dd>
 
 
 <dt id="arg-n-timestep">n_timestep<a class="anchor" aria-label="anchor" href="#arg-n-timestep"></a></dt>
-<dd><p>Number of time-steps to be saved. Default <code>1000</code>.</p></dd>
+<dd><p>Integer.
+Number of time-steps to be saved. Default <code>1000</code>.</p></dd>
 
 
 <dt id="arg-propagule-interval">propagule_interval<a class="anchor" aria-label="anchor" href="#arg-propagule-interval"></a></dt>
-<dd><p>Time interval for propagule introduction during warm-up. If <code>NULL</code>, a value of <code>ceiling(n_warmup / 10)</code> will be used.</p></dd>
+<dd><p>Integer.
+Time interval for propagule introduction during warm-up.
+If <code>NULL</code>, a value of <code>ceiling(n_warmup / 10)</code> will be used.</p></dd>
 
 
 <dt id="arg-propagule-seed">propagule_seed<a class="anchor" aria-label="anchor" href="#arg-propagule-seed"></a></dt>
-<dd><p>Propagule mean density (intensity parameter in a Poisson distribution). Default <code>0.5</code>.</p></dd>
+<dd><p>Numeric.
+Propagule mean density (intensity parameter in a Poisson distribution).
+Default <code>0.5</code>.</p></dd>
 
 
 <dt id="arg-carrying-capacity">carrying_capacity<a class="anchor" aria-label="anchor" href="#arg-carrying-capacity"></a></dt>
-<dd><p>Carrying capacities of individual patches. Length must be one or equal to <code>n_patch</code>. Default <code>100</code>.</p></dd>
+<dd><p>Numeric.
+Carrying capacities of individual patches.
+Length must be one or equal to <code>n_patch</code>. Default <code>100</code>.</p></dd>
 
 
 <dt id="arg-xi">xi<a class="anchor" aria-label="anchor" href="#arg-xi"></a></dt>
-<dd><p>Hassell exponent. Undercompensation (xi &lt; 1), no compensation (xi = 1; reduced to Beverton-Holt), and overcompensation (xi &gt; 1).</p></dd>
+<dd><p>Numeric.
+Hassell exponent.
+Undercompensation (xi &lt; 1),
+no compensation (xi = 1; reduced to Beverton-Holt),
+and overcompensation (xi &gt; 1).</p></dd>
 
 
 <dt id="arg-interaction-type">interaction_type<a class="anchor" aria-label="anchor" href="#arg-interaction-type"></a></dt>
-<dd><p><code>"constant"</code> or <code>"random"</code>. <code>"constant"</code> assumes the unique interaction strength of <code>alpha</code> for all pairs of species. <code>"random"</code> draws random numbers from a uniform distribution with <code>min_alpha</code> and <code>max_alpha</code>.</p></dd>
+<dd><p>Character.
+<code>"constant"</code> or <code>"random"</code>.
+<code>"constant"</code> assumes the unique interaction strength of <code>alpha</code>
+for all pairs of species.
+<code>"random"</code> draws random numbers from a uniform distribution
+with <code>min_alpha</code> and <code>max_alpha</code>.</p></dd>
 
 
 <dt id="arg-alpha">alpha<a class="anchor" aria-label="anchor" href="#arg-alpha"></a></dt>
-<dd><p>Species interaction strength. Enabled if <code>interaction_type = "constant"</code>. Default <code>0</code>.</p></dd>
+<dd><p>Numeric matrix.
+Species interaction strength.
+Enabled if <code>interaction_type = "constant"</code>.
+Default <code>0</code>.</p></dd>
 
 
 <dt id="arg-min-alpha">min_alpha<a class="anchor" aria-label="anchor" href="#arg-min-alpha"></a></dt>
-<dd><p>Minimum value of a uniform distribution that generates species interaction strength. Enabled if <code>interaction_type = "random"</code>. Default <code>NULL</code>.</p></dd>
+<dd><p>Numeric.
+Minimum value of a uniform distribution generating interaction strength.
+Enabled if <code>interaction_type = "random"</code>. Default <code>NULL</code>.</p></dd>
 
 
 <dt id="arg-max-alpha">max_alpha<a class="anchor" aria-label="anchor" href="#arg-max-alpha"></a></dt>
-<dd><p>Maximum value of a uniform distribution that generates species interaction strength. Enabled if <code>interaction_type = "random"</code>. Default <code>NULL</code>.</p></dd>
+<dd><p>Numeric.
+Maximum value of a uniform distribution generating interaction strength.
+Enabled if <code>interaction_type = "random"</code>. Default <code>NULL</code>.</p></dd>
 
 
 <dt id="arg-r-">r0<a class="anchor" aria-label="anchor" href="#arg-r-"></a></dt>
-<dd><p>Maximum reproductive number of the Beverton-Holt model. Length must be one or equal to <code>n_species</code>.</p></dd>
+<dd><p>Numeric.
+Maximum reproductive number of the Beverton-Holt model.
+Length must be one or equal to <code>n_species</code>.</p></dd>
 
 
 <dt id="arg-niche-optim">niche_optim<a class="anchor" aria-label="anchor" href="#arg-niche-optim"></a></dt>
-<dd><p>Niche optimum of species (environmental value that maximizes the reproductive number). Length must be one or equal to <code>n_species</code>. Default <code>NULL</code>.</p></dd>
+<dd><p>Numeric.
+Niche optimum of species
+(the environmental value at which the reproductive number is maximized).
+Length must be one or equal to <code>n_species</code>. Default <code>NULL</code>.</p></dd>
 
 
 <dt id="arg-min-optim">min_optim<a class="anchor" aria-label="anchor" href="#arg-min-optim"></a></dt>
-<dd><p>Minimum value of a uniform distribution that generates optimal environmental values of simulated species. Values are randomly assigned to species. Enabled if <code>niche_optim = NULL</code>.</p></dd>
+<dd><p>Numeric.
+Minimum value of a uniform distribution
+generating the optimal environmental values of simulated species.
+Values are randomly assigned to species.
+Enabled if <code>niche_optim = NULL</code>.</p></dd>
 
 
 <dt id="arg-max-optim">max_optim<a class="anchor" aria-label="anchor" href="#arg-max-optim"></a></dt>
-<dd><p>Maximum value of a uniform distribution that generates optimal environmental values of simulated species. Values are randomly assigned to species. Enabled if <code>niche_optim = NULL</code>.</p></dd>
+<dd><p>Numeric.
+Maximum value of a uniform distribution
+generating the optimal environmental values of simulated species.
+Values are randomly assigned to species.
+Enabled if <code>niche_optim = NULL</code>.</p></dd>
 
 
 <dt id="arg-sd-niche-width">sd_niche_width<a class="anchor" aria-label="anchor" href="#arg-sd-niche-width"></a></dt>
-<dd><p>Niche width of species. Higher values indicate greater niche width. Length must be one or equal to <code>n_species</code>.</p></dd>
+<dd><p>Numeric.
+Niche width of species.
+Higher values indicate greater niche width.
+Length must be one or equal to <code>n_species</code>.</p></dd>
 
 
 <dt id="arg-min-niche-width">min_niche_width<a class="anchor" aria-label="anchor" href="#arg-min-niche-width"></a></dt>
-<dd><p>Minimum value of a uniform distribution that generates niche width values of simulated species. Values are randomly assigned to species. Enabled if <code>sd_niche_width = NULL</code>.</p></dd>
+<dd><p>Numeric.
+Minimum value of a uniform distribution
+generating the niche width values of simulated species.
+Values are randomly assigned to species.
+Enabled if <code>sd_niche_width = NULL</code>.</p></dd>
 
 
 <dt id="arg-max-niche-width">max_niche_width<a class="anchor" aria-label="anchor" href="#arg-max-niche-width"></a></dt>
-<dd><p>Maximum value of a uniform distribution that generates niche width values of simulated species. Values are randomly assigned to species. Enabled if <code>sd_niche_width = NULL</code>.</p></dd>
+<dd><p>Numeric.
+Maximum value of a uniform distribution
+generating the niche width values of simulated species.
+Values are randomly assigned to species.
+Enabled if <code>sd_niche_width = NULL</code>.</p></dd>
 
 
 <dt id="arg-niche-cost">niche_cost<a class="anchor" aria-label="anchor" href="#arg-niche-cost"></a></dt>
-<dd><p>Determine the cost of wide niche (smaller values imply greater costs of wider niche). Default <code>1</code>.</p></dd>
+<dd><p>Numeric.
+This parameter determines the cost of wide niche.
+Smaller values imply greater costs of wider niche.
+Default <code>1</code>.</p></dd>
 
 
 <dt id="arg-xy-coord">xy_coord<a class="anchor" aria-label="anchor" href="#arg-xy-coord"></a></dt>
-<dd><p>Site coordinates. Must be provided as a data frame in which each row corresponds to an individual site with x and y coordinates (columns). Defualt <code>NULL</code>.</p></dd>
+<dd><p>Site coordinates.
+Must be provided as a data frame,
+in which each row corresponds to an individual site
+with x and y coordinates (columns).
+Defualt <code>NULL</code>.</p></dd>
 
 
 <dt id="arg-distance-matrix">distance_matrix<a class="anchor" aria-label="anchor" href="#arg-distance-matrix"></a></dt>
-<dd><p>Distance matrix indicating distance between habitat patches. If provided, the distance matrix will be used to generate dispersal matrix and to calculate distance decay of environmental correlations. Default <code>NULL</code>.</p></dd>
+<dd><p>Distance matrix.
+Each element must indicate distance between a given pair of habitat patches.
+If provided, the distance matrix will be used
+to generate dispersal matrix and distance decay of environmental correlations.
+Default <code>NULL</code>.</p></dd>
 
 
 <dt id="arg-dispersal-matrix">dispersal_matrix<a class="anchor" aria-label="anchor" href="#arg-dispersal-matrix"></a></dt>
-<dd><p>Dispersal matrix to be used to simulate dispersal process. Override distance_matrix. Default <code>NULL</code>.</p></dd>
+<dd><p>Dispersal matrix.
+If provided, this matrix overrides <code>distance_matrix</code>
+to simulate dispersal process.
+Default <code>NULL</code>.</p></dd>
 
 
 <dt id="arg-p-disturb">p_disturb<a class="anchor" aria-label="anchor" href="#arg-p-disturb"></a></dt>
-<dd><p>Disturbance probability.</p></dd>
+<dd><p>Numeric. Disturbance probability.</p></dd>
 
 
 <dt id="arg-i-disturb">i_disturb<a class="anchor" aria-label="anchor" href="#arg-i-disturb"></a></dt>
-<dd><p>Disturbance intensity expressed as proportional mortality (0 to 1). Length must be one or equal to <code>n_patch</code>.</p></dd>
+<dd><p>Numeric.
+Disturbance intensity expressed as proportional mortality (0 to 1).
+Length must be one or equal to <code>n_patch</code>.</p></dd>
 
 
 <dt id="arg-landscape-size">landscape_size<a class="anchor" aria-label="anchor" href="#arg-landscape-size"></a></dt>
-<dd><p>Length of a landscape on a side. Enabled if <code>dispersal_matrix = NULL</code>.</p></dd>
+<dd><p>Length of a landscape on a side.
+Enabled if <code>distance_matrix = NULL</code> and <code>dispersal_matrix = NULL</code>.</p></dd>
 
 
 <dt id="arg-mean-env">mean_env<a class="anchor" aria-label="anchor" href="#arg-mean-env"></a></dt>
-<dd><p>Mean environmental values of patches. Length must be one or equal to <code>n_patch</code>.</p></dd>
+<dd><p>Numeric.
+Mean environmental values of patches.
+Length must be one or equal to <code>n_patch</code>.</p></dd>
 
 
 <dt id="arg-sd-env">sd_env<a class="anchor" aria-label="anchor" href="#arg-sd-env"></a></dt>
-<dd><p>Standard deviation of temporal environmental variation at each patch.</p></dd>
+<dd><p>Numeric.
+Standard deviation of temporal environmental variation at each patch.</p></dd>
 
 
 <dt id="arg-spatial-env-cor">spatial_env_cor<a class="anchor" aria-label="anchor" href="#arg-spatial-env-cor"></a></dt>
-<dd><p>If <code>TRUE</code>, spatial autocorrelation in temporal environmental fluctuation is considered. Default <code>FALSE</code>.</p></dd>
+<dd><p>Numeric.
+If <code>TRUE</code>,
+spatial autocorrelation in temporal environmental fluctuation is considered.
+Default <code>FALSE</code>.</p></dd>
 
 
 <dt id="arg-phi">phi<a class="anchor" aria-label="anchor" href="#arg-phi"></a></dt>
-<dd><p>Parameter describing the distance decay of spatial autocorrelation in temporal environmental fluctuation. Enabled if <code>spatial_env_cor = TRUE</code>.</p></dd>
+<dd><p>Numeric.
+This parameter describes the distance decay of spatial autocorrelation
+in temporal environmental fluctuation.
+Enabled if <code>spatial_env_cor = TRUE</code>.</p></dd>
 
 
 <dt id="arg-p-dispersal">p_dispersal<a class="anchor" aria-label="anchor" href="#arg-p-dispersal"></a></dt>
-<dd><p>Dispersal probability. Length must be one or equal to <code>n_species</code>.</p></dd>
+<dd><p>Numeric.
+This parameter describes dispersal probability.
+Length must be one or equal to <code>n_species</code>.</p></dd>
 
 
 <dt id="arg-theta">theta<a class="anchor" aria-label="anchor" href="#arg-theta"></a></dt>
-<dd><p>Rate parameter of exponential dispersal kernel.</p></dd>
+<dd><p>Numeric.
+Rate parameter of exponential dispersal kernel.</p></dd>
 
 
 <dt id="arg-zeta">zeta<a class="anchor" aria-label="anchor" href="#arg-zeta"></a></dt>
-<dd><p>Species sensitivity to environmental pollutants.</p></dd>
+<dd><p>Numeric.
+Species sensitivity to environmental pollutants.</p></dd>
 
 
 <dt id="arg-impact">impact<a class="anchor" aria-label="anchor" href="#arg-impact"></a></dt>
-<dd><p>Concentration of environmental pollutants.</p></dd>
+<dd><p>Numeric.
+Concentration of environmental pollutants.</p></dd>
 
 
 <dt id="arg-plot">plot<a class="anchor" aria-label="anchor" href="#arg-plot"></a></dt>
-<dd><p>If <code>TRUE</code>, five sample patches and species of <code>df_dynamics</code> are plotted.</p></dd>
+<dd><p>Logical.
+If <code>TRUE</code>,
+five sample patches and species of <code>df_dynamics</code> are plotted.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="reference">Reference<a class="anchor" aria-label="anchor" href="#reference"></a></h2>
-    <p>see <a href="https://aterui.github.io/mcbrnet/index.html">package webpage</a> for instruction</p>
+
+
+<p>see <a href="https://aterui.github.io/mcbrnet/">package webpage</a> for details</p>
     </div>
     <div class="section level2">
     <h2 id="author">Author<a class="anchor" aria-label="anchor" href="#author"></a></h2>

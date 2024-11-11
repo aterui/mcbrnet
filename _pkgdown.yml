@@ -17,14 +17,8 @@ reference:
   - mcsim
   - igpsim
   - sglv
-  - foodweb
-  - findr
-  - stability
 - title: "Utils"
   desc: "Utility functions for internal use"
   contents:
   - starts_with("fun_")
   - resample
-  - extra_prey
-  - ppm
-  - to_alpha
